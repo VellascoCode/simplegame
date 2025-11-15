@@ -18,6 +18,7 @@
 - Criar conta (email + senha)  
 - Login  
 - Logout  
+- Sessão oficial via NextAuth (Credentials + JWT)  
 
 ### 2.2 Personagem
 - Criar personagem (nome, visual básico)  
@@ -76,7 +77,8 @@
 ### Autenticação
 - `POST /api/auth/register`  
 - `POST /api/auth/login`  
-- `GET /api/auth/logout`  
+- `POST /api/auth/logout` (GET mantido para compatibilidade)  
+- `GET/POST /api/auth/[...nextauth]` (NextAuth Credentials)  
 
 ### Personagem
 - `POST /api/character/create`  
@@ -238,7 +240,7 @@ Criar todas essas rotas GET, cada uma devendo retornar APENAS `"ok"`:
 
 ```
 /app
-  /city
+  /play
   /house
   /farm
   /forest

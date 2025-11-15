@@ -1,0 +1,3702 @@
+module.exports = [
+"[externals]/next/dist/compiled/next-server/app-page-turbo.runtime.dev.js [external] (next/dist/compiled/next-server/app-page-turbo.runtime.dev.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/compiled/next-server/app-page-turbo.runtime.dev.js", () => require("next/dist/compiled/next-server/app-page-turbo.runtime.dev.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/server/app-render/action-async-storage.external.js [external] (next/dist/server/app-render/action-async-storage.external.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/server/app-render/action-async-storage.external.js", () => require("next/dist/server/app-render/action-async-storage.external.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/server/app-render/work-unit-async-storage.external.js [external] (next/dist/server/app-render/work-unit-async-storage.external.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/server/app-render/work-unit-async-storage.external.js", () => require("next/dist/server/app-render/work-unit-async-storage.external.js"));
+
+module.exports = mod;
+}),
+"[externals]/next/dist/server/app-render/work-async-storage.external.js [external] (next/dist/server/app-render/work-async-storage.external.js, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("next/dist/server/app-render/work-async-storage.external.js", () => require("next/dist/server/app-render/work-async-storage.external.js"));
+
+module.exports = mod;
+}),
+"[project]/lib/clientApi.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "getJSON",
+    ()=>getJSON,
+    "postJSON",
+    ()=>postJSON
+]);
+const rawBase = ("TURBOPACK compile-time value", "http://localhost:3001/")?.trim() ?? "";
+const API_BASE = /^https?:\/\//i.test(rawBase) ? rawBase.replace(/\/$/, "") : "";
+function buildUrl(path) {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+    if (!API_BASE) return normalizedPath;
+    if (API_BASE.endsWith("/api") && normalizedPath.startsWith("/api")) {
+        const trimmed = normalizedPath.slice(4) || "/";
+        return `${API_BASE}${trimmed}`;
+    }
+    return `${API_BASE}${normalizedPath}`;
+}
+async function getJSON(path) {
+    const response = await fetch(buildUrl(path), {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        cache: "no-store"
+    });
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+    return await response.json();
+}
+async function postJSON(path, body) {
+    const response = await fetch(buildUrl(path), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    });
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+    return await response.json();
+}
+}),
+"[project]/components/BottomMenu.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "BottomMenu",
+    ()=>BottomMenu
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
+"use client";
+;
+;
+const menuLinks = [
+    {
+        id: "admin",
+        label: "Admin",
+        path: "/editor"
+    },
+    {
+        id: "cidade",
+        label: "Cidade",
+        path: "/city"
+    },
+    {
+        id: "casa",
+        label: "Casa",
+        path: "/house"
+    },
+    {
+        id: "farm",
+        label: "Fazenda",
+        path: "/farm"
+    },
+    {
+        id: "forest",
+        label: "Floresta",
+        path: "/forest"
+    },
+    {
+        id: "shops",
+        label: "Lojas",
+        path: "/shops"
+    },
+    {
+        id: "chat",
+        label: "Chat",
+        path: "/chat"
+    }
+];
+function BottomMenu({ variant = "page", buttons, square = false } = {}) {
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
+    function handleNavigate(path) {
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+        router.push(path);
+    }
+    const items = buttons ?? menuLinks;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
+        className: `bottom-menu${variant === "overlay" ? " bottom-menu--overlay" : ""}`,
+        children: items.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                type: "button",
+                className: square ? "bottom-menu-square" : undefined,
+                onClick: ()=>{
+                    if (item.onClick) {
+                        item.onClick();
+                    } else if (item.path) {
+                        handleNavigate(item.path);
+                    }
+                },
+                "aria-label": item.ariaLabel ?? item.label,
+                children: [
+                    item.icon ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                        src: item.icon,
+                        alt: ""
+                    }, void 0, false, {
+                        fileName: "[project]/components/BottomMenu.tsx",
+                        lineNumber: 59,
+                        columnNumber: 24
+                    }, this) : item.label,
+                    !item.icon && item.label
+                ]
+            }, item.id, true, {
+                fileName: "[project]/components/BottomMenu.tsx",
+                lineNumber: 46,
+                columnNumber: 9
+            }, this))
+    }, void 0, false, {
+        fileName: "[project]/components/BottomMenu.tsx",
+        lineNumber: 44,
+        columnNumber: 5
+    }, this);
+}
+}),
+"[project]/lib/characterSprites.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "characterSprites",
+    ()=>characterSprites,
+    "getCharacterSpriteConfig",
+    ()=>getCharacterSpriteConfig,
+    "getNpcSpriteConfig",
+    ()=>getNpcSpriteConfig
+]);
+const baseSize = {
+    frameWidth: 192,
+    frameHeight: 192
+};
+const characterSprites = {
+    warriorblue: {
+        run: {
+            sheet: "/sprites/warriorblue/walk.png",
+            ...baseSize,
+            frames: 6,
+            frameRate: 8
+        },
+        idle: {
+            sheet: "/sprites/warriorblue/idle.png",
+            ...baseSize,
+            frames: 6,
+            frameRate: 4
+        },
+        attack: {
+            sheet: "/sprites/warriorblue/attack1.png",
+            ...baseSize,
+            frames: 4,
+            frameRate: 10
+        }
+    }
+};
+const npcSprites = {
+    lancer: {
+        run: {
+            sheet: "/sprites/lancer/walk.png",
+            frameWidth: 320,
+            frameHeight: 320,
+            frames: 6,
+            frameRate: 8
+        },
+        idle: {
+            sheet: "/sprites/lancer/walk.png",
+            frameWidth: 320,
+            frameHeight: 320,
+            frames: 6,
+            frameRate: 8
+        },
+        attack: {
+            sheet: "/sprites/lancer/attack.png",
+            frameWidth: 320,
+            frameHeight: 320,
+            frames: 3,
+            frameRate: 8
+        }
+    }
+};
+function getCharacterSpriteConfig(sprite) {
+    return characterSprites[sprite] ?? characterSprites.warriorblue;
+}
+function getNpcSpriteConfig(sprite) {
+    return npcSprites[sprite] ?? npcSprites.lancer;
+}
+}),
+"[project]/app/page.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>HomePage
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/clientApi.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$BottomMenu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/BottomMenu.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$characterSprites$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/characterSprites.ts [app-ssr] (ecmascript)");
+"use client";
+;
+;
+;
+;
+;
+;
+const spriteOptions = [
+    "default",
+    "guerreiro",
+    "arqueira",
+    "mago"
+];
+const roadmapSteps = [
+    "Etapa 1 — Autenticação + personagens",
+    "Etapa 2 — Cidade com Phaser",
+    "Etapa 3 — Movimentação básica",
+    "Etapa 4 — Casa / Fazenda / Floresta / Lojas",
+    "Etapa 5 — Inventário",
+    "Etapa 6 — Lista de online",
+    "Etapa 7 — Chat global"
+];
+const featureHighlights = [
+    {
+        title: "Fluxo fixo",
+        description: "Nenhum atalho fora do README. Tudo acontece pelo servidor."
+    },
+    {
+        title: "Tiles 32×32",
+        description: "`tile1.png` e `tile2.png` (100×100) reamostrados no Phaser e no editor."
+    },
+    {
+        title: "Personagens persistentes",
+        description: "Até 4 slots por usuário. Sempre escolha um antes de clicar em Jogar."
+    }
+];
+const loreSections = [
+    {
+        title: "Camadas do mapa",
+        content: "Cada mapa usa camadas de piso, detalhes e construções (tile1 até tile6). O editor salva diretamente no servidor, garantindo que o Phaser carregue o JSON correto."
+    },
+    {
+        title: "Estruturas obrigatórias",
+        content: "Cidade, casa, fazenda, floresta e lojas possuem rotas e telas dedicadas. Todos os fluxos passam pelas APIs listadas no README."
+    },
+    {
+        title: "Rotas de verificação",
+        content: "As rotas `/api/check/*` seguem ativas para validar o ambiente rapidamente (auth, character, online, chat, inventory, house, farm, forest, shops)."
+    }
+];
+const showcaseClasses = [
+    {
+        name: "Guerreiro Azul",
+        sprite: "/sprites/warriorblue/idle.png",
+        role: "Frente de batalha",
+        description: "Ataques corpo a corpo. Base para todos os testes de HUD e combate."
+    },
+    {
+        name: "Lanceiro NPC",
+        sprite: "/sprites/lancer/walk.png",
+        role: "Hostil",
+        description: "NPC experimental que caça o jogador e dispara eventos de XP/dano."
+    },
+    {
+        name: "Explorador",
+        sprite: "/tilesets/tile2.png",
+        role: "Economia",
+        description: "Placeholder para conectarmos cidade, casa, fazenda e floresta."
+    }
+];
+const roadmapTiles = [
+    {
+        title: "Sessões seguras",
+        subtitle: "ownerId",
+        description: "Cookies HTTP-only + Mongo guardam o dono logado e o personagem escolhido."
+    },
+    {
+        title: "Seleção obrigatória",
+        subtitle: "character",
+        description: "Até 4 personagens por conta — sempre escolha um antes de abrir a cidade."
+    },
+    {
+        title: "HUD dinâmico",
+        subtitle: "painéis slide",
+        description: "Inventário, chat, conta e configurações usam os mesmos dados reais das rotas API."
+    }
+];
+const assetHighlights = [
+    {
+        label: "Tilesets",
+        value: "tile1.png até tile6.png"
+    },
+    {
+        label: "Sprites",
+        value: "warriorblue, lancer e futuros NPCs"
+    },
+    {
+        label: "GUI",
+        value: "Botões /public/gui + ícones personalizados"
+    },
+    {
+        label: "Mapas",
+        value: "city, house, farm, forest (JSON)"
+    }
+];
+function HomePage() {
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
+    const [registerData, setRegisterData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+        email: "",
+        password: ""
+    });
+    const [loginData, setLoginData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+        email: "",
+        password: ""
+    });
+    const [authFeedback, setAuthFeedback] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [loadingAuth, setLoadingAuth] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [characters, setCharacters] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [selectedCharacter, setSelectedCharacter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [characterForm, setCharacterForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+        name: "",
+        sprite: spriteOptions[0]
+    });
+    const [characterFeedback, setCharacterFeedback] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [refreshingCharacters, setRefreshingCharacters] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [modalView, setModalView] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [lastRoute, setLastRoute] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const characterLimitReached = characters.length >= 4;
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if ("TURBOPACK compile-time truthy", 1) return;
+        //TURBOPACK unreachable
+        ;
+        const updateFromStorage = undefined;
+        const handleStorage = undefined;
+        const handleCustom = undefined;
+    }, []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        void syncSessionCharacter();
+    }, []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (!user?.id) {
+            setCharacters([]);
+            setSelectedCharacter("");
+            return;
+        }
+        void refreshCharacters(user.id);
+        void syncSessionCharacter();
+    }, [
+        user?.id
+    ]);
+    async function handleRegister(event) {
+        event.preventDefault();
+        setLoadingAuth(true);
+        setAuthFeedback(null);
+        try {
+            const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["postJSON"])("/api/auth/register", registerData);
+            setUser(result);
+            setAuthFeedback(`Conta criada: ${result.email}`);
+            setModalView(null);
+            void syncSessionCharacter();
+        } catch (err) {
+            setAuthFeedback(getMessage(err));
+        } finally{
+            setLoadingAuth(false);
+        }
+    }
+    async function handleLogin(event) {
+        event.preventDefault();
+        setLoadingAuth(true);
+        setAuthFeedback(null);
+        try {
+            const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["postJSON"])("/api/auth/login", loginData);
+            setUser(result);
+            setAuthFeedback(`Login efetuado para ${result.email}`);
+            setModalView(null);
+            void syncSessionCharacter();
+        } catch (err) {
+            setAuthFeedback(getMessage(err));
+        } finally{
+            setLoadingAuth(false);
+        }
+    }
+    async function handleCreateCharacter(event) {
+        event.preventDefault();
+        if (!user?.id) {
+            setCharacterFeedback("Faça login antes de criar personagens.");
+            return;
+        }
+        setCharacterFeedback(null);
+        try {
+            await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["postJSON"])("/api/character/create", {
+                ownerId: user.id,
+                name: characterForm.name,
+                sprite: characterForm.sprite
+            });
+            setCharacterForm({
+                name: "",
+                sprite: spriteOptions[0]
+            });
+            await refreshCharacters(user.id);
+            setCharacterFeedback("Personagem criado.");
+        } catch (err) {
+            setCharacterFeedback(getMessage(err));
+        }
+    }
+    async function refreshCharacters(ownerId) {
+        setRefreshingCharacters(true);
+        setCharacterFeedback(null);
+        try {
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getJSON"])(`/api/character/get?ownerId=${ownerId}`);
+            setCharacters(response.characters);
+            if (response.characters.length === 0) {
+                setSelectedCharacter("");
+            } else {
+                setSelectedCharacter((current)=>{
+                    if (current && response.characters.find((char)=>char._id === current)) {
+                        return current;
+                    }
+                    return response.characters[0]._id ?? "";
+                });
+            }
+        } catch (err) {
+            setCharacters([]);
+            setSelectedCharacter("");
+            setCharacterFeedback(getMessage(err));
+        } finally{
+            setRefreshingCharacters(false);
+        }
+    }
+    async function enterCity() {
+        if (!user?.id || !selectedCharacter) {
+            setCharacterFeedback("Selecione um personagem para continuar.");
+            return;
+        }
+        try {
+            await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["postJSON"])("/api/session/select", {
+                characterId: selectedCharacter
+            });
+            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+            ;
+            router.push("/city");
+        } catch (err) {
+            setCharacterFeedback(getMessage(err));
+        }
+    }
+    async function syncSessionCharacter() {
+        try {
+            const session = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getJSON"])("/api/session/state");
+            if (session.characterId) {
+                setSelectedCharacter(session.characterId);
+            }
+            if (session.ownerId && !user) {
+                setUser({
+                    id: session.ownerId,
+                    email: session.ownerId
+                });
+                void refreshCharacters(session.ownerId);
+            }
+        } catch  {
+        // sessão ainda não definida
+        }
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "flex flex-col gap-10",
+        children: [
+            !user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                        className: "rounded-[32px] border border-[#7a4b1a] bg-gradient-to-br from-[#4a2c19] to-[#2b160b] p-10 text-amber-100 shadow-[0_25px_70px_rgba(0,0,0,0.45)]",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "grid gap-8 md:grid-cols-2",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-4",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs uppercase tracking-[0.4em] text-amber-300/80",
+                                            children: "MVP — Mundo 2D Spinazzi"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 282,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                            className: "font-display text-3xl text-amber-50",
+                                            children: "Landing oficial do projeto"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 283,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-amber-100/80",
+                                            children: "Siga o README sem atalhos: registre-se, crie até quatro personagens e entre direto no mapa da cidade (Phaser + inventário + online + chat)."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 284,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex flex-wrap gap-4",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "inline-flex items-center justify-center rounded-full bg-gradient-to-b from-[#f7c681] to-[#c16a27] px-8 py-3 font-bold uppercase tracking-wider text-[#341507] shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:brightness-110",
+                                                    type: "button",
+                                                    onClick: ()=>setModalView("register"),
+                                                    children: "Registrar"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 289,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    className: "inline-flex items-center justify-center rounded-full border border-amber-300/60 px-8 py-3 font-bold uppercase tracking-wider text-amber-100 transition hover:bg-amber-200/10",
+                                                    type: "button",
+                                                    onClick: ()=>setModalView("login"),
+                                                    children: "Login"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 296,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 288,
+                                            columnNumber: 17
+                                        }, this),
+                                        authFeedback && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-amber-200",
+                                            children: authFeedback
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 304,
+                                            columnNumber: 34
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/page.tsx",
+                                    lineNumber: 281,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "rounded-3xl border border-[#c6853e] bg-[#2a150a]/80 p-6",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                            className: "text-lg font-semibold text-amber-100",
+                                            children: "Roadmap obrigatório"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 307,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                            className: "mt-4 space-y-2 text-sm text-amber-100/80",
+                                            children: roadmapSteps.map((step)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                    className: "flex items-center gap-3",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "inline-flex h-3 w-3 rounded-full bg-amber-400"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.tsx",
+                                                            lineNumber: 311,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        step
+                                                    ]
+                                                }, step, true, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 310,
+                                                    columnNumber: 21
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 308,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/page.tsx",
+                                    lineNumber: 306,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/page.tsx",
+                            lineNumber: 280,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 279,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                        className: "card",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                className: "text-xl font-semibold text-amber-100",
+                                children: "Por que seguir este layout?"
+                            }, void 0, false, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 321,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "mt-6 grid gap-6 md:grid-cols-3",
+                                children: featureHighlights.map((feature)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                        className: "rounded-2xl border border-[#a1652c] bg-[#311909]/70 p-5 text-sm text-amber-100/85 shadow-inner",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                className: "text-lg font-semibold text-amber-100",
+                                                children: feature.title
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 328,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "mt-2",
+                                                children: feature.description
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 329,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, feature.title, true, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 324,
+                                        columnNumber: 17
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 322,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 320,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                        className: "card",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                className: "text-xl font-semibold text-amber-100",
+                                children: "Seções obrigatórias do MVP"
+                            }, void 0, false, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 336,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-amber-100/80",
+                                children: "As regras abaixo resumem o README e devem ser respeitadas em qualquer implementação."
+                            }, void 0, false, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 337,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "mt-6 grid gap-6 md:grid-cols-3",
+                                children: loreSections.map((section)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                        className: "rounded-2xl border border-[#a1652c] bg-[#2e170c] p-5 text-sm text-amber-100/85 shadow-inner",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                className: "text-lg font-semibold text-amber-100",
+                                                children: section.title
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 346,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "mt-2",
+                                                children: section.content
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 347,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, section.title, true, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 342,
+                                        columnNumber: 17
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 340,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 335,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                        className: "card",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex flex-col gap-8 lg:flex-row",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex-1 space-y-4",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs uppercase tracking-[0.4em] text-amber-300/80",
+                                            children: "Owner vs Character"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 356,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                            className: "text-2xl font-bold text-amber-50",
+                                            children: "Conta segura, personagens independentes"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 357,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-amber-100/80",
+                                            children: "Owner = a conta logada via email/senha (Mongo + cookies HTTP-only). Character = cada avatar jogável com XP, HP, inventário e posição próprios. A landing obriga escolher um character para habilitar o botão “Jogar”, e a sessão `/api/session/*` garante que o estado continue após refresh ou troca de rota."
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 358,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "grid gap-4 md:grid-cols-3",
+                                            children: roadmapTiles.map((tile)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                                    className: "rounded-2xl border border-[#8b4f1f] bg-[#1f0d05]/80 p-4",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs uppercase tracking-[0.3em] text-amber-300/60",
+                                                            children: tile.subtitle
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.tsx",
+                                                            lineNumber: 366,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                            className: "text-lg font-semibold text-amber-50",
+                                                            children: tile.title
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.tsx",
+                                                            lineNumber: 367,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-sm text-amber-100/80",
+                                                            children: tile.description
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/page.tsx",
+                                                            lineNumber: 368,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, tile.title, true, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 365,
+                                                    columnNumber: 21
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 363,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/page.tsx",
+                                    lineNumber: 355,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex-1 rounded-[32px] border border-[#70421a] bg-gradient-to-b from-[#3a1d0c] to-[#1a0a05] p-6 text-sm text-amber-100/80 shadow-[0_30px_60px_rgba(0,0,0,0.45)]",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs uppercase tracking-[0.3em] text-amber-300/70",
+                                            children: "Fluxo resumido"
+                                        }, void 0, false, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 374,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
+                                            className: "mt-4 space-y-3 list-decimal list-inside",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                    children: "Owner faz login → cookie `session_owner`."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 376,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                    children: "Seleciona um character → `/api/session/select` salva ownerId + characterId + mapa."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 377,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                    children: "`/api/session/state` alimenta `/city` antes do Phaser inicializar."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 378,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                    children: "Posição e quick slots persistem via `/api/session/position` e `/api/quickslots`."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 379,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/page.tsx",
+                                            lineNumber: 375,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/app/page.tsx",
+                                    lineNumber: 373,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/page.tsx",
+                            lineNumber: 354,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 353,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true),
+            user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                className: "card",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                        className: "flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-sm text-amber-100/70",
+                                        children: "Bem-vindo de volta"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 391,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                        className: "text-2xl font-bold text-amber-50",
+                                        children: "Minha Conta"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 392,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 390,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex flex-wrap gap-3 items-center",
+                                children: [
+                                    lastRoute && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: "button",
+                                        type: "button",
+                                        onClick: ()=>lastRoute && router.push(lastRoute),
+                                        children: [
+                                            "Continuar em ",
+                                            lastRoute
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 396,
+                                        columnNumber: 17
+                                    }, this),
+                                    authFeedback && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-amber-200",
+                                        children: authFeedback
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 400,
+                                        columnNumber: 32
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 394,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 389,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "mt-6 grid gap-6 md:grid-cols-3",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                className: "rounded-2xl border border-[#a1652c] bg-[#2d160b]/80 p-5 shadow-inner",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                        className: "text-lg font-semibold text-amber-100",
+                                        children: "Dados do jogador"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 405,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: [
+                                            "E-mail: ",
+                                            user.email
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 406,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: [
+                                            "Personagens: ",
+                                            characters.length,
+                                            " / 4"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 407,
+                                        columnNumber: 15
+                                    }, this),
+                                    refreshingCharacters && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        children: "Atualizando lista…"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 408,
+                                        columnNumber: 40
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 404,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                className: "rounded-2xl border border-[#a1652c] bg-[#2d160b]/80 p-5 shadow-inner",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                        className: "text-lg font-semibold text-amber-100",
+                                        children: "Selecione quem vai jogar"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 412,
+                                        columnNumber: 15
+                                    }, this),
+                                    characterFeedback && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-amber-200",
+                                        children: characterFeedback
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 413,
+                                        columnNumber: 37
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid gap-4 md:grid-cols-1",
+                                        children: [
+                                            characters.map((character)=>{
+                                                const characterId = character._id ?? "";
+                                                const isSelected = selectedCharacter === characterId;
+                                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    className: `rounded-2xl border border-[#9c5f29] bg-[#1d0d06]/70 p-4 text-left text-sm transition ${isSelected ? "ring-2 ring-amber-400" : ""}`,
+                                                    onClick: ()=>characterId && setSelectedCharacter(characterId),
+                                                    disabled: !characterId,
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center gap-4",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: `character-display ${getSpriteVariant(character.sprite)}`,
+                                                                style: getPreviewStyle(character.sprite)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/page.tsx",
+                                                                lineNumber: 429,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "flex flex-col gap-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                                        className: "text-amber-50 text-lg",
+                                                                        children: character.name
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/app/page.tsx",
+                                                                        lineNumber: 434,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "text-amber-100/75",
+                                                                        children: [
+                                                                            "sprite ",
+                                                                            character.sprite,
+                                                                            " — nível ",
+                                                                            character.stats.level
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/app/page.tsx",
+                                                                        lineNumber: 435,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/app/page.tsx",
+                                                                lineNumber: 433,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/app/page.tsx",
+                                                        lineNumber: 428,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                }, character._id ?? character.name, false, {
+                                                    fileName: "[project]/app/page.tsx",
+                                                    lineNumber: 419,
+                                                    columnNumber: 21
+                                                }, this);
+                                            }),
+                                            characters.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                children: "Nenhum personagem criado."
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 443,
+                                                columnNumber: 45
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 414,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        className: "button mt-4 w-full",
+                                        type: "button",
+                                        onClick: enterCity,
+                                        disabled: !selectedCharacter,
+                                        children: "Jogar (ir para a cidade)"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 445,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 411,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
+                                className: "rounded-2xl border border-[#a1652c] bg-[#2d160b]/80 p-5 shadow-inner",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                        className: "text-lg font-semibold text-amber-100",
+                                        children: "Criar personagem"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 451,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                                        onSubmit: handleCreateCharacter,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "character-name",
+                                                children: "Nome"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 453,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                id: "character-name",
+                                                required: true,
+                                                minLength: 3,
+                                                value: characterForm.name,
+                                                onChange: (event)=>setCharacterForm((prev)=>({
+                                                            ...prev,
+                                                            name: event.target.value
+                                                        })),
+                                                disabled: characterLimitReached
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 454,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                htmlFor: "character-sprite",
+                                                children: "Sprite"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 462,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                id: "character-sprite",
+                                                value: characterForm.sprite,
+                                                onChange: (event)=>setCharacterForm((prev)=>({
+                                                            ...prev,
+                                                            sprite: event.target.value
+                                                        })),
+                                                disabled: characterLimitReached,
+                                                children: spriteOptions.map((option)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        children: option
+                                                    }, option, false, {
+                                                        fileName: "[project]/app/page.tsx",
+                                                        lineNumber: 470,
+                                                        columnNumber: 21
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 463,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                className: "button",
+                                                disabled: characterLimitReached,
+                                                children: characterLimitReached ? "Limite atingido" : "Criar personagem"
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/page.tsx",
+                                                lineNumber: 473,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/app/page.tsx",
+                                        lineNumber: 452,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/page.tsx",
+                                lineNumber: 450,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 403,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/page.tsx",
+                lineNumber: 388,
+                columnNumber: 9
+            }, this),
+            user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$BottomMenu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["BottomMenu"], {}, void 0, false, {
+                fileName: "[project]/app/page.tsx",
+                lineNumber: 482,
+                columnNumber: 16
+            }, this),
+            modalView && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "modal-overlay",
+                role: "dialog",
+                "aria-modal": "true",
+                onClick: ()=>setModalView(null),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "modal-card",
+                    onClick: (event)=>event.stopPropagation(),
+                    children: [
+                        modalView === "register" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ModalRegister, {
+                            registerData: registerData,
+                            setRegisterData: setRegisterData,
+                            loading: loadingAuth,
+                            onSubmit: handleRegister
+                        }, void 0, false, {
+                            fileName: "[project]/app/page.tsx",
+                            lineNumber: 488,
+                            columnNumber: 15
+                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ModalLogin, {
+                            loginData: loginData,
+                            setLoginData: setLoginData,
+                            loading: loadingAuth,
+                            onSubmit: handleLogin
+                        }, void 0, false, {
+                            fileName: "[project]/app/page.tsx",
+                            lineNumber: 490,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            className: "modal-close",
+                            onClick: ()=>setModalView(null),
+                            children: "×"
+                        }, void 0, false, {
+                            fileName: "[project]/app/page.tsx",
+                            lineNumber: 492,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/page.tsx",
+                    lineNumber: 486,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/app/page.tsx",
+                lineNumber: 485,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/page.tsx",
+        lineNumber: 276,
+        columnNumber: 5
+    }, this);
+}
+function ModalRegister({ registerData, setRegisterData, loading, onSubmit }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "modal-section",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                className: "text-xl font-semibold text-amber-100",
+                children: "Registrar conta"
+            }, void 0, false, {
+                fileName: "[project]/app/page.tsx",
+                lineNumber: 515,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                onSubmit: onSubmit,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                        htmlFor: "register-email",
+                        children: "E-mail"
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 517,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        id: "register-email",
+                        type: "email",
+                        required: true,
+                        value: registerData.email,
+                        onChange: (event)=>setRegisterData((prev)=>({
+                                    ...prev,
+                                    email: event.target.value
+                                }))
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 518,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                        htmlFor: "register-password",
+                        children: "Senha"
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 525,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        id: "register-password",
+                        type: "password",
+                        required: true,
+                        minLength: 6,
+                        value: registerData.password,
+                        onChange: (event)=>setRegisterData((prev)=>({
+                                    ...prev,
+                                    password: event.target.value
+                                }))
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 526,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        className: "button",
+                        disabled: loading,
+                        children: "Registrar"
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 534,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/page.tsx",
+                lineNumber: 516,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/page.tsx",
+        lineNumber: 514,
+        columnNumber: 5
+    }, this);
+}
+function ModalLogin({ loginData, setLoginData, loading, onSubmit }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "modal-section",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                className: "text-xl font-semibold text-amber-100",
+                children: "Login"
+            }, void 0, false, {
+                fileName: "[project]/app/page.tsx",
+                lineNumber: 555,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                onSubmit: onSubmit,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                        htmlFor: "login-email",
+                        children: "E-mail"
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 557,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        id: "login-email",
+                        type: "email",
+                        required: true,
+                        value: loginData.email,
+                        onChange: (event)=>setLoginData((prev)=>({
+                                    ...prev,
+                                    email: event.target.value
+                                }))
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 558,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                        htmlFor: "login-password",
+                        children: "Senha"
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 565,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        id: "login-password",
+                        type: "password",
+                        required: true,
+                        value: loginData.password,
+                        onChange: (event)=>setLoginData((prev)=>({
+                                    ...prev,
+                                    password: event.target.value
+                                }))
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 566,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        className: "button",
+                        disabled: loading,
+                        children: "Entrar"
+                    }, void 0, false, {
+                        fileName: "[project]/app/page.tsx",
+                        lineNumber: 573,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/page.tsx",
+                lineNumber: 556,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/app/page.tsx",
+        lineNumber: 554,
+        columnNumber: 5
+    }, this);
+}
+function getMessage(err) {
+    return err instanceof Error ? err.message : "Ação não concluída";
+}
+function getSpriteVariant(sprite) {
+    if (sprite === "guerreiro") return "variant-guerreiro";
+    if (sprite === "arqueira") return "variant-arqueira";
+    if (sprite === "mago") return "variant-mago";
+    return "";
+}
+function getPreviewStyle(sprite) {
+    const config = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$characterSprites$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getCharacterSpriteConfig"])(sprite);
+    const idle = config.idle;
+    const duration = idle.frames / idle.frameRate;
+    return {
+        backgroundImage: `url(${idle.sheet})`,
+        backgroundSize: `${idle.frames * 100}% 100%`,
+        animation: `character-walk ${duration}s steps(${idle.frames}) infinite`
+    };
+}
+}),
+"[project]/node_modules/next/dist/server/route-modules/app-page/module.compiled.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+;
+else {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    else {
+        if ("TURBOPACK compile-time truthy", 1) {
+            if ("TURBOPACK compile-time truthy", 1) {
+                module.exports = __turbopack_context__.r("[externals]/next/dist/compiled/next-server/app-page-turbo.runtime.dev.js [external] (next/dist/compiled/next-server/app-page-turbo.runtime.dev.js, cjs)");
+            } else //TURBOPACK unreachable
+            ;
+        } else //TURBOPACK unreachable
+        ;
+    }
+} //# sourceMappingURL=module.compiled.js.map
+}),
+"[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/module.compiled.js [app-ssr] (ecmascript)").vendored['react-ssr'].ReactJsxDevRuntime; //# sourceMappingURL=react-jsx-dev-runtime.js.map
+}),
+"[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/module.compiled.js [app-ssr] (ecmascript)").vendored['react-ssr'].React; //# sourceMappingURL=react.js.map
+}),
+"[project]/node_modules/@swc/helpers/cjs/_interop_require_wildcard.cjs [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+function _getRequireWildcardCache(nodeInterop) {
+    if (typeof WeakMap !== "function") return null;
+    var cacheBabelInterop = new WeakMap();
+    var cacheNodeInterop = new WeakMap();
+    return (_getRequireWildcardCache = function(nodeInterop) {
+        return nodeInterop ? cacheNodeInterop : cacheBabelInterop;
+    })(nodeInterop);
+}
+function _interop_require_wildcard(obj, nodeInterop) {
+    if (!nodeInterop && obj && obj.__esModule) return obj;
+    if (obj === null || typeof obj !== "object" && typeof obj !== "function") return {
+        default: obj
+    };
+    var cache = _getRequireWildcardCache(nodeInterop);
+    if (cache && cache.has(obj)) return cache.get(obj);
+    var newObj = {
+        __proto__: null
+    };
+    var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
+    for(var key in obj){
+        if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) {
+            var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
+            if (desc && (desc.get || desc.set)) Object.defineProperty(newObj, key, desc);
+            else newObj[key] = obj[key];
+        }
+    }
+    newObj.default = obj;
+    if (cache) cache.set(obj, newObj);
+    return newObj;
+}
+exports._ = _interop_require_wildcard;
+}),
+"[project]/node_modules/next/dist/server/route-modules/app-page/vendored/contexts/app-router-context.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/module.compiled.js [app-ssr] (ecmascript)").vendored['contexts'].AppRouterContext; //# sourceMappingURL=app-router-context.js.map
+}),
+"[project]/node_modules/next/dist/server/route-modules/app-page/vendored/contexts/hooks-client-context.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/module.compiled.js [app-ssr] (ecmascript)").vendored['contexts'].HooksClientContext; //# sourceMappingURL=hooks-client-context.js.map
+}),
+"[project]/node_modules/next/dist/shared/lib/segment.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    DEFAULT_SEGMENT_KEY: null,
+    PAGE_SEGMENT_KEY: null,
+    addSearchParamsIfPageSegment: null,
+    computeSelectedLayoutSegment: null,
+    getSegmentValue: null,
+    getSelectedLayoutSegmentPath: null,
+    isGroupSegment: null,
+    isParallelRouteSegment: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    DEFAULT_SEGMENT_KEY: function() {
+        return DEFAULT_SEGMENT_KEY;
+    },
+    PAGE_SEGMENT_KEY: function() {
+        return PAGE_SEGMENT_KEY;
+    },
+    addSearchParamsIfPageSegment: function() {
+        return addSearchParamsIfPageSegment;
+    },
+    computeSelectedLayoutSegment: function() {
+        return computeSelectedLayoutSegment;
+    },
+    getSegmentValue: function() {
+        return getSegmentValue;
+    },
+    getSelectedLayoutSegmentPath: function() {
+        return getSelectedLayoutSegmentPath;
+    },
+    isGroupSegment: function() {
+        return isGroupSegment;
+    },
+    isParallelRouteSegment: function() {
+        return isParallelRouteSegment;
+    }
+});
+function getSegmentValue(segment) {
+    return Array.isArray(segment) ? segment[1] : segment;
+}
+function isGroupSegment(segment) {
+    // Use array[0] for performant purpose
+    return segment[0] === '(' && segment.endsWith(')');
+}
+function isParallelRouteSegment(segment) {
+    return segment.startsWith('@') && segment !== '@children';
+}
+function addSearchParamsIfPageSegment(segment, searchParams) {
+    const isPageSegment = segment.includes(PAGE_SEGMENT_KEY);
+    if (isPageSegment) {
+        const stringifiedQuery = JSON.stringify(searchParams);
+        return stringifiedQuery !== '{}' ? PAGE_SEGMENT_KEY + '?' + stringifiedQuery : PAGE_SEGMENT_KEY;
+    }
+    return segment;
+}
+function computeSelectedLayoutSegment(segments, parallelRouteKey) {
+    if (!segments || segments.length === 0) {
+        return null;
+    }
+    // For 'children', use first segment; for other parallel routes, use last segment
+    const rawSegment = parallelRouteKey === 'children' ? segments[0] : segments[segments.length - 1];
+    // If the default slot is showing, return null since it's not technically "selected" (it's a fallback)
+    // Returning an internal value like `__DEFAULT__` would be confusing
+    return rawSegment === DEFAULT_SEGMENT_KEY ? null : rawSegment;
+}
+function getSelectedLayoutSegmentPath(tree, parallelRouteKey, first = true, segmentPath = []) {
+    let node;
+    if (first) {
+        // Use the provided parallel route key on the first parallel route
+        node = tree[1][parallelRouteKey];
+    } else {
+        // After first parallel route prefer children, if there's no children pick the first parallel route.
+        const parallelRoutes = tree[1];
+        node = parallelRoutes.children ?? Object.values(parallelRoutes)[0];
+    }
+    if (!node) return segmentPath;
+    const segment = node[0];
+    let segmentValue = getSegmentValue(segment);
+    if (!segmentValue || segmentValue.startsWith(PAGE_SEGMENT_KEY)) {
+        return segmentPath;
+    }
+    segmentPath.push(segmentValue);
+    return getSelectedLayoutSegmentPath(node, parallelRouteKey, false, segmentPath);
+}
+const PAGE_SEGMENT_KEY = '__PAGE__';
+const DEFAULT_SEGMENT_KEY = '__DEFAULT__'; //# sourceMappingURL=segment.js.map
+}),
+"[project]/node_modules/next/dist/client/components/readonly-url-search-params.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/**
+ * ReadonlyURLSearchParams implementation shared between client and server.
+ * This file is intentionally not marked as 'use client' or 'use server'
+ * so it can be imported by both environments.
+ */ /** @internal */ Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "ReadonlyURLSearchParams", {
+    enumerable: true,
+    get: function() {
+        return ReadonlyURLSearchParams;
+    }
+});
+class ReadonlyURLSearchParamsError extends Error {
+    constructor(){
+        super('Method unavailable on `ReadonlyURLSearchParams`. Read more: https://nextjs.org/docs/app/api-reference/functions/use-search-params#updating-searchparams');
+    }
+}
+class ReadonlyURLSearchParams extends URLSearchParams {
+    /** @deprecated Method unavailable on `ReadonlyURLSearchParams`. Read more: https://nextjs.org/docs/app/api-reference/functions/use-search-params#updating-searchparams */ append() {
+        throw new ReadonlyURLSearchParamsError();
+    }
+    /** @deprecated Method unavailable on `ReadonlyURLSearchParams`. Read more: https://nextjs.org/docs/app/api-reference/functions/use-search-params#updating-searchparams */ delete() {
+        throw new ReadonlyURLSearchParamsError();
+    }
+    /** @deprecated Method unavailable on `ReadonlyURLSearchParams`. Read more: https://nextjs.org/docs/app/api-reference/functions/use-search-params#updating-searchparams */ set() {
+        throw new ReadonlyURLSearchParamsError();
+    }
+    /** @deprecated Method unavailable on `ReadonlyURLSearchParams`. Read more: https://nextjs.org/docs/app/api-reference/functions/use-search-params#updating-searchparams */ sort() {
+        throw new ReadonlyURLSearchParamsError();
+    }
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=readonly-url-search-params.js.map
+}),
+"[project]/node_modules/next/dist/server/route-modules/app-page/vendored/contexts/server-inserted-html.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/module.compiled.js [app-ssr] (ecmascript)").vendored['contexts'].ServerInsertedHtml; //# sourceMappingURL=server-inserted-html.js.map
+}),
+"[project]/node_modules/next/dist/client/components/unrecognized-action-error.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    UnrecognizedActionError: null,
+    unstable_isUnrecognizedActionError: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    UnrecognizedActionError: function() {
+        return UnrecognizedActionError;
+    },
+    unstable_isUnrecognizedActionError: function() {
+        return unstable_isUnrecognizedActionError;
+    }
+});
+class UnrecognizedActionError extends Error {
+    constructor(...args){
+        super(...args);
+        this.name = 'UnrecognizedActionError';
+    }
+}
+function unstable_isUnrecognizedActionError(error) {
+    return !!(error && typeof error === 'object' && error instanceof UnrecognizedActionError);
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=unrecognized-action-error.js.map
+}),
+"[project]/node_modules/next/dist/client/components/redirect-status-code.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "RedirectStatusCode", {
+    enumerable: true,
+    get: function() {
+        return RedirectStatusCode;
+    }
+});
+var RedirectStatusCode = /*#__PURE__*/ function(RedirectStatusCode) {
+    RedirectStatusCode[RedirectStatusCode["SeeOther"] = 303] = "SeeOther";
+    RedirectStatusCode[RedirectStatusCode["TemporaryRedirect"] = 307] = "TemporaryRedirect";
+    RedirectStatusCode[RedirectStatusCode["PermanentRedirect"] = 308] = "PermanentRedirect";
+    return RedirectStatusCode;
+}({});
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=redirect-status-code.js.map
+}),
+"[project]/node_modules/next/dist/client/components/redirect-error.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    REDIRECT_ERROR_CODE: null,
+    RedirectType: null,
+    isRedirectError: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    REDIRECT_ERROR_CODE: function() {
+        return REDIRECT_ERROR_CODE;
+    },
+    RedirectType: function() {
+        return RedirectType;
+    },
+    isRedirectError: function() {
+        return isRedirectError;
+    }
+});
+const _redirectstatuscode = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/redirect-status-code.js [app-ssr] (ecmascript)");
+const REDIRECT_ERROR_CODE = 'NEXT_REDIRECT';
+var RedirectType = /*#__PURE__*/ function(RedirectType) {
+    RedirectType["push"] = "push";
+    RedirectType["replace"] = "replace";
+    return RedirectType;
+}({});
+function isRedirectError(error) {
+    if (typeof error !== 'object' || error === null || !('digest' in error) || typeof error.digest !== 'string') {
+        return false;
+    }
+    const digest = error.digest.split(';');
+    const [errorCode, type] = digest;
+    const destination = digest.slice(2, -2).join(';');
+    const status = digest.at(-2);
+    const statusCode = Number(status);
+    return errorCode === REDIRECT_ERROR_CODE && (type === 'replace' || type === 'push') && typeof destination === 'string' && !isNaN(statusCode) && statusCode in _redirectstatuscode.RedirectStatusCode;
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=redirect-error.js.map
+}),
+"[project]/node_modules/next/dist/client/components/redirect.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    getRedirectError: null,
+    getRedirectStatusCodeFromError: null,
+    getRedirectTypeFromError: null,
+    getURLFromRedirectError: null,
+    permanentRedirect: null,
+    redirect: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    getRedirectError: function() {
+        return getRedirectError;
+    },
+    getRedirectStatusCodeFromError: function() {
+        return getRedirectStatusCodeFromError;
+    },
+    getRedirectTypeFromError: function() {
+        return getRedirectTypeFromError;
+    },
+    getURLFromRedirectError: function() {
+        return getURLFromRedirectError;
+    },
+    permanentRedirect: function() {
+        return permanentRedirect;
+    },
+    redirect: function() {
+        return redirect;
+    }
+});
+const _redirectstatuscode = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/redirect-status-code.js [app-ssr] (ecmascript)");
+const _redirecterror = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/redirect-error.js [app-ssr] (ecmascript)");
+const actionAsyncStorage = ("TURBOPACK compile-time truthy", 1) ? __turbopack_context__.r("[externals]/next/dist/server/app-render/action-async-storage.external.js [external] (next/dist/server/app-render/action-async-storage.external.js, cjs)").actionAsyncStorage : "TURBOPACK unreachable";
+function getRedirectError(url, type, statusCode = _redirectstatuscode.RedirectStatusCode.TemporaryRedirect) {
+    const error = Object.defineProperty(new Error(_redirecterror.REDIRECT_ERROR_CODE), "__NEXT_ERROR_CODE", {
+        value: "E394",
+        enumerable: false,
+        configurable: true
+    });
+    error.digest = `${_redirecterror.REDIRECT_ERROR_CODE};${type};${url};${statusCode};`;
+    return error;
+}
+function redirect(/** The URL to redirect to */ url, type) {
+    type ??= actionAsyncStorage?.getStore()?.isAction ? _redirecterror.RedirectType.push : _redirecterror.RedirectType.replace;
+    throw getRedirectError(url, type, _redirectstatuscode.RedirectStatusCode.TemporaryRedirect);
+}
+function permanentRedirect(/** The URL to redirect to */ url, type = _redirecterror.RedirectType.replace) {
+    throw getRedirectError(url, type, _redirectstatuscode.RedirectStatusCode.PermanentRedirect);
+}
+function getURLFromRedirectError(error) {
+    if (!(0, _redirecterror.isRedirectError)(error)) return null;
+    // Slices off the beginning of the digest that contains the code and the
+    // separating ';'.
+    return error.digest.split(';').slice(2, -2).join(';');
+}
+function getRedirectTypeFromError(error) {
+    if (!(0, _redirecterror.isRedirectError)(error)) {
+        throw Object.defineProperty(new Error('Not a redirect error'), "__NEXT_ERROR_CODE", {
+            value: "E260",
+            enumerable: false,
+            configurable: true
+        });
+    }
+    return error.digest.split(';', 2)[1];
+}
+function getRedirectStatusCodeFromError(error) {
+    if (!(0, _redirecterror.isRedirectError)(error)) {
+        throw Object.defineProperty(new Error('Not a redirect error'), "__NEXT_ERROR_CODE", {
+            value: "E260",
+            enumerable: false,
+            configurable: true
+        });
+    }
+    return Number(error.digest.split(';').at(-2));
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=redirect.js.map
+}),
+"[project]/node_modules/next/dist/client/components/http-access-fallback/http-access-fallback.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    HTTPAccessErrorStatus: null,
+    HTTP_ERROR_FALLBACK_ERROR_CODE: null,
+    getAccessFallbackErrorTypeByStatus: null,
+    getAccessFallbackHTTPStatus: null,
+    isHTTPAccessFallbackError: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    HTTPAccessErrorStatus: function() {
+        return HTTPAccessErrorStatus;
+    },
+    HTTP_ERROR_FALLBACK_ERROR_CODE: function() {
+        return HTTP_ERROR_FALLBACK_ERROR_CODE;
+    },
+    getAccessFallbackErrorTypeByStatus: function() {
+        return getAccessFallbackErrorTypeByStatus;
+    },
+    getAccessFallbackHTTPStatus: function() {
+        return getAccessFallbackHTTPStatus;
+    },
+    isHTTPAccessFallbackError: function() {
+        return isHTTPAccessFallbackError;
+    }
+});
+const HTTPAccessErrorStatus = {
+    NOT_FOUND: 404,
+    FORBIDDEN: 403,
+    UNAUTHORIZED: 401
+};
+const ALLOWED_CODES = new Set(Object.values(HTTPAccessErrorStatus));
+const HTTP_ERROR_FALLBACK_ERROR_CODE = 'NEXT_HTTP_ERROR_FALLBACK';
+function isHTTPAccessFallbackError(error) {
+    if (typeof error !== 'object' || error === null || !('digest' in error) || typeof error.digest !== 'string') {
+        return false;
+    }
+    const [prefix, httpStatus] = error.digest.split(';');
+    return prefix === HTTP_ERROR_FALLBACK_ERROR_CODE && ALLOWED_CODES.has(Number(httpStatus));
+}
+function getAccessFallbackHTTPStatus(error) {
+    const httpStatus = error.digest.split(';')[1];
+    return Number(httpStatus);
+}
+function getAccessFallbackErrorTypeByStatus(status) {
+    switch(status){
+        case 401:
+            return 'unauthorized';
+        case 403:
+            return 'forbidden';
+        case 404:
+            return 'not-found';
+        default:
+            return;
+    }
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=http-access-fallback.js.map
+}),
+"[project]/node_modules/next/dist/client/components/not-found.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "notFound", {
+    enumerable: true,
+    get: function() {
+        return notFound;
+    }
+});
+const _httpaccessfallback = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/http-access-fallback/http-access-fallback.js [app-ssr] (ecmascript)");
+/**
+ * This function allows you to render the [not-found.js file](https://nextjs.org/docs/app/api-reference/file-conventions/not-found)
+ * within a route segment as well as inject a tag.
+ *
+ * `notFound()` can be used in
+ * [Server Components](https://nextjs.org/docs/app/building-your-application/rendering/server-components),
+ * [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers), and
+ * [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
+ *
+ * - In a Server Component, this will insert a `<meta name="robots" content="noindex" />` meta tag and set the status code to 404.
+ * - In a Route Handler or Server Action, it will serve a 404 to the caller.
+ *
+ * Read more: [Next.js Docs: `notFound`](https://nextjs.org/docs/app/api-reference/functions/not-found)
+ */ const DIGEST = `${_httpaccessfallback.HTTP_ERROR_FALLBACK_ERROR_CODE};404`;
+function notFound() {
+    const error = Object.defineProperty(new Error(DIGEST), "__NEXT_ERROR_CODE", {
+        value: "E394",
+        enumerable: false,
+        configurable: true
+    });
+    error.digest = DIGEST;
+    throw error;
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=not-found.js.map
+}),
+"[project]/node_modules/next/dist/client/components/forbidden.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "forbidden", {
+    enumerable: true,
+    get: function() {
+        return forbidden;
+    }
+});
+const _httpaccessfallback = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/http-access-fallback/http-access-fallback.js [app-ssr] (ecmascript)");
+// TODO: Add `forbidden` docs
+/**
+ * @experimental
+ * This function allows you to render the [forbidden.js file](https://nextjs.org/docs/app/api-reference/file-conventions/forbidden)
+ * within a route segment as well as inject a tag.
+ *
+ * `forbidden()` can be used in
+ * [Server Components](https://nextjs.org/docs/app/building-your-application/rendering/server-components),
+ * [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers), and
+ * [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
+ *
+ * Read more: [Next.js Docs: `forbidden`](https://nextjs.org/docs/app/api-reference/functions/forbidden)
+ */ const DIGEST = `${_httpaccessfallback.HTTP_ERROR_FALLBACK_ERROR_CODE};403`;
+function forbidden() {
+    if ("TURBOPACK compile-time truthy", 1) {
+        throw Object.defineProperty(new Error(`\`forbidden()\` is experimental and only allowed to be enabled when \`experimental.authInterrupts\` is enabled.`), "__NEXT_ERROR_CODE", {
+            value: "E488",
+            enumerable: false,
+            configurable: true
+        });
+    }
+    const error = Object.defineProperty(new Error(DIGEST), "__NEXT_ERROR_CODE", {
+        value: "E394",
+        enumerable: false,
+        configurable: true
+    });
+    error.digest = DIGEST;
+    throw error;
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=forbidden.js.map
+}),
+"[project]/node_modules/next/dist/client/components/unauthorized.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "unauthorized", {
+    enumerable: true,
+    get: function() {
+        return unauthorized;
+    }
+});
+const _httpaccessfallback = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/http-access-fallback/http-access-fallback.js [app-ssr] (ecmascript)");
+// TODO: Add `unauthorized` docs
+/**
+ * @experimental
+ * This function allows you to render the [unauthorized.js file](https://nextjs.org/docs/app/api-reference/file-conventions/unauthorized)
+ * within a route segment as well as inject a tag.
+ *
+ * `unauthorized()` can be used in
+ * [Server Components](https://nextjs.org/docs/app/building-your-application/rendering/server-components),
+ * [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers), and
+ * [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
+ *
+ *
+ * Read more: [Next.js Docs: `unauthorized`](https://nextjs.org/docs/app/api-reference/functions/unauthorized)
+ */ const DIGEST = `${_httpaccessfallback.HTTP_ERROR_FALLBACK_ERROR_CODE};401`;
+function unauthorized() {
+    if ("TURBOPACK compile-time truthy", 1) {
+        throw Object.defineProperty(new Error(`\`unauthorized()\` is experimental and only allowed to be used when \`experimental.authInterrupts\` is enabled.`), "__NEXT_ERROR_CODE", {
+            value: "E411",
+            enumerable: false,
+            configurable: true
+        });
+    }
+    const error = Object.defineProperty(new Error(DIGEST), "__NEXT_ERROR_CODE", {
+        value: "E394",
+        enumerable: false,
+        configurable: true
+    });
+    error.digest = DIGEST;
+    throw error;
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=unauthorized.js.map
+}),
+"[project]/node_modules/next/dist/server/dynamic-rendering-utils.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    isHangingPromiseRejectionError: null,
+    makeDevtoolsIOAwarePromise: null,
+    makeHangingPromise: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    isHangingPromiseRejectionError: function() {
+        return isHangingPromiseRejectionError;
+    },
+    makeDevtoolsIOAwarePromise: function() {
+        return makeDevtoolsIOAwarePromise;
+    },
+    makeHangingPromise: function() {
+        return makeHangingPromise;
+    }
+});
+function isHangingPromiseRejectionError(err) {
+    if (typeof err !== 'object' || err === null || !('digest' in err)) {
+        return false;
+    }
+    return err.digest === HANGING_PROMISE_REJECTION;
+}
+const HANGING_PROMISE_REJECTION = 'HANGING_PROMISE_REJECTION';
+class HangingPromiseRejectionError extends Error {
+    constructor(route, expression){
+        super(`During prerendering, ${expression} rejects when the prerender is complete. Typically these errors are handled by React but if you move ${expression} to a different context by using \`setTimeout\`, \`after\`, or similar functions you may observe this error and you should handle it in that context. This occurred at route "${route}".`), this.route = route, this.expression = expression, this.digest = HANGING_PROMISE_REJECTION;
+    }
+}
+const abortListenersBySignal = new WeakMap();
+function makeHangingPromise(signal, route, expression) {
+    if (signal.aborted) {
+        return Promise.reject(new HangingPromiseRejectionError(route, expression));
+    } else {
+        const hangingPromise = new Promise((_, reject)=>{
+            const boundRejection = reject.bind(null, new HangingPromiseRejectionError(route, expression));
+            let currentListeners = abortListenersBySignal.get(signal);
+            if (currentListeners) {
+                currentListeners.push(boundRejection);
+            } else {
+                const listeners = [
+                    boundRejection
+                ];
+                abortListenersBySignal.set(signal, listeners);
+                signal.addEventListener('abort', ()=>{
+                    for(let i = 0; i < listeners.length; i++){
+                        listeners[i]();
+                    }
+                }, {
+                    once: true
+                });
+            }
+        });
+        // We are fine if no one actually awaits this promise. We shouldn't consider this an unhandled rejection so
+        // we attach a noop catch handler here to suppress this warning. If you actually await somewhere or construct
+        // your own promise out of it you'll need to ensure you handle the error when it rejects.
+        hangingPromise.catch(ignoreReject);
+        return hangingPromise;
+    }
+}
+function ignoreReject() {}
+function makeDevtoolsIOAwarePromise(underlying, requestStore, stage) {
+    if (requestStore.stagedRendering) {
+        // We resolve each stage in a timeout, so React DevTools will pick this up as IO.
+        return requestStore.stagedRendering.delayUntilStage(stage, undefined, underlying);
+    }
+    // in React DevTools if we resolve in a setTimeout we will observe
+    // the promise resolution as something that can suspend a boundary or root.
+    return new Promise((resolve)=>{
+        // Must use setTimeout to be considered IO React DevTools. setImmediate will not work.
+        setTimeout(()=>{
+            resolve(underlying);
+        }, 0);
+    });
+} //# sourceMappingURL=dynamic-rendering-utils.js.map
+}),
+"[project]/node_modules/next/dist/server/lib/router-utils/is-postpone.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "isPostpone", {
+    enumerable: true,
+    get: function() {
+        return isPostpone;
+    }
+});
+const REACT_POSTPONE_TYPE = Symbol.for('react.postpone');
+function isPostpone(error) {
+    return typeof error === 'object' && error !== null && error.$$typeof === REACT_POSTPONE_TYPE;
+} //# sourceMappingURL=is-postpone.js.map
+}),
+"[project]/node_modules/next/dist/shared/lib/lazy-dynamic/bailout-to-csr.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+// This has to be a shared module which is shared between client component error boundary and dynamic component
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    BailoutToCSRError: null,
+    isBailoutToCSRError: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    BailoutToCSRError: function() {
+        return BailoutToCSRError;
+    },
+    isBailoutToCSRError: function() {
+        return isBailoutToCSRError;
+    }
+});
+const BAILOUT_TO_CSR = 'BAILOUT_TO_CLIENT_SIDE_RENDERING';
+class BailoutToCSRError extends Error {
+    constructor(reason){
+        super(`Bail out to client-side rendering: ${reason}`), this.reason = reason, this.digest = BAILOUT_TO_CSR;
+    }
+}
+function isBailoutToCSRError(err) {
+    if (typeof err !== 'object' || err === null || !('digest' in err)) {
+        return false;
+    }
+    return err.digest === BAILOUT_TO_CSR;
+} //# sourceMappingURL=bailout-to-csr.js.map
+}),
+"[project]/node_modules/next/dist/client/components/is-next-router-error.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "isNextRouterError", {
+    enumerable: true,
+    get: function() {
+        return isNextRouterError;
+    }
+});
+const _httpaccessfallback = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/http-access-fallback/http-access-fallback.js [app-ssr] (ecmascript)");
+const _redirecterror = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/redirect-error.js [app-ssr] (ecmascript)");
+function isNextRouterError(error) {
+    return (0, _redirecterror.isRedirectError)(error) || (0, _httpaccessfallback.isHTTPAccessFallbackError)(error);
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=is-next-router-error.js.map
+}),
+"[project]/node_modules/next/dist/client/components/hooks-server-context.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    DynamicServerError: null,
+    isDynamicServerError: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    DynamicServerError: function() {
+        return DynamicServerError;
+    },
+    isDynamicServerError: function() {
+        return isDynamicServerError;
+    }
+});
+const DYNAMIC_ERROR_CODE = 'DYNAMIC_SERVER_USAGE';
+class DynamicServerError extends Error {
+    constructor(description){
+        super(`Dynamic server usage: ${description}`), this.description = description, this.digest = DYNAMIC_ERROR_CODE;
+    }
+}
+function isDynamicServerError(err) {
+    if (typeof err !== 'object' || err === null || !('digest' in err) || typeof err.digest !== 'string') {
+        return false;
+    }
+    return err.digest === DYNAMIC_ERROR_CODE;
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=hooks-server-context.js.map
+}),
+"[project]/node_modules/next/dist/client/components/static-generation-bailout.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    StaticGenBailoutError: null,
+    isStaticGenBailoutError: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    StaticGenBailoutError: function() {
+        return StaticGenBailoutError;
+    },
+    isStaticGenBailoutError: function() {
+        return isStaticGenBailoutError;
+    }
+});
+const NEXT_STATIC_GEN_BAILOUT = 'NEXT_STATIC_GEN_BAILOUT';
+class StaticGenBailoutError extends Error {
+    constructor(...args){
+        super(...args), this.code = NEXT_STATIC_GEN_BAILOUT;
+    }
+}
+function isStaticGenBailoutError(error) {
+    if (typeof error !== 'object' || error === null || !('code' in error)) {
+        return false;
+    }
+    return error.code === NEXT_STATIC_GEN_BAILOUT;
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=static-generation-bailout.js.map
+}),
+"[project]/node_modules/next/dist/lib/framework/boundary-constants.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    METADATA_BOUNDARY_NAME: null,
+    OUTLET_BOUNDARY_NAME: null,
+    ROOT_LAYOUT_BOUNDARY_NAME: null,
+    VIEWPORT_BOUNDARY_NAME: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    METADATA_BOUNDARY_NAME: function() {
+        return METADATA_BOUNDARY_NAME;
+    },
+    OUTLET_BOUNDARY_NAME: function() {
+        return OUTLET_BOUNDARY_NAME;
+    },
+    ROOT_LAYOUT_BOUNDARY_NAME: function() {
+        return ROOT_LAYOUT_BOUNDARY_NAME;
+    },
+    VIEWPORT_BOUNDARY_NAME: function() {
+        return VIEWPORT_BOUNDARY_NAME;
+    }
+});
+const METADATA_BOUNDARY_NAME = '__next_metadata_boundary__';
+const VIEWPORT_BOUNDARY_NAME = '__next_viewport_boundary__';
+const OUTLET_BOUNDARY_NAME = '__next_outlet_boundary__';
+const ROOT_LAYOUT_BOUNDARY_NAME = '__next_root_layout_boundary__'; //# sourceMappingURL=boundary-constants.js.map
+}),
+"[project]/node_modules/next/dist/lib/scheduler.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    atLeastOneTask: null,
+    scheduleImmediate: null,
+    scheduleOnNextTick: null,
+    waitAtLeastOneReactRenderTask: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    atLeastOneTask: function() {
+        return atLeastOneTask;
+    },
+    scheduleImmediate: function() {
+        return scheduleImmediate;
+    },
+    scheduleOnNextTick: function() {
+        return scheduleOnNextTick;
+    },
+    waitAtLeastOneReactRenderTask: function() {
+        return waitAtLeastOneReactRenderTask;
+    }
+});
+const scheduleOnNextTick = (cb)=>{
+    // We use Promise.resolve().then() here so that the operation is scheduled at
+    // the end of the promise job queue, we then add it to the next process tick
+    // to ensure it's evaluated afterwards.
+    //
+    // This was inspired by the implementation of the DataLoader interface: https://github.com/graphql/dataloader/blob/d336bd15282664e0be4b4a657cb796f09bafbc6b/src/index.js#L213-L255
+    //
+    Promise.resolve().then(()=>{
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+        else {
+            process.nextTick(cb);
+        }
+    });
+};
+const scheduleImmediate = (cb)=>{
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    else {
+        setImmediate(cb);
+    }
+};
+function atLeastOneTask() {
+    return new Promise((resolve)=>scheduleImmediate(resolve));
+}
+function waitAtLeastOneReactRenderTask() {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    else {
+        return new Promise((r)=>setImmediate(r));
+    }
+} //# sourceMappingURL=scheduler.js.map
+}),
+"[project]/node_modules/next/dist/shared/lib/invariant-error.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "InvariantError", {
+    enumerable: true,
+    get: function() {
+        return InvariantError;
+    }
+});
+class InvariantError extends Error {
+    constructor(message, options){
+        super(`Invariant: ${message.endsWith('.') ? message : message + '.'} This is a bug in Next.js.`, options);
+        this.name = 'InvariantError';
+    }
+} //# sourceMappingURL=invariant-error.js.map
+}),
+"[project]/node_modules/next/dist/shared/lib/promise-with-resolvers.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "createPromiseWithResolvers", {
+    enumerable: true,
+    get: function() {
+        return createPromiseWithResolvers;
+    }
+});
+function createPromiseWithResolvers() {
+    // Shim of Stage 4 Promise.withResolvers proposal
+    let resolve;
+    let reject;
+    const promise = new Promise((res, rej)=>{
+        resolve = res;
+        reject = rej;
+    });
+    return {
+        resolve: resolve,
+        reject: reject,
+        promise
+    };
+} //# sourceMappingURL=promise-with-resolvers.js.map
+}),
+"[project]/node_modules/next/dist/server/app-render/staged-rendering.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    RenderStage: null,
+    StagedRenderingController: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    RenderStage: function() {
+        return RenderStage;
+    },
+    StagedRenderingController: function() {
+        return StagedRenderingController;
+    }
+});
+const _invarianterror = __turbopack_context__.r("[project]/node_modules/next/dist/shared/lib/invariant-error.js [app-ssr] (ecmascript)");
+const _promisewithresolvers = __turbopack_context__.r("[project]/node_modules/next/dist/shared/lib/promise-with-resolvers.js [app-ssr] (ecmascript)");
+var RenderStage = /*#__PURE__*/ function(RenderStage) {
+    RenderStage[RenderStage["Static"] = 1] = "Static";
+    RenderStage[RenderStage["Runtime"] = 2] = "Runtime";
+    RenderStage[RenderStage["Dynamic"] = 3] = "Dynamic";
+    return RenderStage;
+}({});
+class StagedRenderingController {
+    constructor(abortSignal = null){
+        this.abortSignal = abortSignal;
+        this.currentStage = 1;
+        this.runtimeStagePromise = (0, _promisewithresolvers.createPromiseWithResolvers)();
+        this.dynamicStagePromise = (0, _promisewithresolvers.createPromiseWithResolvers)();
+        if (abortSignal) {
+            abortSignal.addEventListener('abort', ()=>{
+                const { reason } = abortSignal;
+                if (this.currentStage < 2) {
+                    this.runtimeStagePromise.promise.catch(ignoreReject) // avoid unhandled rejections
+                    ;
+                    this.runtimeStagePromise.reject(reason);
+                }
+                if (this.currentStage < 3) {
+                    this.dynamicStagePromise.promise.catch(ignoreReject) // avoid unhandled rejections
+                    ;
+                    this.dynamicStagePromise.reject(reason);
+                }
+            }, {
+                once: true
+            });
+        }
+    }
+    advanceStage(stage) {
+        // If we're already at the target stage or beyond, do nothing.
+        // (this can happen e.g. if sync IO advanced us to the dynamic stage)
+        if (this.currentStage >= stage) {
+            return;
+        }
+        this.currentStage = stage;
+        // Note that we might be going directly from Static to Dynamic,
+        // so we need to resolve the runtime stage as well.
+        if (stage >= 2) {
+            this.runtimeStagePromise.resolve();
+        }
+        if (stage >= 3) {
+            this.dynamicStagePromise.resolve();
+        }
+    }
+    getStagePromise(stage) {
+        switch(stage){
+            case 2:
+                {
+                    return this.runtimeStagePromise.promise;
+                }
+            case 3:
+                {
+                    return this.dynamicStagePromise.promise;
+                }
+            default:
+                {
+                    stage;
+                    throw Object.defineProperty(new _invarianterror.InvariantError(`Invalid render stage: ${stage}`), "__NEXT_ERROR_CODE", {
+                        value: "E881",
+                        enumerable: false,
+                        configurable: true
+                    });
+                }
+        }
+    }
+    waitForStage(stage) {
+        return this.getStagePromise(stage);
+    }
+    delayUntilStage(stage, displayName, resolvedValue) {
+        const ioTriggerPromise = this.getStagePromise(stage);
+        const promise = makeDevtoolsIOPromiseFromIOTrigger(ioTriggerPromise, displayName, resolvedValue);
+        // Analogously to `makeHangingPromise`, we might reject this promise if the signal is invoked.
+        // (e.g. in the case where we don't want want the render to proceed to the dynamic stage and abort it).
+        // We shouldn't consider this an unhandled rejection, so we attach a noop catch handler here to suppress this warning.
+        if (this.abortSignal) {
+            promise.catch(ignoreReject);
+        }
+        return promise;
+    }
+}
+function ignoreReject() {}
+// TODO(restart-on-cache-miss): the layering of `delayUntilStage`,
+// `makeDevtoolsIOPromiseFromIOTrigger` and and `makeDevtoolsIOAwarePromise`
+// is confusing, we should clean it up.
+function makeDevtoolsIOPromiseFromIOTrigger(ioTrigger, displayName, resolvedValue) {
+    // If we create a `new Promise` and give it a displayName
+    // (with no userspace code above us in the stack)
+    // React Devtools will use it as the IO cause when determining "suspended by".
+    // In particular, it should shadow any inner IO that resolved/rejected the promise
+    // (in case of staged rendering, this will be the `setTimeout` that triggers the relevant stage)
+    const promise = new Promise((resolve, reject)=>{
+        ioTrigger.then(resolve.bind(null, resolvedValue), reject);
+    });
+    if (displayName !== undefined) {
+        // @ts-expect-error
+        promise.displayName = displayName;
+    }
+    return promise;
+} //# sourceMappingURL=staged-rendering.js.map
+}),
+"[project]/node_modules/next/dist/server/app-render/dynamic-rendering.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/**
+ * The functions provided by this module are used to communicate certain properties
+ * about the currently running code so that Next.js can make decisions on how to handle
+ * the current execution in different rendering modes such as pre-rendering, resuming, and SSR.
+ *
+ * Today Next.js treats all code as potentially static. Certain APIs may only make sense when dynamically rendering.
+ * Traditionally this meant deopting the entire render to dynamic however with PPR we can now deopt parts
+ * of a React tree as dynamic while still keeping other parts static. There are really two different kinds of
+ * Dynamic indications.
+ *
+ * The first is simply an intention to be dynamic. unstable_noStore is an example of this where
+ * the currently executing code simply declares that the current scope is dynamic but if you use it
+ * inside unstable_cache it can still be cached. This type of indication can be removed if we ever
+ * make the default dynamic to begin with because the only way you would ever be static is inside
+ * a cache scope which this indication does not affect.
+ *
+ * The second is an indication that a dynamic data source was read. This is a stronger form of dynamic
+ * because it means that it is inappropriate to cache this at all. using a dynamic data source inside
+ * unstable_cache should error. If you want to use some dynamic data inside unstable_cache you should
+ * read that data outside the cache and pass it in as an argument to the cached function.
+ */ Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    Postpone: null,
+    PreludeState: null,
+    abortAndThrowOnSynchronousRequestDataAccess: null,
+    abortOnSynchronousPlatformIOAccess: null,
+    accessedDynamicData: null,
+    annotateDynamicAccess: null,
+    consumeDynamicAccess: null,
+    createDynamicTrackingState: null,
+    createDynamicValidationState: null,
+    createHangingInputAbortSignal: null,
+    createRenderInBrowserAbortSignal: null,
+    delayUntilRuntimeStage: null,
+    formatDynamicAPIAccesses: null,
+    getFirstDynamicReason: null,
+    isDynamicPostpone: null,
+    isPrerenderInterruptedError: null,
+    logDisallowedDynamicError: null,
+    markCurrentScopeAsDynamic: null,
+    postponeWithTracking: null,
+    throwIfDisallowedDynamic: null,
+    throwToInterruptStaticGeneration: null,
+    trackAllowedDynamicAccess: null,
+    trackDynamicDataInDynamicRender: null,
+    trackSynchronousPlatformIOAccessInDev: null,
+    useDynamicRouteParams: null,
+    useDynamicSearchParams: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    Postpone: function() {
+        return Postpone;
+    },
+    PreludeState: function() {
+        return PreludeState;
+    },
+    abortAndThrowOnSynchronousRequestDataAccess: function() {
+        return abortAndThrowOnSynchronousRequestDataAccess;
+    },
+    abortOnSynchronousPlatformIOAccess: function() {
+        return abortOnSynchronousPlatformIOAccess;
+    },
+    accessedDynamicData: function() {
+        return accessedDynamicData;
+    },
+    annotateDynamicAccess: function() {
+        return annotateDynamicAccess;
+    },
+    consumeDynamicAccess: function() {
+        return consumeDynamicAccess;
+    },
+    createDynamicTrackingState: function() {
+        return createDynamicTrackingState;
+    },
+    createDynamicValidationState: function() {
+        return createDynamicValidationState;
+    },
+    createHangingInputAbortSignal: function() {
+        return createHangingInputAbortSignal;
+    },
+    createRenderInBrowserAbortSignal: function() {
+        return createRenderInBrowserAbortSignal;
+    },
+    delayUntilRuntimeStage: function() {
+        return delayUntilRuntimeStage;
+    },
+    formatDynamicAPIAccesses: function() {
+        return formatDynamicAPIAccesses;
+    },
+    getFirstDynamicReason: function() {
+        return getFirstDynamicReason;
+    },
+    isDynamicPostpone: function() {
+        return isDynamicPostpone;
+    },
+    isPrerenderInterruptedError: function() {
+        return isPrerenderInterruptedError;
+    },
+    logDisallowedDynamicError: function() {
+        return logDisallowedDynamicError;
+    },
+    markCurrentScopeAsDynamic: function() {
+        return markCurrentScopeAsDynamic;
+    },
+    postponeWithTracking: function() {
+        return postponeWithTracking;
+    },
+    throwIfDisallowedDynamic: function() {
+        return throwIfDisallowedDynamic;
+    },
+    throwToInterruptStaticGeneration: function() {
+        return throwToInterruptStaticGeneration;
+    },
+    trackAllowedDynamicAccess: function() {
+        return trackAllowedDynamicAccess;
+    },
+    trackDynamicDataInDynamicRender: function() {
+        return trackDynamicDataInDynamicRender;
+    },
+    trackSynchronousPlatformIOAccessInDev: function() {
+        return trackSynchronousPlatformIOAccessInDev;
+    },
+    useDynamicRouteParams: function() {
+        return useDynamicRouteParams;
+    },
+    useDynamicSearchParams: function() {
+        return useDynamicSearchParams;
+    }
+});
+const _react = /*#__PURE__*/ _interop_require_default(__turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)"));
+const _hooksservercontext = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/hooks-server-context.js [app-ssr] (ecmascript)");
+const _staticgenerationbailout = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/static-generation-bailout.js [app-ssr] (ecmascript)");
+const _workunitasyncstorageexternal = __turbopack_context__.r("[externals]/next/dist/server/app-render/work-unit-async-storage.external.js [external] (next/dist/server/app-render/work-unit-async-storage.external.js, cjs)");
+const _workasyncstorageexternal = __turbopack_context__.r("[externals]/next/dist/server/app-render/work-async-storage.external.js [external] (next/dist/server/app-render/work-async-storage.external.js, cjs)");
+const _dynamicrenderingutils = __turbopack_context__.r("[project]/node_modules/next/dist/server/dynamic-rendering-utils.js [app-ssr] (ecmascript)");
+const _boundaryconstants = __turbopack_context__.r("[project]/node_modules/next/dist/lib/framework/boundary-constants.js [app-ssr] (ecmascript)");
+const _scheduler = __turbopack_context__.r("[project]/node_modules/next/dist/lib/scheduler.js [app-ssr] (ecmascript)");
+const _bailouttocsr = __turbopack_context__.r("[project]/node_modules/next/dist/shared/lib/lazy-dynamic/bailout-to-csr.js [app-ssr] (ecmascript)");
+const _invarianterror = __turbopack_context__.r("[project]/node_modules/next/dist/shared/lib/invariant-error.js [app-ssr] (ecmascript)");
+const _stagedrendering = __turbopack_context__.r("[project]/node_modules/next/dist/server/app-render/staged-rendering.js [app-ssr] (ecmascript)");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}
+const hasPostpone = typeof _react.default.unstable_postpone === 'function';
+function createDynamicTrackingState(isDebugDynamicAccesses) {
+    return {
+        isDebugDynamicAccesses,
+        dynamicAccesses: [],
+        syncDynamicErrorWithStack: null
+    };
+}
+function createDynamicValidationState() {
+    return {
+        hasSuspenseAboveBody: false,
+        hasDynamicMetadata: false,
+        hasDynamicViewport: false,
+        hasAllowedDynamic: false,
+        dynamicErrors: []
+    };
+}
+function getFirstDynamicReason(trackingState) {
+    var _trackingState_dynamicAccesses_;
+    return (_trackingState_dynamicAccesses_ = trackingState.dynamicAccesses[0]) == null ? void 0 : _trackingState_dynamicAccesses_.expression;
+}
+function markCurrentScopeAsDynamic(store, workUnitStore, expression) {
+    if (workUnitStore) {
+        switch(workUnitStore.type){
+            case 'cache':
+            case 'unstable-cache':
+                // Inside cache scopes, marking a scope as dynamic has no effect,
+                // because the outer cache scope creates a cache boundary. This is
+                // subtly different from reading a dynamic data source, which is
+                // forbidden inside a cache scope.
+                return;
+            case 'private-cache':
+                // A private cache scope is already dynamic by definition.
+                return;
+            case 'prerender-legacy':
+            case 'prerender-ppr':
+            case 'request':
+                break;
+            default:
+                workUnitStore;
+        }
+    }
+    // If we're forcing dynamic rendering or we're forcing static rendering, we
+    // don't need to do anything here because the entire page is already dynamic
+    // or it's static and it should not throw or postpone here.
+    if (store.forceDynamic || store.forceStatic) return;
+    if (store.dynamicShouldError) {
+        throw Object.defineProperty(new _staticgenerationbailout.StaticGenBailoutError(`Route ${store.route} with \`dynamic = "error"\` couldn't be rendered statically because it used \`${expression}\`. See more info here: https://nextjs.org/docs/app/building-your-application/rendering/static-and-dynamic#dynamic-rendering`), "__NEXT_ERROR_CODE", {
+            value: "E553",
+            enumerable: false,
+            configurable: true
+        });
+    }
+    if (workUnitStore) {
+        switch(workUnitStore.type){
+            case 'prerender-ppr':
+                return postponeWithTracking(store.route, expression, workUnitStore.dynamicTracking);
+            case 'prerender-legacy':
+                workUnitStore.revalidate = 0;
+                // We aren't prerendering, but we are generating a static page. We need
+                // to bail out of static generation.
+                const err = Object.defineProperty(new _hooksservercontext.DynamicServerError(`Route ${store.route} couldn't be rendered statically because it used ${expression}. See more info here: https://nextjs.org/docs/messages/dynamic-server-error`), "__NEXT_ERROR_CODE", {
+                    value: "E550",
+                    enumerable: false,
+                    configurable: true
+                });
+                store.dynamicUsageDescription = expression;
+                store.dynamicUsageStack = err.stack;
+                throw err;
+            case 'request':
+                if ("TURBOPACK compile-time truthy", 1) {
+                    workUnitStore.usedDynamic = true;
+                }
+                break;
+            default:
+                workUnitStore;
+        }
+    }
+}
+function throwToInterruptStaticGeneration(expression, store, prerenderStore) {
+    // We aren't prerendering but we are generating a static page. We need to bail out of static generation
+    const err = Object.defineProperty(new _hooksservercontext.DynamicServerError(`Route ${store.route} couldn't be rendered statically because it used \`${expression}\`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error`), "__NEXT_ERROR_CODE", {
+        value: "E558",
+        enumerable: false,
+        configurable: true
+    });
+    prerenderStore.revalidate = 0;
+    store.dynamicUsageDescription = expression;
+    store.dynamicUsageStack = err.stack;
+    throw err;
+}
+function trackDynamicDataInDynamicRender(workUnitStore) {
+    switch(workUnitStore.type){
+        case 'cache':
+        case 'unstable-cache':
+            // Inside cache scopes, marking a scope as dynamic has no effect,
+            // because the outer cache scope creates a cache boundary. This is
+            // subtly different from reading a dynamic data source, which is
+            // forbidden inside a cache scope.
+            return;
+        case 'private-cache':
+            // A private cache scope is already dynamic by definition.
+            return;
+        case 'prerender':
+        case 'prerender-runtime':
+        case 'prerender-legacy':
+        case 'prerender-ppr':
+        case 'prerender-client':
+            break;
+        case 'request':
+            if ("TURBOPACK compile-time truthy", 1) {
+                workUnitStore.usedDynamic = true;
+            }
+            break;
+        default:
+            workUnitStore;
+    }
+}
+function abortOnSynchronousDynamicDataAccess(route, expression, prerenderStore) {
+    const reason = `Route ${route} needs to bail out of prerendering at this point because it used ${expression}.`;
+    const error = createPrerenderInterruptedError(reason);
+    prerenderStore.controller.abort(error);
+    const dynamicTracking = prerenderStore.dynamicTracking;
+    if (dynamicTracking) {
+        dynamicTracking.dynamicAccesses.push({
+            // When we aren't debugging, we don't need to create another error for the
+            // stack trace.
+            stack: dynamicTracking.isDebugDynamicAccesses ? new Error().stack : undefined,
+            expression
+        });
+    }
+}
+function abortOnSynchronousPlatformIOAccess(route, expression, errorWithStack, prerenderStore) {
+    const dynamicTracking = prerenderStore.dynamicTracking;
+    abortOnSynchronousDynamicDataAccess(route, expression, prerenderStore);
+    // It is important that we set this tracking value after aborting. Aborts are executed
+    // synchronously except for the case where you abort during render itself. By setting this
+    // value late we can use it to determine if any of the aborted tasks are the task that
+    // called the sync IO expression in the first place.
+    if (dynamicTracking) {
+        if (dynamicTracking.syncDynamicErrorWithStack === null) {
+            dynamicTracking.syncDynamicErrorWithStack = errorWithStack;
+        }
+    }
+}
+function trackSynchronousPlatformIOAccessInDev(requestStore) {
+    // We don't actually have a controller to abort but we do the semantic equivalent by
+    // advancing the request store out of the prerender stage
+    if (requestStore.stagedRendering) {
+        // TODO: error for sync IO in the runtime stage
+        // (which is not currently covered by the validation render in `spawnDynamicValidationInDev`)
+        requestStore.stagedRendering.advanceStage(_stagedrendering.RenderStage.Dynamic);
+    }
+}
+function abortAndThrowOnSynchronousRequestDataAccess(route, expression, errorWithStack, prerenderStore) {
+    const prerenderSignal = prerenderStore.controller.signal;
+    if (prerenderSignal.aborted === false) {
+        // TODO it would be better to move this aborted check into the callsite so we can avoid making
+        // the error object when it isn't relevant to the aborting of the prerender however
+        // since we need the throw semantics regardless of whether we abort it is easier to land
+        // this way. See how this was handled with `abortOnSynchronousPlatformIOAccess` for a closer
+        // to ideal implementation
+        abortOnSynchronousDynamicDataAccess(route, expression, prerenderStore);
+        // It is important that we set this tracking value after aborting. Aborts are executed
+        // synchronously except for the case where you abort during render itself. By setting this
+        // value late we can use it to determine if any of the aborted tasks are the task that
+        // called the sync IO expression in the first place.
+        const dynamicTracking = prerenderStore.dynamicTracking;
+        if (dynamicTracking) {
+            if (dynamicTracking.syncDynamicErrorWithStack === null) {
+                dynamicTracking.syncDynamicErrorWithStack = errorWithStack;
+            }
+        }
+    }
+    throw createPrerenderInterruptedError(`Route ${route} needs to bail out of prerendering at this point because it used ${expression}.`);
+}
+function Postpone({ reason, route }) {
+    const prerenderStore = _workunitasyncstorageexternal.workUnitAsyncStorage.getStore();
+    const dynamicTracking = prerenderStore && prerenderStore.type === 'prerender-ppr' ? prerenderStore.dynamicTracking : null;
+    postponeWithTracking(route, reason, dynamicTracking);
+}
+function postponeWithTracking(route, expression, dynamicTracking) {
+    assertPostpone();
+    if (dynamicTracking) {
+        dynamicTracking.dynamicAccesses.push({
+            // When we aren't debugging, we don't need to create another error for the
+            // stack trace.
+            stack: dynamicTracking.isDebugDynamicAccesses ? new Error().stack : undefined,
+            expression
+        });
+    }
+    _react.default.unstable_postpone(createPostponeReason(route, expression));
+}
+function createPostponeReason(route, expression) {
+    return `Route ${route} needs to bail out of prerendering at this point because it used ${expression}. ` + `React throws this special object to indicate where. It should not be caught by ` + `your own try/catch. Learn more: https://nextjs.org/docs/messages/ppr-caught-error`;
+}
+function isDynamicPostpone(err) {
+    if (typeof err === 'object' && err !== null && typeof err.message === 'string') {
+        return isDynamicPostponeReason(err.message);
+    }
+    return false;
+}
+function isDynamicPostponeReason(reason) {
+    return reason.includes('needs to bail out of prerendering at this point because it used') && reason.includes('Learn more: https://nextjs.org/docs/messages/ppr-caught-error');
+}
+if (isDynamicPostponeReason(createPostponeReason('%%%', '^^^')) === false) {
+    throw Object.defineProperty(new Error('Invariant: isDynamicPostpone misidentified a postpone reason. This is a bug in Next.js'), "__NEXT_ERROR_CODE", {
+        value: "E296",
+        enumerable: false,
+        configurable: true
+    });
+}
+const NEXT_PRERENDER_INTERRUPTED = 'NEXT_PRERENDER_INTERRUPTED';
+function createPrerenderInterruptedError(message) {
+    const error = Object.defineProperty(new Error(message), "__NEXT_ERROR_CODE", {
+        value: "E394",
+        enumerable: false,
+        configurable: true
+    });
+    error.digest = NEXT_PRERENDER_INTERRUPTED;
+    return error;
+}
+function isPrerenderInterruptedError(error) {
+    return typeof error === 'object' && error !== null && error.digest === NEXT_PRERENDER_INTERRUPTED && 'name' in error && 'message' in error && error instanceof Error;
+}
+function accessedDynamicData(dynamicAccesses) {
+    return dynamicAccesses.length > 0;
+}
+function consumeDynamicAccess(serverDynamic, clientDynamic) {
+    // We mutate because we only call this once we are no longer writing
+    // to the dynamicTrackingState and it's more efficient than creating a new
+    // array.
+    serverDynamic.dynamicAccesses.push(...clientDynamic.dynamicAccesses);
+    return serverDynamic.dynamicAccesses;
+}
+function formatDynamicAPIAccesses(dynamicAccesses) {
+    return dynamicAccesses.filter((access)=>typeof access.stack === 'string' && access.stack.length > 0).map(({ expression, stack })=>{
+        stack = stack.split('\n') // Remove the "Error: " prefix from the first line of the stack trace as
+        // well as the first 4 lines of the stack trace which is the distance
+        // from the user code and the `new Error().stack` call.
+        .slice(4).filter((line)=>{
+            // Exclude Next.js internals from the stack trace.
+            if (line.includes('node_modules/next/')) {
+                return false;
+            }
+            // Exclude anonymous functions from the stack trace.
+            if (line.includes(' (<anonymous>)')) {
+                return false;
+            }
+            // Exclude Node.js internals from the stack trace.
+            if (line.includes(' (node:')) {
+                return false;
+            }
+            return true;
+        }).join('\n');
+        return `Dynamic API Usage Debug - ${expression}:\n${stack}`;
+    });
+}
+function assertPostpone() {
+    if (!hasPostpone) {
+        throw Object.defineProperty(new Error(`Invariant: React.unstable_postpone is not defined. This suggests the wrong version of React was loaded. This is a bug in Next.js`), "__NEXT_ERROR_CODE", {
+            value: "E224",
+            enumerable: false,
+            configurable: true
+        });
+    }
+}
+function createRenderInBrowserAbortSignal() {
+    const controller = new AbortController();
+    controller.abort(Object.defineProperty(new _bailouttocsr.BailoutToCSRError('Render in Browser'), "__NEXT_ERROR_CODE", {
+        value: "E721",
+        enumerable: false,
+        configurable: true
+    }));
+    return controller.signal;
+}
+function createHangingInputAbortSignal(workUnitStore) {
+    switch(workUnitStore.type){
+        case 'prerender':
+        case 'prerender-runtime':
+            const controller = new AbortController();
+            if (workUnitStore.cacheSignal) {
+                // If we have a cacheSignal it means we're in a prospective render. If
+                // the input we're waiting on is coming from another cache, we do want
+                // to wait for it so that we can resolve this cache entry too.
+                workUnitStore.cacheSignal.inputReady().then(()=>{
+                    controller.abort();
+                });
+            } else {
+                // Otherwise we're in the final render and we should already have all
+                // our caches filled.
+                // If the prerender uses stages, we have wait until the runtime stage,
+                // at which point all runtime inputs will be resolved.
+                // (otherwise, a runtime prerender might consider `cookies()` hanging
+                //  even though they'd resolve in the next task.)
+                //
+                // We might still be waiting on some microtasks so we
+                // wait one tick before giving up. When we give up, we still want to
+                // render the content of this cache as deeply as we can so that we can
+                // suspend as deeply as possible in the tree or not at all if we don't
+                // end up waiting for the input.
+                const runtimeStagePromise = (0, _workunitasyncstorageexternal.getRuntimeStagePromise)(workUnitStore);
+                if (runtimeStagePromise) {
+                    runtimeStagePromise.then(()=>(0, _scheduler.scheduleOnNextTick)(()=>controller.abort()));
+                } else {
+                    (0, _scheduler.scheduleOnNextTick)(()=>controller.abort());
+                }
+            }
+            return controller.signal;
+        case 'prerender-client':
+        case 'prerender-ppr':
+        case 'prerender-legacy':
+        case 'request':
+        case 'cache':
+        case 'private-cache':
+        case 'unstable-cache':
+            return undefined;
+        default:
+            workUnitStore;
+    }
+}
+function annotateDynamicAccess(expression, prerenderStore) {
+    const dynamicTracking = prerenderStore.dynamicTracking;
+    if (dynamicTracking) {
+        dynamicTracking.dynamicAccesses.push({
+            stack: dynamicTracking.isDebugDynamicAccesses ? new Error().stack : undefined,
+            expression
+        });
+    }
+}
+function useDynamicRouteParams(expression) {
+    const workStore = _workasyncstorageexternal.workAsyncStorage.getStore();
+    const workUnitStore = _workunitasyncstorageexternal.workUnitAsyncStorage.getStore();
+    if (workStore && workUnitStore) {
+        switch(workUnitStore.type){
+            case 'prerender-client':
+            case 'prerender':
+                {
+                    const fallbackParams = workUnitStore.fallbackRouteParams;
+                    if (fallbackParams && fallbackParams.size > 0) {
+                        // We are in a prerender with cacheComponents semantics. We are going to
+                        // hang here and never resolve. This will cause the currently
+                        // rendering component to effectively be a dynamic hole.
+                        _react.default.use((0, _dynamicrenderingutils.makeHangingPromise)(workUnitStore.renderSignal, workStore.route, expression));
+                    }
+                    break;
+                }
+            case 'prerender-ppr':
+                {
+                    const fallbackParams = workUnitStore.fallbackRouteParams;
+                    if (fallbackParams && fallbackParams.size > 0) {
+                        return postponeWithTracking(workStore.route, expression, workUnitStore.dynamicTracking);
+                    }
+                    break;
+                }
+            case 'prerender-runtime':
+                throw Object.defineProperty(new _invarianterror.InvariantError(`\`${expression}\` was called during a runtime prerender. Next.js should be preventing ${expression} from being included in server components statically, but did not in this case.`), "__NEXT_ERROR_CODE", {
+                    value: "E771",
+                    enumerable: false,
+                    configurable: true
+                });
+            case 'cache':
+            case 'private-cache':
+                throw Object.defineProperty(new _invarianterror.InvariantError(`\`${expression}\` was called inside a cache scope. Next.js should be preventing ${expression} from being included in server components statically, but did not in this case.`), "__NEXT_ERROR_CODE", {
+                    value: "E745",
+                    enumerable: false,
+                    configurable: true
+                });
+            case 'prerender-legacy':
+            case 'request':
+            case 'unstable-cache':
+                break;
+            default:
+                workUnitStore;
+        }
+    }
+}
+function useDynamicSearchParams(expression) {
+    const workStore = _workasyncstorageexternal.workAsyncStorage.getStore();
+    const workUnitStore = _workunitasyncstorageexternal.workUnitAsyncStorage.getStore();
+    if (!workStore) {
+        // We assume pages router context and just return
+        return;
+    }
+    if (!workUnitStore) {
+        (0, _workunitasyncstorageexternal.throwForMissingRequestStore)(expression);
+    }
+    switch(workUnitStore.type){
+        case 'prerender-client':
+            {
+                _react.default.use((0, _dynamicrenderingutils.makeHangingPromise)(workUnitStore.renderSignal, workStore.route, expression));
+                break;
+            }
+        case 'prerender-legacy':
+        case 'prerender-ppr':
+            {
+                if (workStore.forceStatic) {
+                    return;
+                }
+                throw Object.defineProperty(new _bailouttocsr.BailoutToCSRError(expression), "__NEXT_ERROR_CODE", {
+                    value: "E394",
+                    enumerable: false,
+                    configurable: true
+                });
+            }
+        case 'prerender':
+        case 'prerender-runtime':
+            throw Object.defineProperty(new _invarianterror.InvariantError(`\`${expression}\` was called from a Server Component. Next.js should be preventing ${expression} from being included in server components statically, but did not in this case.`), "__NEXT_ERROR_CODE", {
+                value: "E795",
+                enumerable: false,
+                configurable: true
+            });
+        case 'cache':
+        case 'unstable-cache':
+        case 'private-cache':
+            throw Object.defineProperty(new _invarianterror.InvariantError(`\`${expression}\` was called inside a cache scope. Next.js should be preventing ${expression} from being included in server components statically, but did not in this case.`), "__NEXT_ERROR_CODE", {
+                value: "E745",
+                enumerable: false,
+                configurable: true
+            });
+        case 'request':
+            return;
+        default:
+            workUnitStore;
+    }
+}
+const hasSuspenseRegex = /\n\s+at Suspense \(<anonymous>\)/;
+// Common implicit body tags that React will treat as body when placed directly in html
+const bodyAndImplicitTags = 'body|div|main|section|article|aside|header|footer|nav|form|p|span|h1|h2|h3|h4|h5|h6';
+// Detects when RootLayoutBoundary (our framework marker component) appears
+// after Suspense in the component stack, indicating the root layout is wrapped
+// within a Suspense boundary. Ensures no body/html/implicit-body components are in between.
+//
+// Example matches:
+//   at Suspense (<anonymous>)
+//   at __next_root_layout_boundary__ (<anonymous>)
+//
+// Or with other components in between (but not body/html/implicit-body):
+//   at Suspense (<anonymous>)
+//   at SomeComponent (<anonymous>)
+//   at __next_root_layout_boundary__ (<anonymous>)
+const hasSuspenseBeforeRootLayoutWithoutBodyOrImplicitBodyRegex = new RegExp(`\\n\\s+at Suspense \\(<anonymous>\\)(?:(?!\\n\\s+at (?:${bodyAndImplicitTags}) \\(<anonymous>\\))[\\s\\S])*?\\n\\s+at ${_boundaryconstants.ROOT_LAYOUT_BOUNDARY_NAME} \\([^\\n]*\\)`);
+const hasMetadataRegex = new RegExp(`\\n\\s+at ${_boundaryconstants.METADATA_BOUNDARY_NAME}[\\n\\s]`);
+const hasViewportRegex = new RegExp(`\\n\\s+at ${_boundaryconstants.VIEWPORT_BOUNDARY_NAME}[\\n\\s]`);
+const hasOutletRegex = new RegExp(`\\n\\s+at ${_boundaryconstants.OUTLET_BOUNDARY_NAME}[\\n\\s]`);
+function trackAllowedDynamicAccess(workStore, componentStack, dynamicValidation, clientDynamic) {
+    if (hasOutletRegex.test(componentStack)) {
+        // We don't need to track that this is dynamic. It is only so when something else is also dynamic.
+        return;
+    } else if (hasMetadataRegex.test(componentStack)) {
+        dynamicValidation.hasDynamicMetadata = true;
+        return;
+    } else if (hasViewportRegex.test(componentStack)) {
+        dynamicValidation.hasDynamicViewport = true;
+        return;
+    } else if (hasSuspenseBeforeRootLayoutWithoutBodyOrImplicitBodyRegex.test(componentStack)) {
+        // For Suspense within body, the prelude wouldn't be empty so it wouldn't violate the empty static shells rule.
+        // But if you have Suspense above body, the prelude is empty but we allow that because having Suspense
+        // is an explicit signal from the user that they acknowledge the empty shell and want dynamic rendering.
+        dynamicValidation.hasAllowedDynamic = true;
+        dynamicValidation.hasSuspenseAboveBody = true;
+        return;
+    } else if (hasSuspenseRegex.test(componentStack)) {
+        // this error had a Suspense boundary above it so we don't need to report it as a source
+        // of disallowed
+        dynamicValidation.hasAllowedDynamic = true;
+        return;
+    } else if (clientDynamic.syncDynamicErrorWithStack) {
+        // This task was the task that called the sync error.
+        dynamicValidation.dynamicErrors.push(clientDynamic.syncDynamicErrorWithStack);
+        return;
+    } else {
+        const message = `Route "${workStore.route}": Uncached data was accessed outside of ` + '<Suspense>. This delays the entire page from rendering, resulting in a ' + 'slow user experience. Learn more: ' + 'https://nextjs.org/docs/messages/blocking-route';
+        const error = createErrorWithComponentOrOwnerStack(message, componentStack);
+        dynamicValidation.dynamicErrors.push(error);
+        return;
+    }
+}
+/**
+ * In dev mode, we prefer using the owner stack, otherwise the provided
+ * component stack is used.
+ */ function createErrorWithComponentOrOwnerStack(message, componentStack) {
+    const ownerStack = ("TURBOPACK compile-time value", "development") !== 'production' && _react.default.captureOwnerStack ? _react.default.captureOwnerStack() : null;
+    const error = Object.defineProperty(new Error(message), "__NEXT_ERROR_CODE", {
+        value: "E394",
+        enumerable: false,
+        configurable: true
+    });
+    error.stack = error.name + ': ' + message + (ownerStack ?? componentStack);
+    return error;
+}
+var PreludeState = /*#__PURE__*/ function(PreludeState) {
+    PreludeState[PreludeState["Full"] = 0] = "Full";
+    PreludeState[PreludeState["Empty"] = 1] = "Empty";
+    PreludeState[PreludeState["Errored"] = 2] = "Errored";
+    return PreludeState;
+}({});
+function logDisallowedDynamicError(workStore, error) {
+    console.error(error);
+    if (!workStore.dev) {
+        if (workStore.hasReadableErrorStacks) {
+            console.error(`To get a more detailed stack trace and pinpoint the issue, start the app in development mode by running \`next dev\`, then open "${workStore.route}" in your browser to investigate the error.`);
+        } else {
+            console.error(`To get a more detailed stack trace and pinpoint the issue, try one of the following:
+  - Start the app in development mode by running \`next dev\`, then open "${workStore.route}" in your browser to investigate the error.
+  - Rerun the production build with \`next build --debug-prerender\` to generate better stack traces.`);
+        }
+    }
+}
+function throwIfDisallowedDynamic(workStore, prelude, dynamicValidation, serverDynamic) {
+    if (serverDynamic.syncDynamicErrorWithStack) {
+        logDisallowedDynamicError(workStore, serverDynamic.syncDynamicErrorWithStack);
+        throw new _staticgenerationbailout.StaticGenBailoutError();
+    }
+    if (prelude !== 0) {
+        if (dynamicValidation.hasSuspenseAboveBody) {
+            // This route has opted into allowing fully dynamic rendering
+            // by including a Suspense boundary above the body. In this case
+            // a lack of a shell is not considered disallowed so we simply return
+            return;
+        }
+        // We didn't have any sync bailouts but there may be user code which
+        // blocked the root. We would have captured these during the prerender
+        // and can log them here and then terminate the build/validating render
+        const dynamicErrors = dynamicValidation.dynamicErrors;
+        if (dynamicErrors.length > 0) {
+            for(let i = 0; i < dynamicErrors.length; i++){
+                logDisallowedDynamicError(workStore, dynamicErrors[i]);
+            }
+            throw new _staticgenerationbailout.StaticGenBailoutError();
+        }
+        // If we got this far then the only other thing that could be blocking
+        // the root is dynamic Viewport. If this is dynamic then
+        // you need to opt into that by adding a Suspense boundary above the body
+        // to indicate your are ok with fully dynamic rendering.
+        if (dynamicValidation.hasDynamicViewport) {
+            console.error(`Route "${workStore.route}" has a \`generateViewport\` that depends on Request data (\`cookies()\`, etc...) or uncached external data (\`fetch(...)\`, etc...) without explicitly allowing fully dynamic rendering. See more info here: https://nextjs.org/docs/messages/next-prerender-dynamic-viewport`);
+            throw new _staticgenerationbailout.StaticGenBailoutError();
+        }
+        if (prelude === 1) {
+            // If we ever get this far then we messed up the tracking of invalid dynamic.
+            // We still adhere to the constraint that you must produce a shell but invite the
+            // user to report this as a bug in Next.js.
+            console.error(`Route "${workStore.route}" did not produce a static shell and Next.js was unable to determine a reason. This is a bug in Next.js.`);
+            throw new _staticgenerationbailout.StaticGenBailoutError();
+        }
+    } else {
+        if (dynamicValidation.hasAllowedDynamic === false && dynamicValidation.hasDynamicMetadata) {
+            console.error(`Route "${workStore.route}" has a \`generateMetadata\` that depends on Request data (\`cookies()\`, etc...) or uncached external data (\`fetch(...)\`, etc...) when the rest of the route does not. See more info here: https://nextjs.org/docs/messages/next-prerender-dynamic-metadata`);
+            throw new _staticgenerationbailout.StaticGenBailoutError();
+        }
+    }
+}
+function delayUntilRuntimeStage(prerenderStore, result) {
+    if (prerenderStore.runtimeStagePromise) {
+        return prerenderStore.runtimeStagePromise.then(()=>result);
+    }
+    return result;
+} //# sourceMappingURL=dynamic-rendering.js.map
+}),
+"[project]/node_modules/next/dist/client/components/unstable-rethrow.server.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "unstable_rethrow", {
+    enumerable: true,
+    get: function() {
+        return unstable_rethrow;
+    }
+});
+const _dynamicrenderingutils = __turbopack_context__.r("[project]/node_modules/next/dist/server/dynamic-rendering-utils.js [app-ssr] (ecmascript)");
+const _ispostpone = __turbopack_context__.r("[project]/node_modules/next/dist/server/lib/router-utils/is-postpone.js [app-ssr] (ecmascript)");
+const _bailouttocsr = __turbopack_context__.r("[project]/node_modules/next/dist/shared/lib/lazy-dynamic/bailout-to-csr.js [app-ssr] (ecmascript)");
+const _isnextroutererror = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/is-next-router-error.js [app-ssr] (ecmascript)");
+const _dynamicrendering = __turbopack_context__.r("[project]/node_modules/next/dist/server/app-render/dynamic-rendering.js [app-ssr] (ecmascript)");
+const _hooksservercontext = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/hooks-server-context.js [app-ssr] (ecmascript)");
+function unstable_rethrow(error) {
+    if ((0, _isnextroutererror.isNextRouterError)(error) || (0, _bailouttocsr.isBailoutToCSRError)(error) || (0, _hooksservercontext.isDynamicServerError)(error) || (0, _dynamicrendering.isDynamicPostpone)(error) || (0, _ispostpone.isPostpone)(error) || (0, _dynamicrenderingutils.isHangingPromiseRejectionError)(error) || (0, _dynamicrendering.isPrerenderInterruptedError)(error)) {
+        throw error;
+    }
+    if (error instanceof Error && 'cause' in error) {
+        unstable_rethrow(error.cause);
+    }
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=unstable-rethrow.server.js.map
+}),
+"[project]/node_modules/next/dist/client/components/unstable-rethrow.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/**
+ * This function should be used to rethrow internal Next.js errors so that they can be handled by the framework.
+ * When wrapping an API that uses errors to interrupt control flow, you should use this function before you do any error handling.
+ * This function will rethrow the error if it is a Next.js error so it can be handled, otherwise it will do nothing.
+ *
+ * Read more: [Next.js Docs: `unstable_rethrow`](https://nextjs.org/docs/app/api-reference/functions/unstable_rethrow)
+ */ Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "unstable_rethrow", {
+    enumerable: true,
+    get: function() {
+        return unstable_rethrow;
+    }
+});
+const unstable_rethrow = ("TURBOPACK compile-time truthy", 1) ? __turbopack_context__.r("[project]/node_modules/next/dist/client/components/unstable-rethrow.server.js [app-ssr] (ecmascript)").unstable_rethrow : "TURBOPACK unreachable";
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=unstable-rethrow.js.map
+}),
+"[project]/node_modules/next/dist/client/components/navigation.react-server.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    ReadonlyURLSearchParams: null,
+    RedirectType: null,
+    forbidden: null,
+    notFound: null,
+    permanentRedirect: null,
+    redirect: null,
+    unauthorized: null,
+    unstable_isUnrecognizedActionError: null,
+    unstable_rethrow: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    ReadonlyURLSearchParams: function() {
+        return _readonlyurlsearchparams.ReadonlyURLSearchParams;
+    },
+    RedirectType: function() {
+        return _redirecterror.RedirectType;
+    },
+    forbidden: function() {
+        return _forbidden.forbidden;
+    },
+    notFound: function() {
+        return _notfound.notFound;
+    },
+    permanentRedirect: function() {
+        return _redirect.permanentRedirect;
+    },
+    redirect: function() {
+        return _redirect.redirect;
+    },
+    unauthorized: function() {
+        return _unauthorized.unauthorized;
+    },
+    unstable_isUnrecognizedActionError: function() {
+        return unstable_isUnrecognizedActionError;
+    },
+    unstable_rethrow: function() {
+        return _unstablerethrow.unstable_rethrow;
+    }
+});
+const _readonlyurlsearchparams = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/readonly-url-search-params.js [app-ssr] (ecmascript)");
+const _redirect = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/redirect.js [app-ssr] (ecmascript)");
+const _redirecterror = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/redirect-error.js [app-ssr] (ecmascript)");
+const _notfound = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/not-found.js [app-ssr] (ecmascript)");
+const _forbidden = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/forbidden.js [app-ssr] (ecmascript)");
+const _unauthorized = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/unauthorized.js [app-ssr] (ecmascript)");
+const _unstablerethrow = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/unstable-rethrow.js [app-ssr] (ecmascript)");
+function unstable_isUnrecognizedActionError() {
+    throw Object.defineProperty(new Error('`unstable_isUnrecognizedActionError` can only be used on the client.'), "__NEXT_ERROR_CODE", {
+        value: "E776",
+        enumerable: false,
+        configurable: true
+    });
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=navigation.react-server.js.map
+}),
+"[project]/node_modules/next/dist/client/components/navigation.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+0 && (module.exports = {
+    ReadonlyURLSearchParams: null,
+    RedirectType: null,
+    ServerInsertedHTMLContext: null,
+    forbidden: null,
+    notFound: null,
+    permanentRedirect: null,
+    redirect: null,
+    unauthorized: null,
+    unstable_isUnrecognizedActionError: null,
+    unstable_rethrow: null,
+    useParams: null,
+    usePathname: null,
+    useRouter: null,
+    useSearchParams: null,
+    useSelectedLayoutSegment: null,
+    useSelectedLayoutSegments: null,
+    useServerInsertedHTML: null
+});
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: all[name]
+    });
+}
+_export(exports, {
+    ReadonlyURLSearchParams: function() {
+        return _navigationreactserver.ReadonlyURLSearchParams;
+    },
+    RedirectType: function() {
+        return _navigationreactserver.RedirectType;
+    },
+    ServerInsertedHTMLContext: function() {
+        return _serverinsertedhtmlsharedruntime.ServerInsertedHTMLContext;
+    },
+    forbidden: function() {
+        return _navigationreactserver.forbidden;
+    },
+    notFound: function() {
+        return _navigationreactserver.notFound;
+    },
+    permanentRedirect: function() {
+        return _navigationreactserver.permanentRedirect;
+    },
+    redirect: function() {
+        return _navigationreactserver.redirect;
+    },
+    unauthorized: function() {
+        return _navigationreactserver.unauthorized;
+    },
+    unstable_isUnrecognizedActionError: function() {
+        return _unrecognizedactionerror.unstable_isUnrecognizedActionError;
+    },
+    unstable_rethrow: function() {
+        return _navigationreactserver.unstable_rethrow;
+    },
+    useParams: function() {
+        return useParams;
+    },
+    usePathname: function() {
+        return usePathname;
+    },
+    useRouter: function() {
+        return useRouter;
+    },
+    useSearchParams: function() {
+        return useSearchParams;
+    },
+    useSelectedLayoutSegment: function() {
+        return useSelectedLayoutSegment;
+    },
+    useSelectedLayoutSegments: function() {
+        return useSelectedLayoutSegments;
+    },
+    useServerInsertedHTML: function() {
+        return _serverinsertedhtmlsharedruntime.useServerInsertedHTML;
+    }
+});
+const _interop_require_wildcard = __turbopack_context__.r("[project]/node_modules/@swc/helpers/cjs/_interop_require_wildcard.cjs [app-ssr] (ecmascript)");
+const _react = /*#__PURE__*/ _interop_require_wildcard._(__turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)"));
+const _approutercontextsharedruntime = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/contexts/app-router-context.js [app-ssr] (ecmascript)");
+const _hooksclientcontextsharedruntime = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/contexts/hooks-client-context.js [app-ssr] (ecmascript)");
+const _segment = __turbopack_context__.r("[project]/node_modules/next/dist/shared/lib/segment.js [app-ssr] (ecmascript)");
+const _readonlyurlsearchparams = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/readonly-url-search-params.js [app-ssr] (ecmascript)");
+const _serverinsertedhtmlsharedruntime = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/contexts/server-inserted-html.js [app-ssr] (ecmascript)");
+const _unrecognizedactionerror = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/unrecognized-action-error.js [app-ssr] (ecmascript)");
+const _navigationreactserver = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/navigation.react-server.js [app-ssr] (ecmascript)");
+const useDynamicRouteParams = ("TURBOPACK compile-time truthy", 1) ? __turbopack_context__.r("[project]/node_modules/next/dist/server/app-render/dynamic-rendering.js [app-ssr] (ecmascript)").useDynamicRouteParams : "TURBOPACK unreachable";
+const useDynamicSearchParams = ("TURBOPACK compile-time truthy", 1) ? __turbopack_context__.r("[project]/node_modules/next/dist/server/app-render/dynamic-rendering.js [app-ssr] (ecmascript)").useDynamicSearchParams : "TURBOPACK unreachable";
+function useSearchParams() {
+    useDynamicSearchParams?.('useSearchParams()');
+    const searchParams = (0, _react.useContext)(_hooksclientcontextsharedruntime.SearchParamsContext);
+    // In the case where this is `null`, the compat types added in
+    // `next-env.d.ts` will add a new overload that changes the return type to
+    // include `null`.
+    const readonlySearchParams = (0, _react.useMemo)(()=>{
+        if (!searchParams) {
+            // When the router is not ready in pages, we won't have the search params
+            // available.
+            return null;
+        }
+        return new _readonlyurlsearchparams.ReadonlyURLSearchParams(searchParams);
+    }, [
+        searchParams
+    ]);
+    // Instrument with Suspense DevTools (dev-only)
+    if (("TURBOPACK compile-time value", "development") !== 'production' && 'use' in _react.default) {
+        const navigationPromises = (0, _react.use)(_hooksclientcontextsharedruntime.NavigationPromisesContext);
+        if (navigationPromises) {
+            return (0, _react.use)(navigationPromises.searchParams);
+        }
+    }
+    return readonlySearchParams;
+}
+function usePathname() {
+    useDynamicRouteParams?.('usePathname()');
+    // In the case where this is `null`, the compat types added in `next-env.d.ts`
+    // will add a new overload that changes the return type to include `null`.
+    const pathname = (0, _react.useContext)(_hooksclientcontextsharedruntime.PathnameContext);
+    // Instrument with Suspense DevTools (dev-only)
+    if (("TURBOPACK compile-time value", "development") !== 'production' && 'use' in _react.default) {
+        const navigationPromises = (0, _react.use)(_hooksclientcontextsharedruntime.NavigationPromisesContext);
+        if (navigationPromises) {
+            return (0, _react.use)(navigationPromises.pathname);
+        }
+    }
+    return pathname;
+}
+function useRouter() {
+    const router = (0, _react.useContext)(_approutercontextsharedruntime.AppRouterContext);
+    if (router === null) {
+        throw Object.defineProperty(new Error('invariant expected app router to be mounted'), "__NEXT_ERROR_CODE", {
+            value: "E238",
+            enumerable: false,
+            configurable: true
+        });
+    }
+    return router;
+}
+function useParams() {
+    useDynamicRouteParams?.('useParams()');
+    const params = (0, _react.useContext)(_hooksclientcontextsharedruntime.PathParamsContext);
+    // Instrument with Suspense DevTools (dev-only)
+    if (("TURBOPACK compile-time value", "development") !== 'production' && 'use' in _react.default) {
+        const navigationPromises = (0, _react.use)(_hooksclientcontextsharedruntime.NavigationPromisesContext);
+        if (navigationPromises) {
+            return (0, _react.use)(navigationPromises.params);
+        }
+    }
+    return params;
+}
+function useSelectedLayoutSegments(parallelRouteKey = 'children') {
+    useDynamicRouteParams?.('useSelectedLayoutSegments()');
+    const context = (0, _react.useContext)(_approutercontextsharedruntime.LayoutRouterContext);
+    // @ts-expect-error This only happens in `pages`. Type is overwritten in navigation.d.ts
+    if (!context) return null;
+    // Instrument with Suspense DevTools (dev-only)
+    if (("TURBOPACK compile-time value", "development") !== 'production' && 'use' in _react.default) {
+        const navigationPromises = (0, _react.use)(_hooksclientcontextsharedruntime.NavigationPromisesContext);
+        if (navigationPromises) {
+            const promise = navigationPromises.selectedLayoutSegmentsPromises?.get(parallelRouteKey);
+            if (promise) {
+                // We should always have a promise here, but if we don't, it's not worth erroring over.
+                // We just won't be able to instrument it, but can still provide the value.
+                return (0, _react.use)(promise);
+            }
+        }
+    }
+    return (0, _segment.getSelectedLayoutSegmentPath)(context.parentTree, parallelRouteKey);
+}
+function useSelectedLayoutSegment(parallelRouteKey = 'children') {
+    useDynamicRouteParams?.('useSelectedLayoutSegment()');
+    const navigationPromises = (0, _react.useContext)(_hooksclientcontextsharedruntime.NavigationPromisesContext);
+    const selectedLayoutSegments = useSelectedLayoutSegments(parallelRouteKey);
+    // Instrument with Suspense DevTools (dev-only)
+    if (("TURBOPACK compile-time value", "development") !== 'production' && navigationPromises && 'use' in _react.default) {
+        const promise = navigationPromises.selectedLayoutSegmentPromises?.get(parallelRouteKey);
+        if (promise) {
+            // We should always have a promise here, but if we don't, it's not worth erroring over.
+            // We just won't be able to instrument it, but can still provide the value.
+            return (0, _react.use)(promise);
+        }
+    }
+    return (0, _segment.computeSelectedLayoutSegment)(selectedLayoutSegments, parallelRouteKey);
+}
+if ((typeof exports.default === 'function' || typeof exports.default === 'object' && exports.default !== null) && typeof exports.default.__esModule === 'undefined') {
+    Object.defineProperty(exports.default, '__esModule', {
+        value: true
+    });
+    Object.assign(exports.default, exports);
+    module.exports = exports.default;
+} //# sourceMappingURL=navigation.js.map
+}),
+"[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+
+module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/client/components/navigation.js [app-ssr] (ecmascript)");
+}),
+];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__ef76703a._.js.map

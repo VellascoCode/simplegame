@@ -1,0 +1,3 @@
+{
+  "/api/character/get/route": "app/api/character/get/route.js"
+}
