@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 28, "column": 0}, "map": {"version":3,"sources":["file:///Users/diegovellasco/simplegame/components/EmbedToggle.tsx"],"sourcesContent":["\"use client\";\n\nimport { useEffect } from \"react\";\nimport { useSearchParams } from \"next/navigation\";\n\nexport function EmbedToggle() {\n  const searchParams = useSearchParams();\n  const isEmbed = searchParams.get(\"embed\") === \"1\";\n\n  useEffect(() => {\n    document.body.classList.toggle(\"embed-mode\", isEmbed);\n  }, [isEmbed]);\n\n  return null;\n}\n"],"names":[],"mappings":";;;;AAEA;AACA;AAHA;;;AAKO,SAAS;IACd,MAAM,eAAe,IAAA,qJAAe;IACpC,MAAM,UAAU,aAAa,GAAG,CAAC,aAAa;IAE9C,IAAA,kNAAS,EAAC;QACR,SAAS,IAAI,CAAC,SAAS,CAAC,MAAM,CAAC,cAAc;IAC/C,GAAG;QAAC;KAAQ;IAEZ,OAAO;AACT"}}]
-}
