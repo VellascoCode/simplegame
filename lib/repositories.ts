@@ -1,9 +1,10 @@
-import { ObjectId, type OptionalUnlessRequiredId } from "mongodb";
+import { ObjectId, type OptionalUnlessRequiredId, type ModifyResult } from "mongodb";
 import { getCollection, hasMongoConnection } from "./db";
 import { getMemoryDB } from "./memoryStore";
 import type {
   ChatMessage,
   Character,
+  CharacterStats,
   FarmState,
   HouseState,
   InventoryItem,
@@ -12,6 +13,8 @@ import type {
   QuickSlotLayout,
   User
 } from "./models";
+import type { BestiaryProfile } from "@/models/Bestiary";
+import { resolveBestiaryTier } from "@/models/Bestiary";
 
 type CharacterDocument = Omit<Character, "_id"> & { _id: ObjectId };
 type UserDocument = Omit<User, "_id"> & { _id: ObjectId };
@@ -97,6 +100,152 @@ export async function findCharacterById(ownerId: string, characterId: string) {
     (c) => c.ownerId === ownerId && c._id === characterId
   );
   return character ? { ...character } : null;
+}
+
+export async function updateCharacterStats(
+  ownerId: string,
+  characterId: string,
+  stats: CharacterStats
+) {
+  const payload = { ...stats };
+  const updatedAt = new Date().toISOString();
+  if (hasMongoConnection()) {
+    if (!ObjectId.isValid(characterId)) {
+      throw new Error("Personagem inválido");
+    }
+    const characters = await getCollection<CharacterDocument>("characters");
+    await characters.updateOne(
+      { ownerId, _id: new ObjectId(characterId) },
+      { $set: { stats: payload, updatedAt } }
+    );
+    const updated = await characters.findOne({ ownerId, _id: new ObjectId(characterId) });
+    if (!updated) {
+      throw new Error("Personagem não encontrado");
+    }
+    return normalizeCharacter(updated);
+  }
+
+  const memory = getMemoryDB();
+  const characterIndex = memory.characters.findIndex(
+    (c) => c.ownerId === ownerId && c._id === characterId
+  );
+  if (characterIndex < 0) {
+    throw new Error("Personagem não encontrado");
+  }
+  memory.characters[characterIndex] = {
+    ...memory.characters[characterIndex],
+    stats: payload,
+    updatedAt
+  };
+  return { ...memory.characters[characterIndex] };
+}
+
+export async function updateCharacterGold(ownerId: string, characterId: string, gold: number) {
+  const updatedAt = new Date().toISOString();
+  if (hasMongoConnection()) {
+    if (!ObjectId.isValid(characterId)) {
+      throw new Error("Personagem inválido");
+    }
+    const characters = await getCollection<CharacterDocument>("characters");
+    await characters.updateOne(
+      { ownerId, _id: new ObjectId(characterId) },
+      { $set: { gold, updatedAt } }
+    );
+    const updated = await characters.findOne({ ownerId, _id: new ObjectId(characterId) });
+    if (!updated) {
+      throw new Error("Personagem não encontrado");
+    }
+    return normalizeCharacter(updated);
+  }
+
+  const memory = getMemoryDB();
+  const characterIndex = memory.characters.findIndex(
+    (c) => c.ownerId === ownerId && c._id === characterId
+  );
+  if (characterIndex < 0) throw new Error("Personagem não encontrado");
+  memory.characters[characterIndex] = {
+    ...memory.characters[characterIndex],
+    gold,
+    updatedAt
+  };
+  return { ...memory.characters[characterIndex] };
+}
+
+type BestiaryDocument = Omit<BestiaryProfile, "_id"> & { _id?: ObjectId };
+
+export async function getBestiaryProfile(ownerId: string, characterId: string) {
+  if (hasMongoConnection()) {
+    const collection = await getCollection<BestiaryDocument>("bestiary");
+    const doc = await collection.findOne({ ownerId, characterId });
+    return doc ?? null;
+  }
+
+  const memory = getMemoryDB();
+  return (
+    memory.bestiary.find(
+      (entry) => entry.ownerId === ownerId && entry.characterId === characterId
+    ) ?? null
+  );
+}
+
+export async function incrementBestiaryKill(
+  ownerId: string,
+  characterId: string,
+  monsterId: number
+) {
+  const updatedAt = new Date().toISOString();
+  if (hasMongoConnection()) {
+    const collection = await getCollection<BestiaryDocument>("bestiary");
+    const existing = await collection.findOne({ ownerId, characterId });
+    const profile: BestiaryProfile =
+      existing ?? {
+        ownerId,
+        characterId,
+        entries: [],
+        updatedAt
+      };
+    profile.entries = bumpBestiaryEntry(profile.entries, monsterId);
+    profile.updatedAt = updatedAt;
+    await collection.updateOne(
+      { ownerId, characterId },
+      { $set: profile },
+      { upsert: true }
+    );
+    return profile;
+  }
+
+  const memory = getMemoryDB();
+  let profile = memory.bestiary.find(
+    (entry) => entry.ownerId === ownerId && entry.characterId === characterId
+  );
+  if (!profile) {
+    profile = {
+      ownerId,
+      characterId,
+      entries: [],
+      updatedAt
+    };
+    memory.bestiary.push(profile);
+  }
+  profile.entries = bumpBestiaryEntry(profile.entries, monsterId);
+  profile.updatedAt = updatedAt;
+  return { ...profile };
+}
+
+function bumpBestiaryEntry(entries: BestiaryProfile["entries"], monsterId: number) {
+  const next = [...entries];
+  const entry = next.find((item) => item.monsterId === monsterId);
+  if (entry) {
+    entry.kills += 1;
+    entry.tier = resolveBestiaryTier(entry.kills);
+    return next;
+  }
+  next.push({
+    monsterId,
+    kills: 1,
+    tier: resolveBestiaryTier(1)
+  });
+  return next;
 }
 
 export async function getInventory(ownerId: string) {

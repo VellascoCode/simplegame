@@ -9,6 +9,7 @@ import type {
   QuickSlotLayout,
   User
 } from "./models";
+import type { BestiaryProfile } from "@/models/Bestiary";
 
 type MemoryDB = {
   users: User[];
@@ -20,6 +21,7 @@ type MemoryDB = {
   online: OnlinePresence[];
   sessions: PlayerSessionState[];
   quickSlots: QuickSlotLayout[];
+  bestiary: BestiaryProfile[];
 };
 
 const memoryDb: MemoryDB = {
@@ -31,7 +33,8 @@ const memoryDb: MemoryDB = {
   chat: [],
   online: [],
   sessions: [],
-  quickSlots: []
+  quickSlots: [],
+  bestiary: []
 };
 
 export function getMemoryDB() {

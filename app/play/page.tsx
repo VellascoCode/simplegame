@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { CityPhaser } from "@/components/CityPhaser";
@@ -8,9 +8,13 @@ import { OnlinePanel } from "@/components/OnlinePanel";
 import { OnlineBadge } from "@/components/OnlineBadge";
 import { BottomMenu } from "@/components/BottomMenu";
 import { InventoryPanel } from "@/components/InventoryPanel";
-import { ChatPanel } from "@/components/ChatPanel";
+import { useChatFeed } from "@/components/ChatPanel";
 import { getJSON, postJSON } from "@/lib/clientApi";
-import type { Character, InventoryItem } from "@/lib/models";
+import type { Character, CharacterStats, InventoryItem } from "@/lib/models";
+import { xpForLevel } from "@/lib/progression";
+import type { FactionWarState } from "@/lib/factions";
+import type { BestiaryEntry } from "@/models/Bestiary";
+import { useXp } from "@/hooks/useXp";
 
 type SessionState = {
   ownerId: string;
@@ -25,6 +29,8 @@ type CombatEvent = {
   tone: "damage" | "xp";
   createdAt: number;
 };
+
+const BESTIARY_TIER_LABELS = ["Comum", "Incomum", "Raro", "Épico", "Lendário", "Mítico"] as const;
 
 const playNavLinks = [
   {
@@ -61,30 +67,54 @@ export default function CityPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [craftingOpen, setCraftingOpen] = useState(false);
   const [equipOpen, setEquipOpen] = useState(false);
+  const [bestiaryOpen, setBestiaryOpen] = useState(false);
   const [showMiniMap, setShowMiniMap] = useState(false);
+  const [warState, setWarState] = useState<FactionWarState | null>(null);
   const [playerPosition, setPlayerPosition] = useState<{ x: number; y: number } | null>(null);
   const [inventoryVersion, setInventoryVersion] = useState(0);
   const [combatLog, setCombatLog] = useState<CombatEvent[]>([]);
   const [gameReady, setGameReady] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [bestiaryEntries, setBestiaryEntries] = useState<BestiaryEntry[]>([]);
 
   const ownerId = sessionState?.ownerId ?? "";
   const characterId = sessionState?.characterId ?? "";
 
+  const loadBestiaryProfile = useCallback(
+    async (currentOwnerId: string, currentCharacterId: string) => {
+      try {
+        const table = await getJSON<BestiaryEntry[]>(
+          `/api/bestiary/get?ownerId=${currentOwnerId}&characterId=${currentCharacterId}`
+        );
+        setBestiaryEntries(table);
+      } catch {
+        setBestiaryEntries([]);
+      }
+    },
+    []
+  );
+
   const loadSelectedCharacter = useCallback(async (currentOwnerId: string, currentCharacterId: string) => {
     if (!currentOwnerId || !currentCharacterId) {
       setCharacterInfo(null);
+      setBestiaryEntries([]);
       return;
     }
     try {
       const data = await getJSON<Character>(
         `/api/character/get?ownerId=${currentOwnerId}&characterId=${currentCharacterId}`
       );
-      setCharacterInfo(data);
+      setCharacterInfo({
+        ...data,
+        gold: data.gold ?? 0
+      });
+      await loadBestiaryProfile(currentOwnerId, currentCharacterId);
     } catch (err) {
       setCharacterInfo(null);
+      setBestiaryEntries([]);
       setFeedback(getMessage(err));
     }
-  }, []);
+  }, [loadBestiaryProfile]);
 
   const loadSession = useCallback(async () => {
     setLoadingSession(true);
@@ -113,6 +143,24 @@ export default function CityPage() {
       router.replace("/");
     }
   }, [status, loadSession, router]);
+
+  useEffect(() => {
+    let active = true;
+    const loadWar = async () => {
+      try {
+        const state = await getJSON<FactionWarState>("/api/factions/war");
+        if (active) setWarState(state);
+      } catch {
+        // ignore
+      }
+    };
+    loadWar();
+    const interval = window.setInterval(loadWar, 30000);
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     if (!ownerId || !characterId) {
@@ -196,6 +244,12 @@ export default function CityPage() {
       onClick: () => setChatOpen(true)
     },
     {
+      id: "bestiary",
+      label: "📜",
+      ariaLabel: "Abrir bestiário",
+      onClick: () => setBestiaryOpen(true)
+    },
+    {
       id: "account",
       label: "ACC",
       icon: "/icons/achievements.png",
@@ -234,11 +288,47 @@ export default function CityPage() {
   );
 
   const handleCombatEvent = useCallback((event: { message: string; tone: "damage" | "xp" }) => {
-    setCombatLog((current) => [
-      ...current,
-      { id: `${Date.now()}-${Math.random()}`, message: event.message, tone: event.tone, createdAt: Date.now() }
-    ]);
+    setCombatLog((current) => {
+      const entry = {
+        id: `${Date.now()}-${Math.random()}`,
+        message: event.message,
+        tone: event.tone,
+        createdAt: Date.now()
+      };
+      return [...current, entry].slice(-20);
+    });
   }, []);
+
+  const handleStatsChange = useCallback((stats: CharacterStats) => {
+    setCharacterInfo((previous) =>
+      previous
+        ? {
+            ...previous,
+            stats: {
+              ...previous.stats,
+              ...stats
+            }
+          }
+        : previous
+    );
+  }, []);
+
+  const handleGoldChange = useCallback((gold: number) => {
+    setCharacterInfo((previous) =>
+      previous
+        ? {
+            ...previous,
+            gold
+          }
+        : previous
+    );
+  }, []);
+
+  const handleBestiaryUpdate = useCallback((table: BestiaryEntry[]) => {
+    setBestiaryEntries(table);
+  }, []);
+
+  const toggleSound = () => setSoundEnabled((previous) => !previous);
 
   if (status === "loading" || loadingSession) {
     return (
@@ -249,38 +339,26 @@ export default function CityPage() {
   }
 
   return (
-    <section className="city-shell">
-      {ownerId && (
-        <nav
-          className="mb-4 flex flex-wrap gap-3 rounded-[32px] border border-white/10 bg-black/70 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
-          aria-label="Menu do jogo"
-        >
-          {playNavLinks.map((link) => (
-            <button
-              key={link.id}
-              type="button"
-              className="flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-left text-amber-100 transition hover:bg-white/10"
-            >
-              <img src={link.icon} alt="" className="h-9 w-9 object-contain" />
-              <div>
-                <p className="text-sm font-semibold leading-tight">{link.label}</p>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-amber-100/70">{link.description}</p>
-              </div>
-            </button>
-          ))}
-        </nav>
-      )}
-      <div className="map-layout">
-        <div className="map-stage">
+    <>
+      {ownerId && <PlayTopNav links={playNavLinks} />}
+      <section className={`city-shell ${ownerId ? "pt-32 md:pt-40" : ""}`}>
+        <div className="map-layout">
+          <div className="map-stage">
           {ownerId && characterId ? (
             <CityPhaser
               ownerId={ownerId}
               characterId={characterId}
               characterName={characterInfo?.name}
               characterLevel={characterInfo?.stats.level}
+              characterXp={characterInfo?.stats.xp}
+              warState={warState}
               initialPosition={sessionState?.position}
               onPositionChange={handlePositionChange}
               onCombatEvent={handleCombatEvent}
+              onStatsChange={handleStatsChange}
+              onGoldChange={handleGoldChange}
+              onBestiaryUpdate={handleBestiaryUpdate}
+              soundEnabled={soundEnabled}
               onReady={setGameReady}
             />
           ) : (
@@ -292,16 +370,23 @@ export default function CityPage() {
             </div>
           )}
           {characterInfo && <CityHud stats={characterInfo.stats} />}
+          {ownerId && <TopCenterSlots onOpenEquipment={() => setEquipOpen(true)} />}
           {ownerId && (
             <QuickSlots
               ownerId={ownerId}
+              characterId={characterId}
+              goldAmount={characterInfo?.gold ?? 0}
               refreshKey={inventoryVersion}
               onItemUsed={handleItemUsed}
               onInventoryChange={notifyInventoryChange}
-              onOpenEquipment={() => setEquipOpen(true)}
             />
           )}
-          {ownerId && <OnlineBadge />}
+          {ownerId && (
+            <>
+              <OnlineBadge />
+              <SoundToggleButton enabled={soundEnabled} onToggle={toggleSound} />
+            </>
+          )}
           {ownerId && <BottomMenu variant="overlay" buttons={actionButtons} square />}
           <MiniMapOverlay
             visible={Boolean(ownerId && showMiniMap)}
@@ -319,19 +404,18 @@ export default function CityPage() {
           <p>{feedback}</p>
         </div>
       )}
-      {ownerId && (
-        <div className="grid">
-          <div className="card">
-            <OnlinePanel ownerId={ownerId} />
-          </div>
-        </div>
-      )}
       <InventoryDrawer
         open={inventoryOpen}
         onClose={() => setInventoryOpen(false)}
         ownerId={ownerId}
+        characterId={characterId}
         onItemUsed={handleItemUsed}
         onInventoryChange={notifyInventoryChange}
+      />
+      <BestiaryDrawer
+        open={bestiaryOpen}
+        onClose={() => setBestiaryOpen(false)}
+        entries={bestiaryEntries}
       />
       <ChatDrawer
         open={chatOpen}
@@ -368,6 +452,7 @@ export default function CityPage() {
       <CraftingDrawer open={craftingOpen} onClose={() => setCraftingOpen(false)} />
       <EquipmentDrawer open={equipOpen} onClose={() => setEquipOpen(false)} />
     </section>
+    </>
   );
 }
 
@@ -376,10 +461,20 @@ function getMessage(err: unknown) {
 }
 
 function CityHud({ stats }: { stats: Character["stats"] }) {
+  const levelFloor = xpForLevel(stats.level);
+  const nextLevelTarget = xpForLevel(stats.level + 1);
+  const xpCurrent = Math.max(0, stats.xp - levelFloor);
+  const xpNeeded = Math.max(1, nextLevelTarget - levelFloor);
   const bars = [
-    { key: "hp", label: "HP", value: stats.hp, max: 100 },
-    { key: "energy", label: "ENERGIA", value: stats.energy, max: 100 },
-    { key: "xp", label: "XP", value: stats.xp, max: 100 }
+    { key: "hp", label: "HP", value: stats.hp, max: 100, display: `${stats.hp}` },
+    { key: "energy", label: "ENERGIA", value: stats.energy, max: 100, display: `${stats.energy}` },
+    {
+      key: "xp",
+      label: `XP LV.${stats.level}`,
+      value: xpCurrent,
+      max: xpNeeded,
+      display: `${xpCurrent}/${xpNeeded}`
+    }
   ];
   const gradientMap: Record<string, string> = {
     hp: "from-red-300 to-red-500",
@@ -388,15 +483,15 @@ function CityHud({ stats }: { stats: Character["stats"] }) {
   };
 
   return (
-    <div className="pointer-events-none absolute top-3 left-3 flex w-[180px] flex-col gap-2 rounded-sm border border-white/10 bg-black/70 p-4 text-amber-50 shadow-black shadow-2xl">
-      <div className="space-y-1">
+    <div className="pointer-events-none absolute top-3 left-3 flex w-[190px] flex-col gap-2 rounded-sm border border-white/10 bg-black/70 p-4 text-amber-50 shadow-black shadow-2xl">
+      <div className="space-y-2">
         {bars.map((bar) => {
-          const percentage = Math.min(100, bar.value);
+          const percentage = Math.min(100, (bar.value / bar.max) * 100);
           return (
             <div key={bar.key} className="flex flex-col gap-1">
               <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-amber-100/70">
                 <span>{bar.label}</span>
-                <span>{bar.value}</span>
+                <span>{bar.display}</span>
               </div>
               <div className="h-3 rounded-full bg-black/40">
                 <div
@@ -408,47 +503,97 @@ function CityHud({ stats }: { stats: Character["stats"] }) {
           );
         })}
       </div>
-      <div className="flex items-center justify-between rounded-2xl bg-amber-200/20 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-amber-100">
-        <span>NVL</span>
-        <span className="text-2xl font-bold tracking-normal text-amber-50">{stats.level}</span>
-      </div>
     </div>
+  );
+}
+
+function SoundToggleButton({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      className="pointer-events-auto absolute top-6 right-32 flex items-center gap-2 rounded-full border border-white/20 bg-black/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-amber-100 shadow"
+      onClick={onToggle}
+    >
+      <span>{enabled ? "🔊" : "🔇"}</span>
+      <span>Som</span>
+    </button>
+  );
+}
+
+function PlayTopNav({ links }: { links: typeof playNavLinks }) {
+  return (
+    <header className="fixed left-0 right-0 top-0 z-30 border-b border-white/10 bg-black/85 shadow-[0_10px_30px_rgba(0,0,0,0.7)] backdrop-blur">
+      <div className="mx-auto flex w-full max-w-6xl items-center gap-8 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <img
+            src="/weapons/club/200.png"
+            alt="Mystic Tales"
+            className="h-14 w-14 rounded-sm border border-white/15 bg-black/40 p-1"
+          />
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-amber-100">
+              Mystic Tales
+            </p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-amber-200/70">
+              Cidade Multiplayer Alpha
+            </p>
+          </div>
+        </div>
+        <nav className="flex flex-1 flex-wrap items-center justify-start gap-2" aria-label="Menu do jogo">
+          {links.map((link) => (
+            <button
+              key={link.id}
+              type="button"
+              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-left text-amber-100 transition hover:bg-white/10"
+            >
+              <img src={link.icon} alt="" className="h-8 w-8 object-contain" />
+              <div>
+                <p className="text-xs font-semibold leading-tight">{link.label}</p>
+                <p className="text-[9px] uppercase tracking-[0.18em] text-amber-100/70">
+                  {link.description}
+                </p>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </header>
   );
 }
 
 type QuickSlotsProps = {
   ownerId: string;
   refreshKey: number;
+  characterId?: string;
+  goldAmount?: number;
   onItemUsed?: (itemId: string) => void;
   onInventoryChange?: () => void;
-  onOpenEquipment?: () => void;
 };
 
-function QuickSlots({ ownerId, refreshKey, onItemUsed, onInventoryChange, onOpenEquipment }: QuickSlotsProps) {
+function QuickSlots({
+  ownerId,
+  characterId,
+  refreshKey,
+  goldAmount,
+  onItemUsed,
+  onInventoryChange
+}: QuickSlotsProps) {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [slotRefs, setSlotRefs] = useState<Array<string | null>>([null, null, null, null]);
   const [pickerSlot, setPickerSlot] = useState<number | null>(null);
-  const [visibleSlots, setVisibleSlots] = useState(4);
+  const { grantXp } = useXp(ownerId, characterId);
   const iconMap: Record<string, string> = {
     item1: "/itens/item1.png",
-    item10: "/itens/item10.png"
+    item10: "/itens/item10.png",
+    item30: "/itens/item30.png",
+    item31: "/itens/item31.png"
+  };
+  const consumableXp: Record<string, number> = {
+    item30: 25,
+    item31: 60
   };
 
   if (!ownerId) return null;
-
-  useEffect(() => {
-    const updateSlots = () => {
-      if (typeof window === "undefined") return;
-      const height = window.innerHeight;
-      if (height > 900) setVisibleSlots(4);
-      else if (height > 720) setVisibleSlots(3);
-      else if (height > 620) setVisibleSlots(2);
-      else setVisibleSlots(1);
-    };
-    updateSlots();
-    window.addEventListener("resize", updateSlots);
-    return () => window.removeEventListener("resize", updateSlots);
-  }, []);
 
   useEffect(() => {
     if (!ownerId) return;
@@ -496,6 +641,10 @@ function QuickSlots({ ownerId, refreshKey, onItemUsed, onInventoryChange, onOpen
       pruneSlots(updated);
       onItemUsed?.(slot.id);
       onInventoryChange?.();
+      const xpAmount = consumableXp[slot.id];
+      if (xpAmount) {
+        await grantXp(xpAmount);
+      }
     } catch {
       // ignore errors
     }
@@ -538,15 +687,10 @@ function QuickSlots({ ownerId, refreshKey, onItemUsed, onInventoryChange, onOpen
   );
 
   const quickSlots = [0, 1, 2, 3].map((slotIndex) => resolvedSlots[slotIndex] ?? null);
-  const equipmentSlots = [
-    { id: "cordao", icon: "🔗" },
-    { id: "anel", icon: "💍" },
-    { id: "arma", icon: "⚔️" }
-  ];
 
   return (
-    <div className="pointer-events-auto absolute right-4 top-20 flex w-[120px] flex-col sm:right-6 md:top-24">
-      <div className="relative rounded-[28px] border border-white/10 bg-black/70 p-3 shadow-xl">
+    <div className="pointer-events-auto absolute right-2 top-20 flex flex-col items-end gap-4 sm:right-4 md:top-24">
+      <div className="relative rounded-[28px] border border-white/10 bg-black/70 p-2 shadow-xl">
         <div className="flex flex-col gap-2">
           {quickSlots.map((slot, index) => {
             const icon = slot ? iconMap[slot.id] : undefined;
@@ -598,21 +742,66 @@ function QuickSlots({ ownerId, refreshKey, onItemUsed, onInventoryChange, onOpen
             </div>
         )}
       </div>
-      <div className="mt-3 rounded-[28px] border border-white/10 bg-black/70 p-3 shadow-xl">
-        <div className="flex flex-col gap-2">
-          {equipmentSlots.map((slot) => (
-            <button
-              key={slot.id}
-              type="button"
-              className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-lg text-amber-100"
-              onClick={() => onOpenEquipment?.()}
-              aria-label={`Gerenciar ${slot.id}`}
-            >
-              {slot.icon}
-            </button>
-          ))}
+      {typeof goldAmount === "number" && (
+        <div className="rounded-[20px] border border-yellow-200/40 bg-black/70 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-200 shadow-xl">
+          <span className="mr-2">🪙</span>
+          <span>{goldAmount}</span>
         </div>
-      </div>
+      )}
+    </div>
+  );
+}
+
+type TopCenterSlotsProps = {
+  onOpenEquipment?: () => void;
+};
+
+function TopCenterSlots({ onOpenEquipment }: TopCenterSlotsProps) {
+  const slots = [
+    { id: "necklace", label: "Cordão", hint: "CD", type: "equipment" },
+    { id: "ring", label: "Anel", hint: "AN", type: "equipment" },
+    { id: "weapon", label: "Arma", hint: "WP", type: "equipment" },
+    { id: "skill-primary", label: "Skill 1", hint: "S1", type: "skill" },
+    { id: "skill-secondary", label: "Skill 2", hint: "S2", type: "skill" },
+    { id: "skill-ultimate", label: "Skill 3", hint: "S3", type: "skill" },
+    { id: "skill-extra", label: "Skill 4", hint: "S4", type: "skill" }
+  ] as const;
+  const backgroundMap: Record<string, string> = {
+    necklace: "/icons/neck.png",
+    ring: "/icons/ring.png",
+    weapon: "/icons/weapon.png"
+  };
+
+  return (
+    <div className="pointer-events-none absolute left-1/2 top-3 z-30 flex -translate-x-1/2 items-center gap-2 rounded-[36px] border border-white/10 bg-black/70 px-4 py-2 shadow-[0_15px_40px_rgba(0,0,0,0.6)]">
+      {slots.map((slot) => {
+        const isEquipment = slot.type === "equipment";
+        const background = backgroundMap[slot.id];
+        return (
+          <button
+            key={slot.id}
+            type="button"
+            onClick={isEquipment ? onOpenEquipment : undefined}
+            className={`pointer-events-auto flex h-12 w-12 flex-col items-center justify-center rounded-2xl border text-xs font-semibold uppercase tracking-[0.3em] text-amber-100 transition ${
+              isEquipment
+                ? "border-amber-200/30 bg-black/60 hover:border-amber-200"
+                : "border-white/15 bg-black/50 hover:border-amber-200"
+            }`}
+            style={
+              background
+                ? {
+                    backgroundImage: `url(${background})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                  }
+                : undefined
+            }
+            aria-label={slot.label}
+          >
+            {!isEquipment && <span className="text-base">{slot.hint}</span>}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -644,12 +833,14 @@ function InventoryDrawer({
   open,
   onClose,
   ownerId,
+  characterId,
   onItemUsed,
   onInventoryChange
 }: {
   open: boolean;
   onClose: () => void;
   ownerId: string;
+  characterId?: string;
   onItemUsed?: (itemId: string) => void;
   onInventoryChange?: () => void;
 }) {
@@ -658,6 +849,7 @@ function InventoryDrawer({
     <Drawer open={open} onClose={onClose} title="Inventário">
       <InventoryPanel
         ownerId={ownerId}
+        characterId={characterId}
         onItemUsed={onItemUsed}
         onItemsChange={() => onInventoryChange?.()}
       />
@@ -665,16 +857,85 @@ function InventoryDrawer({
   );
 }
 
+const MONSTER_NAMES = new Map<number, string>([[0, "Lanceiro"]]);
+
+function BestiaryDrawer({
+  open,
+  onClose,
+  entries
+}: {
+  open: boolean;
+  onClose: () => void;
+  entries: BestiaryEntry[];
+}) {
+  if (!entries || entries.length === 0) {
+    return (
+      <Drawer open={open} onClose={onClose} title="Bestiário">
+        <p>Derrote monstros para registrar no bestiário.</p>
+      </Drawer>
+    );
+  }
+  const sorted = [...entries].sort((a, b) => b.kills - a.kills);
+  const totalKills = sorted.reduce((sum, entry) => sum + entry.kills, 0);
+  const uniqueKills = sorted.length;
+  const topEnemy = sorted[0];
+  return (
+    <Drawer open={open} onClose={onClose} title="Bestiário">
+      <div className="mb-4 grid grid-cols-3 gap-2 text-center text-xs uppercase tracking-[0.2em] text-amber-100/80">
+        <div className="rounded-2xl border border-white/10 bg-black/40 px-2 py-3">
+          <p>Total</p>
+          <p className="text-2xl font-bold text-amber-200">{totalKills}</p>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-black/40 px-2 py-3">
+          <p>Espécies</p>
+          <p className="text-2xl font-bold text-amber-200">{uniqueKills}</p>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-black/40 px-2 py-3">
+          <p>Top</p>
+          <p className="text-sm font-bold text-amber-200">
+            {topEnemy ? MONSTER_NAMES.get(topEnemy.monsterId) ?? `${topEnemy.monsterId}` : "-"}
+          </p>
+        </div>
+      </div>
+      <ul className="space-y-2 text-sm text-amber-100">
+        {sorted.map((entry) => (
+          <li key={entry.monsterId} className="rounded-2xl border border-white/10 bg-black/40 px-3 py-2">
+            <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-amber-100/70">
+              <span>{MONSTER_NAMES.get(entry.monsterId) ?? `${entry.monsterId}`}</span>
+              <span>{totalKills > 0 ? ((entry.kills / totalKills) * 100).toFixed(1) : "0.0"}%</span>
+            </div>
+            <div className="flex items-center justify-between text-sm font-bold text-amber-200">
+              <span>Abates</span>
+              <span>x{entry.kills}</span>
+            </div>
+            <div className="mt-1 h-1 rounded-full bg-white/10">
+              <div
+                className="h-1 rounded-full bg-amber-300"
+                style={{
+                  width: `${totalKills > 0 ? Math.min(100, (entry.kills / totalKills) * 100) : 0}%`
+                }}
+              />
+            </div>
+            <div className="mt-1 inline-flex rounded-full border border-amber-200/60 px-2 py-0.5 text-[10px] uppercase tracking-[0.3em] text-amber-200/90">
+              {BESTIARY_TIER_LABELS[entry.tier] ?? BESTIARY_TIER_LABELS[0]}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Drawer>
+  );
+}
+
 function EquipmentDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const slots = [
-    { id: "head", label: "Cabeça", hint: "HD" },
-    { id: "necklace", label: "Cordão", hint: "CD" },
-    { id: "ring", label: "Anel", hint: "AN" },
-    { id: "armor", label: "Armadura", hint: "AR" },
-    { id: "weapon", label: "Arma", hint: "WP" },
-    { id: "shield", label: "Escudo", hint: "ES" },
-    { id: "pants", label: "Calça", hint: "CL" },
-    { id: "boots", label: "Bota", hint: "BT" }
+    { id: "head", label: "Cabeça", icon: "/icons/head.png" },
+    { id: "necklace", label: "Cordão", icon: "/icons/neck.png" },
+    { id: "ring", label: "Anel", icon: "/icons/ring.png" },
+    { id: "armor", label: "Armadura", icon: "/icons/body.png" },
+    { id: "weapon", label: "Arma", icon: "/icons/weapon.png" },
+    { id: "shield", label: "Escudo", icon: "/icons/scroll.png" },
+    { id: "pants", label: "Calça", icon: "/icons/body.png" },
+    { id: "boots", label: "Bota", icon: "/icons/body.png" }
   ];
   return (
     <Drawer open={open} onClose={onClose} title="Equipamentos">
@@ -684,9 +945,20 @@ function EquipmentDrawer({ open, onClose }: { open: boolean; onClose: () => void
             <div
               key={slot.id}
               className="flex h-20 flex-col items-center justify-center rounded-2xl border border-white/15 bg-black/40 text-amber-100"
+              style={
+                slot.icon
+                  ? {
+                      backgroundImage: `url(${slot.icon})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      opacity: 0.85
+                    }
+                  : undefined
+              }
             >
-              <p className="text-[11px] uppercase tracking-[0.2em] text-amber-100/60">{slot.label}</p>
-              <p className="text-2xl font-bold">{slot.hint}</p>
+              <p className="rounded-full bg-black/70 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-amber-100">
+                {slot.label}
+              </p>
             </div>
           ))}
         </div>
@@ -723,29 +995,109 @@ function ChatDrawer({
   combatLog: CombatEvent[];
 }) {
   if (!ownerId) return null;
+  const tabs = [
+    { id: "global", label: "Global" },
+    { id: "logs", label: "Logs" },
+    { id: "guild", label: "Guild" }
+  ] as const;
+  type TabId = (typeof tabs)[number]["id"];
+  const [activeTab, setActiveTab] = useState<TabId>("global");
+  const { message, setMessage, messages, error, sendMessage } = useChatFeed(ownerId, characterName);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (activeTab !== "global") return;
+    await sendMessage();
+  }
+
+  const disableInput = activeTab !== "global";
+  const visibleMessages = messages.slice(-20);
+
   return (
     <Drawer open={open} onClose={onClose} title="Chat">
-      <div className="flex flex-col gap-4">
-        <div>
-          <h4 className="text-sm uppercase tracking-[0.3em] text-amber-100/70">Global</h4>
-          <ChatPanel ownerId={ownerId} characterName={characterName} />
+      <div className="flex h-[60vh] flex-col gap-4 text-amber-50">
+        <div className="flex rounded-full border border-white/10 bg-black/50 p-1 text-sm font-semibold uppercase tracking-[0.3em]">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              className={`flex-1 rounded-full px-3 py-2 transition ${
+                activeTab === tab.id ? "bg-amber-200 text-stone-900" : "text-amber-100/70"
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
-        <div>
-          <h4 className="text-sm uppercase tracking-[0.3em] text-amber-100/70">Battle</h4>
-          <div className="mt-2 flex max-h-60 flex-col gap-2 overflow-y-auto rounded-2xl border border-white/10 bg-black/40 p-3 text-xs text-amber-100">
-            {combatLog.length === 0 && <span className="text-amber-100/60">Sem eventos recentes.</span>}
-            {combatLog.slice(-20).map((entry) => (
-              <div
-                key={entry.id}
-                className={`rounded-xl border px-3 py-1 font-semibold ${
-                  entry.tone === "xp" ? "border-green-200/40 text-green-200" : "border-red-200/40 text-red-200"
-                }`}
-              >
-                {entry.message}
-              </div>
-            ))}
-          </div>
+        <div className="flex-1 overflow-y-auto rounded-[28px] border border-white/10 bg-black/50 p-4">
+          {activeTab === "global" && (
+            <div className="flex flex-col gap-2 text-sm">
+              {error && <span className="text-red-300">{error}</span>}
+              {visibleMessages.length === 0 && (
+                <span className="text-amber-100/70">Sem mensagens recentes.</span>
+              )}
+              {visibleMessages.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="rounded-2xl border border-white/10 bg-black/60 px-3 py-2 text-amber-100"
+                >
+                  <p className="text-xs uppercase tracking-[0.2em] text-amber-200/70">
+                    {entry.characterName ?? entry.ownerId}
+                    <span className="ml-2 text-[10px] text-amber-100/50">
+                      {new Date(entry.createdAt).toLocaleTimeString()}
+                    </span>
+                  </p>
+                  <p className="mt-1 text-base">{entry.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {activeTab === "logs" && (
+            <div className="flex flex-col gap-2 text-xs text-amber-100">
+              {combatLog.length === 0 && <span className="text-amber-100/60">Sem eventos recentes.</span>}
+              {combatLog.slice(-20).map((entry) => (
+                <div
+                  key={entry.id}
+                  className={`rounded-xl border px-3 py-1 font-semibold ${
+                    entry.tone === "xp"
+                      ? "border-green-200/40 text-green-200"
+                      : "border-red-200/40 text-red-200"
+                  }`}
+                >
+                  {entry.message}
+                </div>
+              ))}
+            </div>
+          )}
+          {activeTab === "guild" && (
+            <div className="text-sm text-amber-100/70">Chat de guilda em breve.</div>
+          )}
         </div>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-2 rounded-[28px] border border-white/10 bg-black/60 p-4"
+        >
+          <label htmlFor="drawer-chat-message" className="text-xs uppercase tracking-[0.3em] text-amber-100/70">
+            Mensagem
+          </label>
+          <textarea
+            id="drawer-chat-message"
+            className="min-h-[90px] rounded-2xl border border-white/10 bg-black/40 p-3 text-sm text-amber-50 outline-none focus:border-amber-200"
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            maxLength={280}
+            placeholder={disableInput ? "Selecione a aba Global para enviar mensagens." : "Digite sua mensagem"}
+            disabled={disableInput}
+          />
+          <button
+            type="submit"
+            className="rounded-2xl bg-gradient-to-r from-amber-200 to-amber-500 py-2 text-center text-sm font-bold uppercase tracking-[0.4em] text-stone-900 disabled:cursor-not-allowed disabled:opacity-40"
+            disabled={disableInput || message.trim().length === 0}
+          >
+            Enviar
+          </button>
+        </form>
       </div>
     </Drawer>
   );
@@ -782,10 +1134,13 @@ function MiniMapOverlay({
   const xPercent = Math.max(0, Math.min(100, ((position?.x ?? MAP_WIDTH / 2) / MAP_WIDTH) * 100));
   const yPercent = Math.max(0, Math.min(100, ((position?.y ?? MAP_HEIGHT / 2) / MAP_HEIGHT) * 100));
   return (
-    <div className="mini-map-overlay">
-      <span className="mini-map-title">MINI MAPA</span>
-      <div className="mini-map-grid">
-        <div className="mini-map-pointer" style={{ left: `${xPercent}%`, top: `${yPercent}%` }} />
+    <div className="pointer-events-none absolute bottom-28 left-4 z-30 flex w-40 flex-col gap-1 rounded-3xl border border-white/10 bg-black/70 p-3 shadow-[0_20px_45px_rgba(0,0,0,0.6)]">
+      <span className="text-[10px] uppercase tracking-[0.4em] text-amber-100/70">Mini mapa</span>
+      <div className="relative h-32 w-full overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(circle,_rgba(255,255,255,0.05)_1px,_transparent_1px)] bg-[length:12px_12px]">
+        <div
+          className="absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-200 shadow-[0_0_10px_rgba(255,231,186,0.7)]"
+          style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
+        />
       </div>
     </div>
   );

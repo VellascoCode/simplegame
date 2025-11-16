@@ -47,3 +47,5 @@
 - [ ] Criar páginas dedicadas para Marketplace, Wiki, Fórum e Arquivamentos e conectar o cabeçalho/nav com essas rotas.
 - [ ] Definir o sistema de combate baseado em SQM (alvo único, linha/frente, arco e giro 360°) respeitando armas/skills e espaçamento 3×3.
 - [ ] Introduzir mochilas e upgrades de capacidade (slots iniciais = 4; cada mochila adiciona +20 slots ou conforme atributo configurável).
+- [ ] Configurar mapas internos (casas/salas), falas completas dos NPCs, sistema inicial de quests e ampliar o crafting para suportar novas receitas/drops.
+- [ ] Evento recorrente de facções (ex.: 10 lanceiros x 10 cavaleiros a cada 10 minutos) com drops persistentes por várias horas e indicadores no mapa.

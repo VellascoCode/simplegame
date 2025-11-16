@@ -1,10 +1,11 @@
 var R=require("../../../chunks/[turbopack]_runtime.js")("server/app/api/quickslots/route.js")
 R.c("server/chunks/node_modules_next_4164504e._.js")
+R.c("server/chunks/node_modules_zod_v4_13c0c9ea._.js")
 R.c("server/chunks/node_modules_next-auth_1810886e._.js")
 R.c("server/chunks/node_modules_openid-client_d15f72b3._.js")
 R.c("server/chunks/node_modules_jose_dist_node_cjs_bd88468e._.js")
 R.c("server/chunks/node_modules_618fb930._.js")
-R.c("server/chunks/[root-of-the-server]__c39705ad._.js")
+R.c("server/chunks/[root-of-the-server]__28bb45ff._.js")
 R.c("server/chunks/_next-internal_server_app_api_quickslots_route_actions_5cc4a13f.js")
 R.m("[project]/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/app/api/quickslots/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
 module.exports=R.m("[project]/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/app/api/quickslots/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

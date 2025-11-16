@@ -1,10 +1,13 @@
-import { characterCreateSchema, type Character } from "@/lib/models";
+import { characterCreateSchema, characterGoldSchema, characterXpSchema, type Character } from "@/lib/models";
 import {
   countCharacters,
   findCharacterById,
   insertCharacter,
-  listCharacters
+  listCharacters,
+  updateCharacterGold,
+  updateCharacterStats
 } from "@/lib/repositories";
+import { resolveLevel } from "@/lib/progression";
 
 export async function createCharacter(payload: unknown) {
   const data = characterCreateSchema.parse(payload);
@@ -25,6 +28,7 @@ export async function createCharacter(payload: unknown) {
       hp: 100,
       energy: 100
     },
+    gold: 0,
     createdAt: now,
     updatedAt: now
   };
@@ -43,4 +47,33 @@ export async function loadCharacterById(ownerId: string, characterId: string) {
     throw new Error("Personagem não encontrado");
   }
   return character;
+}
+
+export async function grantCharacterXp(payload: unknown) {
+  const data = characterXpSchema.parse(payload);
+  const character = await findCharacterById(data.ownerId, data.characterId);
+  if (!character) {
+    throw new Error("Personagem não encontrado");
+  }
+  const totalXp = Math.max(0, character.stats.xp + data.amount);
+  const { level } = resolveLevel(totalXp);
+  const stats = {
+    ...character.stats,
+    xp: totalXp,
+    level
+  };
+  await updateCharacterStats(data.ownerId, data.characterId, stats);
+  return stats;
+}
+
+export async function grantCharacterGold(payload: unknown) {
+  const data = characterGoldSchema.parse(payload);
+  const character = await findCharacterById(data.ownerId, data.characterId);
+  if (!character) {
+    throw new Error("Personagem não encontrado");
+  }
+  const currentGold = typeof character.gold === "number" ? character.gold : 0;
+  const totalGold = Math.max(0, currentGold + data.amount);
+  await updateCharacterGold(data.ownerId, data.characterId, totalGold);
+  return { gold: totalGold };
 }

@@ -1,6 +1,9 @@
 import "next-auth";
 import "next-auth/jwt";
 
+export { default } from "next-auth/next";
+export { getServerSession } from "next-auth/next";
+
 declare module "next-auth" {
   interface Session {
     user?: {

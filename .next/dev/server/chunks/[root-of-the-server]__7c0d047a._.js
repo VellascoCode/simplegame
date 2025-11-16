@@ -129,7 +129,8 @@ const memoryDb = {
     chat: [],
     online: [],
     sessions: [],
-    quickSlots: []
+    quickSlots: [],
+    bestiary: []
 };
 function getMemoryDB() {
     return memoryDb;
@@ -149,6 +150,8 @@ __turbopack_context__.s([
     ()=>findCharacterById,
     "findUserByEmail",
     ()=>findUserByEmail,
+    "getBestiaryProfile",
+    ()=>getBestiaryProfile,
     "getFarm",
     ()=>getFarm,
     "getHouse",
@@ -159,6 +162,8 @@ __turbopack_context__.s([
     ()=>getPlayerSession,
     "getQuickSlots",
     ()=>getQuickSlots,
+    "incrementBestiaryKill",
+    ()=>incrementBestiaryKill,
     "insertCharacter",
     ()=>insertCharacter,
     "insertUser",
@@ -179,6 +184,10 @@ __turbopack_context__.s([
     ()=>savePlayerSession,
     "saveQuickSlots",
     ()=>saveQuickSlots,
+    "updateCharacterGold",
+    ()=>updateCharacterGold,
+    "updateCharacterStats",
+    ()=>updateCharacterStats,
     "updateHouse",
     ()=>updateHouse
 ]);
@@ -277,6 +286,144 @@ async function findCharacterById(ownerId, characterId) {
     return character ? {
         ...character
     } : null;
+}
+async function updateCharacterStats(ownerId, characterId, stats) {
+    const payload = {
+        ...stats
+    };
+    const updatedAt = new Date().toISOString();
+    if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["hasMongoConnection"])()) {
+        if (!__TURBOPACK__imported__module__$5b$externals$5d2f$mongodb__$5b$external$5d$__$28$mongodb$2c$__cjs$29$__["ObjectId"].isValid(characterId)) {
+            throw new Error("Personagem inválido");
+        }
+        const characters = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getCollection"])("characters");
+        await characters.updateOne({
+            ownerId,
+            _id: new __TURBOPACK__imported__module__$5b$externals$5d2f$mongodb__$5b$external$5d$__$28$mongodb$2c$__cjs$29$__["ObjectId"](characterId)
+        }, {
+            $set: {
+                stats: payload,
+                updatedAt
+            }
+        });
+        const updated = await characters.findOne({
+            ownerId,
+            _id: new __TURBOPACK__imported__module__$5b$externals$5d2f$mongodb__$5b$external$5d$__$28$mongodb$2c$__cjs$29$__["ObjectId"](characterId)
+        });
+        if (!updated) {
+            throw new Error("Personagem não encontrado");
+        }
+        return normalizeCharacter(updated);
+    }
+    const memory = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$memoryStore$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getMemoryDB"])();
+    const characterIndex = memory.characters.findIndex((c)=>c.ownerId === ownerId && c._id === characterId);
+    if (characterIndex < 0) {
+        throw new Error("Personagem não encontrado");
+    }
+    memory.characters[characterIndex] = {
+        ...memory.characters[characterIndex],
+        stats: payload,
+        updatedAt
+    };
+    return {
+        ...memory.characters[characterIndex]
+    };
+}
+async function updateCharacterGold(ownerId, characterId, gold) {
+    const updatedAt = new Date().toISOString();
+    if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["hasMongoConnection"])()) {
+        if (!__TURBOPACK__imported__module__$5b$externals$5d2f$mongodb__$5b$external$5d$__$28$mongodb$2c$__cjs$29$__["ObjectId"].isValid(characterId)) {
+            throw new Error("Personagem inválido");
+        }
+        const characters = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getCollection"])("characters");
+        await characters.updateOne({
+            ownerId,
+            _id: new __TURBOPACK__imported__module__$5b$externals$5d2f$mongodb__$5b$external$5d$__$28$mongodb$2c$__cjs$29$__["ObjectId"](characterId)
+        }, {
+            $set: {
+                gold,
+                updatedAt
+            }
+        });
+        const updated = await characters.findOne({
+            ownerId,
+            _id: new __TURBOPACK__imported__module__$5b$externals$5d2f$mongodb__$5b$external$5d$__$28$mongodb$2c$__cjs$29$__["ObjectId"](characterId)
+        });
+        if (!updated) {
+            throw new Error("Personagem não encontrado");
+        }
+        return normalizeCharacter(updated);
+    }
+    const memory = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$memoryStore$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getMemoryDB"])();
+    const characterIndex = memory.characters.findIndex((c)=>c.ownerId === ownerId && c._id === characterId);
+    if (characterIndex < 0) throw new Error("Personagem não encontrado");
+    memory.characters[characterIndex] = {
+        ...memory.characters[characterIndex],
+        gold,
+        updatedAt
+    };
+    return {
+        ...memory.characters[characterIndex]
+    };
+}
+async function getBestiaryProfile(ownerId, characterId) {
+    if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["hasMongoConnection"])()) {
+        const collection = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getCollection"])("bestiary");
+        const doc = await collection.findOne({
+            ownerId,
+            characterId
+        });
+        return doc ?? null;
+    }
+    const memory = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$memoryStore$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getMemoryDB"])();
+    return memory.bestiary.find((entry)=>entry.ownerId === ownerId && entry.characterId === characterId) ?? null;
+}
+async function incrementBestiaryKill(ownerId, characterId, monsterId) {
+    const updatedAt = new Date().toISOString();
+    if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["hasMongoConnection"])()) {
+        const collection = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getCollection"])("bestiary");
+        const result = await collection.findOneAndUpdate({
+            ownerId,
+            characterId
+        }, {
+            $setOnInsert: {
+                ownerId,
+                characterId,
+                kills: {},
+                updatedAt
+            },
+            $set: {
+                updatedAt
+            },
+            $inc: {
+                [`kills.${monsterId}`]: 1
+            }
+        }, {
+            upsert: true,
+            returnDocument: "after"
+        });
+        const updated = result?.value;
+        if (!updated) {
+            throw new Error("Falha ao atualizar bestiário");
+        }
+        return updated;
+    }
+    const memory = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$memoryStore$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getMemoryDB"])();
+    let profile = memory.bestiary.find((entry)=>entry.ownerId === ownerId && entry.characterId === characterId);
+    if (!profile) {
+        profile = {
+            ownerId,
+            characterId,
+            kills: {},
+            updatedAt
+        };
+        memory.bestiary.push(profile);
+    }
+    profile.kills[monsterId] = (profile.kills[monsterId] ?? 0) + 1;
+    profile.updatedAt = updatedAt;
+    return {
+        ...profile
+    };
 }
 async function getInventory(ownerId) {
     if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["hasMongoConnection"])()) {

@@ -161,8 +161,14 @@ export default function HomePage() {
   const [refreshingCharacters, setRefreshingCharacters] = useState(false);
   const [modalView, setModalView] = useState<ModalView>(null);
   const [lastRoute, setLastRoute] = useState<string | null>(null);
-  const ownerId = session?.user?.id ?? "";
-  const userEmail = session?.user?.email ?? "";
+  type SessionUser = {
+    id?: string | null;
+    email?: string | null;
+    name?: string | null;
+  };
+  const sessionUser = session?.user as SessionUser | undefined;
+  const ownerId = sessionUser?.id ?? "";
+  const userEmail = sessionUser?.email ?? "";
   const isAuthenticated = Boolean(ownerId);
 
   const characterLimitReached = characters.length >= 4;

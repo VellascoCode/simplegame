@@ -30,6 +30,7 @@ export type Character = {
   sprite: string;
   inventory: InventoryItem[];
   stats: CharacterStats;
+  gold: number;
   createdAt: string;
   updatedAt: string;
 };
@@ -95,6 +96,18 @@ export const characterCreateSchema = z.object({
   ownerId: z.string().min(1),
   name: z.string().min(3).max(20),
   sprite: z.string().min(1)
+});
+
+export const characterGoldSchema = z.object({
+  ownerId: z.string().min(1),
+  characterId: z.string().min(1),
+  amount: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER)
+});
+
+export const characterXpSchema = z.object({
+  ownerId: z.string().min(1),
+  characterId: z.string().min(1),
+  amount: z.number().int().min(1).max(10000)
 });
 
 export const onlinePingSchema = z.object({

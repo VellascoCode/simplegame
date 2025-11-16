@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getJSON, postJSON } from "@/lib/clientApi";
 import type { InventoryItem } from "@/lib/models";
+import { useXp } from "@/hooks/useXp";
 
 const SLOT_COUNT = 20;
 const GRID_COLUMNS = 5;
@@ -10,7 +11,19 @@ const STACK_LIMIT = 10;
 
 const itemDefinitions = {
   item1: { name: "Poção de Mana", icon: "/itens/item1.png", stackable: true, maxStack: STACK_LIMIT },
-  item10: { name: "Poção de Vida", icon: "/itens/item10.png", stackable: true, maxStack: STACK_LIMIT }
+  item10: { name: "Poção de Vida", icon: "/itens/item10.png", stackable: true, maxStack: STACK_LIMIT },
+  item30: {
+    name: "Cristal pequeno de XP",
+    icon: "/itens/item30.png",
+    stackable: true,
+    maxStack: STACK_LIMIT
+  },
+  item31: {
+    name: "Cristal médio de XP",
+    icon: "/itens/item31.png",
+    stackable: true,
+    maxStack: STACK_LIMIT
+  }
 } as const;
 
 const presetItems = [
@@ -18,17 +31,25 @@ const presetItems = [
   { id: "item10", quantity: 1 }
 ] satisfies Array<{ id: keyof typeof itemDefinitions; quantity: number }>;
 
+const consumableXp: Record<string, number> = {
+  item30: 25,
+  item31: 60
+};
+
 export function InventoryPanel({
   ownerId,
+  characterId,
   onItemsChange,
   onItemUsed
 }: {
   ownerId: string;
+  characterId?: string;
   onItemsChange?: (items: InventoryItem[]) => void;
   onItemUsed?: (itemId: string) => void;
 }) {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const { grantXp } = useXp(ownerId, characterId);
 
   useEffect(() => {
     if (!ownerId) {
@@ -79,6 +100,10 @@ export function InventoryPanel({
       setItems(response);
       onItemsChange?.(response);
       onItemUsed?.(itemId);
+      const xpAmount = consumableXp[itemId];
+      if (xpAmount) {
+        await grantXp(xpAmount);
+      }
       setFeedback("Item consumido.");
     } catch (err) {
       setFeedback(getMessage(err));

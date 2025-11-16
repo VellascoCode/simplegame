@@ -1,9 +1,20 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextAuthOptions } from "next-auth";
+import type { Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import { findUserByEmail } from "@/lib/repositories";
 import { verifyPassword } from "@/lib/hash";
 
-export const authOptions: NextAuthOptions = {
+type JwtCallbackParams = {
+  token: JWT;
+  user?: { id?: string } | null;
+};
+
+type SessionCallbackParams = {
+  session: Session & { expires: string };
+  token: JWT;
+};
+
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -24,15 +35,15 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt" as const },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: JwtCallbackParams) {
       if (user?.id) {
         token.id = user.id;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: SessionCallbackParams) {
       if (session.user && token.id) {
         session.user.id = token.id as string;
       }

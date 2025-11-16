@@ -1900,7 +1900,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$InventoryPanel
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ChatPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ChatPanel.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/clientApi.ts [app-client] (ecmascript)");
 ;
-var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature(), _s2 = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
@@ -2155,30 +2155,46 @@ function CityPage() {
     const handleCombatEvent = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
         "CityPage.useCallback[handleCombatEvent]": (event)=>{
             setCombatLog({
-                "CityPage.useCallback[handleCombatEvent]": (current)=>[
+                "CityPage.useCallback[handleCombatEvent]": (current)=>{
+                    const entry = {
+                        id: `${Date.now()}-${Math.random()}`,
+                        message: event.message,
+                        tone: event.tone,
+                        createdAt: Date.now()
+                    };
+                    return [
                         ...current,
-                        {
-                            id: `${Date.now()}-${Math.random()}`,
-                            message: event.message,
-                            tone: event.tone,
-                            createdAt: Date.now()
-                        }
-                    ]
+                        entry
+                    ].slice(-20);
+                }
             }["CityPage.useCallback[handleCombatEvent]"]);
         }
     }["CityPage.useCallback[handleCombatEvent]"], []);
+    const handleStatsChange = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "CityPage.useCallback[handleStatsChange]": (stats)=>{
+            setCharacterInfo({
+                "CityPage.useCallback[handleStatsChange]": (previous)=>previous ? {
+                        ...previous,
+                        stats: {
+                            ...previous.stats,
+                            ...stats
+                        }
+                    } : previous
+            }["CityPage.useCallback[handleStatsChange]"]);
+        }
+    }["CityPage.useCallback[handleStatsChange]"], []);
     if (status === "loading" || loadingSession) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                 children: "Carregando sessão…"
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 246,
+                lineNumber: 266,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/play/page.tsx",
-            lineNumber: 245,
+            lineNumber: 265,
             columnNumber: 7
         }, this);
     }
@@ -2198,7 +2214,7 @@ function CityPage() {
                                 className: "h-9 w-9 object-contain"
                             }, void 0, false, {
                                 fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 264,
+                                lineNumber: 284,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2208,7 +2224,7 @@ function CityPage() {
                                         children: link.label
                                     }, void 0, false, {
                                         fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 266,
+                                        lineNumber: 286,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2216,24 +2232,24 @@ function CityPage() {
                                         children: link.description
                                     }, void 0, false, {
                                         fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 267,
+                                        lineNumber: 287,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 265,
+                                lineNumber: 285,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, link.id, true, {
                         fileName: "[project]/app/play/page.tsx",
-                        lineNumber: 259,
+                        lineNumber: 279,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 254,
+                lineNumber: 274,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2246,19 +2262,21 @@ function CityPage() {
                             characterId: characterId,
                             characterName: characterInfo?.name,
                             characterLevel: characterInfo?.stats.level,
+                            characterXp: characterInfo?.stats.xp,
                             initialPosition: sessionState?.position,
                             onPositionChange: handlePositionChange,
                             onCombatEvent: handleCombatEvent,
+                            onStatsChange: handleStatsChange,
                             onReady: setGameReady
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 276,
+                            lineNumber: 296,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: "Faça login e selecione um personagem para carregar o mapa."
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 287,
+                            lineNumber: 309,
                             columnNumber: 13
                         }, this),
                         !gameReady && ownerId && characterId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2267,35 +2285,41 @@ function CityPage() {
                                 className: "h-20 w-20 animate-pulse rounded-full border-4 border-amber-200/60"
                             }, void 0, false, {
                                 fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 291,
+                                lineNumber: 313,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 290,
+                            lineNumber: 312,
                             columnNumber: 13
                         }, this),
                         characterInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(CityHud, {
                             stats: characterInfo.stats
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 294,
+                            lineNumber: 316,
                             columnNumber: 29
+                        }, this),
+                        ownerId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TopCenterSlots, {
+                            onOpenEquipment: ()=>setEquipOpen(true)
+                        }, void 0, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 317,
+                            columnNumber: 23
                         }, this),
                         ownerId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(QuickSlots, {
                             ownerId: ownerId,
                             refreshKey: inventoryVersion,
                             onItemUsed: handleItemUsed,
-                            onInventoryChange: notifyInventoryChange,
-                            onOpenEquipment: ()=>setEquipOpen(true)
+                            onInventoryChange: notifyInventoryChange
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 296,
+                            lineNumber: 319,
                             columnNumber: 13
                         }, this),
                         ownerId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$OnlineBadge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["OnlineBadge"], {}, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 304,
+                            lineNumber: 326,
                             columnNumber: 23
                         }, this),
                         ownerId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$BottomMenu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BottomMenu"], {
@@ -2304,7 +2328,7 @@ function CityPage() {
                             square: true
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 305,
+                            lineNumber: 327,
                             columnNumber: 23
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MiniMapOverlay, {
@@ -2312,18 +2336,18 @@ function CityPage() {
                             position: playerPosition ?? sessionState?.position
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 306,
+                            lineNumber: 328,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 274,
+                    lineNumber: 294,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 273,
+                lineNumber: 293,
                 columnNumber: 7
             }, this),
             hudEffect && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2331,7 +2355,7 @@ function CityPage() {
                 children: hudEffect.type === "mana" ? "+ Mana" : "+ Vida"
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 313,
+                lineNumber: 335,
                 columnNumber: 9
             }, this),
             feedback && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2340,12 +2364,12 @@ function CityPage() {
                     children: feedback
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 319,
+                    lineNumber: 341,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 318,
+                lineNumber: 340,
                 columnNumber: 9
             }, this),
             ownerId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2356,17 +2380,17 @@ function CityPage() {
                         ownerId: ownerId
                     }, void 0, false, {
                         fileName: "[project]/app/play/page.tsx",
-                        lineNumber: 325,
+                        lineNumber: 347,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 324,
+                    lineNumber: 346,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 323,
+                lineNumber: 345,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(InventoryDrawer, {
@@ -2377,7 +2401,7 @@ function CityPage() {
                 onInventoryChange: notifyInventoryChange
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 329,
+                lineNumber: 351,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ChatDrawer, {
@@ -2388,7 +2412,7 @@ function CityPage() {
                 combatLog: combatLog
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 336,
+                lineNumber: 358,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(PanelDrawer, {
@@ -2405,7 +2429,7 @@ function CityPage() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 350,
+                            lineNumber: 372,
                             columnNumber: 15
                         }, void 0),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2415,7 +2439,7 @@ function CityPage() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 351,
+                            lineNumber: 373,
                             columnNumber: 15
                         }, void 0),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2425,7 +2449,7 @@ function CityPage() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 352,
+                            lineNumber: 374,
                             columnNumber: 15
                         }, void 0),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2435,24 +2459,24 @@ function CityPage() {
                             children: "Logout"
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 353,
+                            lineNumber: 375,
                             columnNumber: 15
                         }, void 0)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 349,
+                    lineNumber: 371,
                     columnNumber: 13
                 }, void 0) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     children: "Nenhum personagem carregado."
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 358,
+                    lineNumber: 380,
                     columnNumber: 13
                 }, void 0)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 343,
+                lineNumber: 365,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(PanelDrawer, {
@@ -2463,12 +2487,12 @@ function CityPage() {
                     children: "Configurações gerais do jogo serão adicionadas aqui."
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 366,
+                    lineNumber: 388,
                     columnNumber: 18
                 }, void 0)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 362,
+                lineNumber: 384,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(CraftingDrawer, {
@@ -2476,7 +2500,7 @@ function CityPage() {
                 onClose: ()=>setCraftingOpen(false)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 368,
+                lineNumber: 390,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(EquipmentDrawer, {
@@ -2484,17 +2508,17 @@ function CityPage() {
                 onClose: ()=>setEquipOpen(false)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 369,
+                lineNumber: 391,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 252,
+        lineNumber: 272,
         columnNumber: 5
     }, this);
 }
-_s(CityPage, "yXallRIIkJaSBB1E36+ZqItd6bk=", false, function() {
+_s(CityPage, "zTzCoAcpftgsInMO9+K1XXNNY48=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSession"]
@@ -2547,20 +2571,20 @@ function CityHud({ stats }) {
                                         children: bar.label
                                     }, void 0, false, {
                                         fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 398,
+                                        lineNumber: 420,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         children: bar.value
                                     }, void 0, false, {
                                         fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 399,
+                                        lineNumber: 421,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 397,
+                                lineNumber: 419,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2572,24 +2596,24 @@ function CityHud({ stats }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/app/play/page.tsx",
-                                    lineNumber: 402,
+                                    lineNumber: 424,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 401,
+                                lineNumber: 423,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, bar.key, true, {
                         fileName: "[project]/app/play/page.tsx",
-                        lineNumber: 396,
+                        lineNumber: 418,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 392,
+                lineNumber: 414,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2599,7 +2623,7 @@ function CityHud({ stats }) {
                         children: "NVL"
                     }, void 0, false, {
                         fileName: "[project]/app/play/page.tsx",
-                        lineNumber: 412,
+                        lineNumber: 434,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2607,24 +2631,24 @@ function CityHud({ stats }) {
                         children: stats.level
                     }, void 0, false, {
                         fileName: "[project]/app/play/page.tsx",
-                        lineNumber: 413,
+                        lineNumber: 435,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 411,
+                lineNumber: 433,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 391,
+        lineNumber: 413,
         columnNumber: 5
     }, this);
 }
 _c1 = CityHud;
-function QuickSlots({ ownerId, refreshKey, onItemUsed, onInventoryChange, onOpenEquipment }) {
+function QuickSlots({ ownerId, refreshKey, onItemUsed, onInventoryChange }) {
     _s1();
     const [items, setItems] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [slotRefs, setSlotRefs] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
@@ -2768,179 +2792,213 @@ function QuickSlots({ ownerId, refreshKey, onItemUsed, onInventoryChange, onOpen
         2,
         3
     ].map((slotIndex)=>resolvedSlots[slotIndex] ?? null);
-    const equipmentSlots = [
-        {
-            id: "cordao",
-            icon: "🔗"
-        },
-        {
-            id: "anel",
-            icon: "💍"
-        },
-        {
-            id: "arma",
-            icon: "⚔️"
-        }
-    ];
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "pointer-events-auto absolute right-4 top-20 flex w-[120px] flex-col sm:right-6 md:top-24",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "relative rounded-[28px] border border-white/10 bg-black/70 p-3 shadow-xl",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex flex-col gap-2",
-                        children: quickSlots.map((slot, index)=>{
-                            const icon = slot ? iconMap[slot.id] : undefined;
-                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                type: "button",
-                                className: `relative flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-lg text-amber-100 transition hover:border-amber-200 ${slot ? "shadow-lg" : ""}`,
-                                onClick: ()=>consumeSlot(index),
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "absolute left-1 top-1 text-[10px] text-amber-200",
-                                        children: index + 1
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 560,
-                                        columnNumber: 17
-                                    }, this),
-                                    slot && icon ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                        src: icon,
-                                        alt: slot.name,
-                                        className: "h-7 w-7 object-contain"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 562,
-                                        columnNumber: 19
-                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: "•"
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 564,
-                                        columnNumber: 19
-                                    }, this),
-                                    slot && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "absolute bottom-1 right-1 rounded-full bg-black/70 px-2 text-xs",
-                                        children: slot.quantity
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 567,
-                                        columnNumber: 19
-                                    }, this)
-                                ]
-                            }, index, true, {
-                                fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 554,
-                                columnNumber: 15
-                            }, this);
-                        })
-                    }, void 0, false, {
-                        fileName: "[project]/app/play/page.tsx",
-                        lineNumber: 550,
-                        columnNumber: 9
-                    }, this),
-                    pickerSlot !== null && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "absolute right-[calc(100%+12px)] top-1/2 w-48 -translate-y-1/2 rounded-2xl border border-white/15 bg-black/90 p-3 text-sm shadow-2xl",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: "font-semibold text-amber-100",
-                                children: [
-                                    "Escolha o item para o slot ",
-                                    pickerSlot + 1
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 577,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mt-3 flex flex-col gap-2",
-                                children: [
-                                    availableItems.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "button",
-                                            className: "rounded-lg border border-white/10 bg-black/40 px-3 py-1.5 text-left text-amber-100 hover:border-amber-200",
-                                            onClick: ()=>assignSlot(item, pickerSlot),
-                                            children: [
-                                                item.name,
-                                                " (",
-                                                item.quantity,
-                                                ")"
-                                            ]
-                                        }, item.id, true, {
-                                            fileName: "[project]/app/play/page.tsx",
-                                            lineNumber: 580,
-                                            columnNumber: 19
-                                        }, this)),
-                                    availableItems.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: "Sem itens disponíveis."
-                                    }, void 0, false, {
-                                        fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 589,
-                                        columnNumber: 49
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 578,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                type: "button",
-                                className: "mt-3 w-full rounded-xl bg-gradient-to-r from-amber-200/80 to-amber-500/80 py-1.5 text-xs font-semibold text-stone-900",
-                                onClick: ()=>setPickerSlot(null),
-                                children: "Fechar"
-                            }, void 0, false, {
-                                fileName: "[project]/app/play/page.tsx",
-                                lineNumber: 591,
-                                columnNumber: 15
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/app/play/page.tsx",
-                        lineNumber: 576,
-                        columnNumber: 13
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/app/play/page.tsx",
-                lineNumber: 549,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mt-3 rounded-[28px] border border-white/10 bg-black/70 p-3 shadow-xl",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "pointer-events-auto absolute right-2 top-20 flex flex-col items-end gap-4 sm:right-4 md:top-24",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "relative rounded-[28px] border border-white/10 bg-black/70 p-2 shadow-xl",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "flex flex-col gap-2",
-                    children: equipmentSlots.map((slot)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                    children: quickSlots.map((slot, index)=>{
+                        const icon = slot ? iconMap[slot.id] : undefined;
+                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             type: "button",
-                            className: "flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-lg text-amber-100",
-                            onClick: ()=>onOpenEquipment?.(),
-                            "aria-label": `Gerenciar ${slot.id}`,
-                            children: slot.icon
-                        }, slot.id, false, {
+                            className: `relative flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-lg text-amber-100 transition hover:border-amber-200 ${slot ? "shadow-lg" : ""}`,
+                            onClick: ()=>consumeSlot(index),
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "absolute left-1 top-1 text-[10px] text-amber-200",
+                                    children: index + 1
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 576,
+                                    columnNumber: 17
+                                }, this),
+                                slot && icon ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                    src: icon,
+                                    alt: slot.name,
+                                    className: "h-7 w-7 object-contain"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 578,
+                                    columnNumber: 19
+                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    children: "•"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 580,
+                                    columnNumber: 19
+                                }, this),
+                                slot && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "absolute bottom-1 right-1 rounded-full bg-black/70 px-2 text-xs",
+                                    children: slot.quantity
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 583,
+                                    columnNumber: 19
+                                }, this)
+                            ]
+                        }, index, true, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 604,
-                            columnNumber: 13
-                        }, this))
+                            lineNumber: 570,
+                            columnNumber: 15
+                        }, this);
+                    })
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 602,
+                    lineNumber: 566,
                     columnNumber: 9
+                }, this),
+                pickerSlot !== null && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "absolute right-[calc(100%+12px)] top-1/2 w-48 -translate-y-1/2 rounded-2xl border border-white/15 bg-black/90 p-3 text-sm shadow-2xl",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "font-semibold text-amber-100",
+                            children: [
+                                "Escolha o item para o slot ",
+                                pickerSlot + 1
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 593,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "mt-3 flex flex-col gap-2",
+                            children: [
+                                availableItems.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        className: "rounded-lg border border-white/10 bg-black/40 px-3 py-1.5 text-left text-amber-100 hover:border-amber-200",
+                                        onClick: ()=>assignSlot(item, pickerSlot),
+                                        children: [
+                                            item.name,
+                                            " (",
+                                            item.quantity,
+                                            ")"
+                                        ]
+                                    }, item.id, true, {
+                                        fileName: "[project]/app/play/page.tsx",
+                                        lineNumber: 596,
+                                        columnNumber: 19
+                                    }, this)),
+                                availableItems.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    children: "Sem itens disponíveis."
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 605,
+                                    columnNumber: 49
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 594,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            type: "button",
+                            className: "mt-3 w-full rounded-xl bg-gradient-to-r from-amber-200/80 to-amber-500/80 py-1.5 text-xs font-semibold text-stone-900",
+                            onClick: ()=>setPickerSlot(null),
+                            children: "Fechar"
+                        }, void 0, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 607,
+                            columnNumber: 15
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/play/page.tsx",
+                    lineNumber: 592,
+                    columnNumber: 13
                 }, this)
-            }, void 0, false, {
-                fileName: "[project]/app/play/page.tsx",
-                lineNumber: 601,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/play/page.tsx",
+            lineNumber: 565,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 548,
+        lineNumber: 564,
         columnNumber: 5
     }, this);
 }
 _s1(QuickSlots, "2emdKxMuyC2lYiE8Us4ue0p2BEs=");
 _c2 = QuickSlots;
+function TopCenterSlots({ onOpenEquipment }) {
+    const slots = [
+        {
+            id: "necklace",
+            label: "Cordão",
+            hint: "CD",
+            type: "equipment"
+        },
+        {
+            id: "ring",
+            label: "Anel",
+            hint: "AN",
+            type: "equipment"
+        },
+        {
+            id: "weapon",
+            label: "Arma",
+            hint: "WP",
+            type: "equipment"
+        },
+        {
+            id: "skill-primary",
+            label: "Skill 1",
+            hint: "S1",
+            type: "skill"
+        },
+        {
+            id: "skill-secondary",
+            label: "Skill 2",
+            hint: "S2",
+            type: "skill"
+        },
+        {
+            id: "skill-ultimate",
+            label: "Skill 3",
+            hint: "S3",
+            type: "skill"
+        },
+        {
+            id: "skill-extra",
+            label: "Skill 4",
+            hint: "S4",
+            type: "skill"
+        }
+    ];
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "pointer-events-none absolute left-1/2 top-3 z-30 flex -translate-x-1/2 items-center gap-2 rounded-[36px] border border-white/10 bg-black/70 px-4 py-2 shadow-[0_15px_40px_rgba(0,0,0,0.6)]",
+        children: slots.map((slot)=>{
+            const isEquipment = slot.type === "equipment";
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                type: "button",
+                onClick: isEquipment ? onOpenEquipment : undefined,
+                className: `pointer-events-auto flex h-12 w-12 flex-col items-center justify-center rounded-2xl border text-xs font-semibold uppercase tracking-[0.3em] text-amber-100 transition ${isEquipment ? "border-amber-200/30 bg-black/60 hover:border-amber-200" : "border-white/15 bg-black/50 hover:border-amber-200"}`,
+                "aria-label": slot.label,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    className: "text-base",
+                    children: slot.hint
+                }, void 0, false, {
+                    fileName: "[project]/app/play/page.tsx",
+                    lineNumber: 652,
+                    columnNumber: 13
+                }, this)
+            }, slot.id, false, {
+                fileName: "[project]/app/play/page.tsx",
+                lineNumber: 641,
+                columnNumber: 11
+            }, this);
+        })
+    }, void 0, false, {
+        fileName: "[project]/app/play/page.tsx",
+        lineNumber: 637,
+        columnNumber: 5
+    }, this);
+}
+_c3 = TopCenterSlots;
 function Drawer({ open, onClose, children, title }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: `city-drawer ${open ? "open" : ""}`,
@@ -2955,7 +3013,7 @@ function Drawer({ open, onClose, children, title }) {
                             children: title
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 632,
+                            lineNumber: 672,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2964,13 +3022,13 @@ function Drawer({ open, onClose, children, title }) {
                             children: "×"
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 633,
+                            lineNumber: 673,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 631,
+                    lineNumber: 671,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2978,22 +3036,22 @@ function Drawer({ open, onClose, children, title }) {
                     children: children
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 637,
+                    lineNumber: 677,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/play/page.tsx",
-            lineNumber: 630,
+            lineNumber: 670,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 629,
+        lineNumber: 669,
         columnNumber: 5
     }, this);
 }
-_c3 = Drawer;
+_c4 = Drawer;
 function InventoryDrawer({ open, onClose, ownerId, onItemUsed, onInventoryChange }) {
     if (!ownerId) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Drawer, {
@@ -3006,16 +3064,16 @@ function InventoryDrawer({ open, onClose, ownerId, onItemUsed, onInventoryChange
             onItemsChange: ()=>onInventoryChange?.()
         }, void 0, false, {
             fileName: "[project]/app/play/page.tsx",
-            lineNumber: 659,
+            lineNumber: 699,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 658,
+        lineNumber: 698,
         columnNumber: 5
     }, this);
 }
-_c4 = InventoryDrawer;
+_c5 = InventoryDrawer;
 function EquipmentDrawer({ open, onClose }) {
     const slots = [
         {
@@ -3076,7 +3134,7 @@ function EquipmentDrawer({ open, onClose }) {
                                     children: slot.label
                                 }, void 0, false, {
                                     fileName: "[project]/app/play/page.tsx",
-                                    lineNumber: 688,
+                                    lineNumber: 728,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3084,18 +3142,18 @@ function EquipmentDrawer({ open, onClose }) {
                                     children: slot.hint
                                 }, void 0, false, {
                                     fileName: "[project]/app/play/page.tsx",
-                                    lineNumber: 689,
+                                    lineNumber: 729,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, slot.id, true, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 684,
+                            lineNumber: 724,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 682,
+                    lineNumber: 722,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -3105,146 +3163,13 @@ function EquipmentDrawer({ open, onClose }) {
                             children: "Buffs & Debuffs"
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 694,
+                            lineNumber: 734,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "mt-2 rounded-2xl border border-white/10 bg-black/30 p-3 text-sm text-amber-100/80",
                             children: "Nenhum efeito ativo."
                         }, void 0, false, {
-                            fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 695,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 693,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                            className: "text-xs uppercase tracking-[0.25em] text-amber-100/70",
-                            children: "Atributos"
-                        }, void 0, false, {
-                            fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 700,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                            className: "mt-2 space-y-1 text-sm text-amber-100/80",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                    children: "Força: 0"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/play/page.tsx",
-                                    lineNumber: 702,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                    children: "Destreza: 0"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/play/page.tsx",
-                                    lineNumber: 703,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                                    children: "Inteligência: 0"
-                                }, void 0, false, {
-                                    fileName: "[project]/app/play/page.tsx",
-                                    lineNumber: 704,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 701,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 699,
-                    columnNumber: 9
-                }, this)
-            ]
-        }, void 0, true, {
-            fileName: "[project]/app/play/page.tsx",
-            lineNumber: 681,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
-        fileName: "[project]/app/play/page.tsx",
-        lineNumber: 680,
-        columnNumber: 5
-    }, this);
-}
-_c5 = EquipmentDrawer;
-function ChatDrawer({ open, onClose, ownerId, characterName, combatLog }) {
-    if (!ownerId) return null;
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Drawer, {
-        open: open,
-        onClose: onClose,
-        title: "Chat",
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "flex flex-col gap-4",
-            children: [
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                            className: "text-sm uppercase tracking-[0.3em] text-amber-100/70",
-                            children: "Global"
-                        }, void 0, false, {
-                            fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 730,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ChatPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ChatPanel"], {
-                            ownerId: ownerId,
-                            characterName: characterName
-                        }, void 0, false, {
-                            fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 731,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 729,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                            className: "text-sm uppercase tracking-[0.3em] text-amber-100/70",
-                            children: "Battle"
-                        }, void 0, false, {
-                            fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 734,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "mt-2 flex max-h-60 flex-col gap-2 overflow-y-auto rounded-2xl border border-white/10 bg-black/40 p-3 text-xs text-amber-100",
-                            children: [
-                                combatLog.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    className: "text-amber-100/60",
-                                    children: "Sem eventos recentes."
-                                }, void 0, false, {
-                                    fileName: "[project]/app/play/page.tsx",
-                                    lineNumber: 736,
-                                    columnNumber: 40
-                                }, this),
-                                combatLog.slice(-20).map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: `rounded-xl border px-3 py-1 font-semibold ${entry.tone === "xp" ? "border-green-200/40 text-green-200" : "border-red-200/40 text-red-200"}`,
-                                        children: entry.message
-                                    }, entry.id, false, {
-                                        fileName: "[project]/app/play/page.tsx",
-                                        lineNumber: 738,
-                                        columnNumber: 15
-                                    }, this))
-                            ]
-                        }, void 0, true, {
                             fileName: "[project]/app/play/page.tsx",
                             lineNumber: 735,
                             columnNumber: 11
@@ -3254,20 +3179,278 @@ function ChatDrawer({ open, onClose, ownerId, characterName, combatLog }) {
                     fileName: "[project]/app/play/page.tsx",
                     lineNumber: 733,
                     columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-xs uppercase tracking-[0.25em] text-amber-100/70",
+                            children: "Atributos"
+                        }, void 0, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 740,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                            className: "mt-2 space-y-1 text-sm text-amber-100/80",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                    children: "Força: 0"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 742,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                    children: "Destreza: 0"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 743,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                    children: "Inteligência: 0"
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 744,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 741,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/play/page.tsx",
+                    lineNumber: 739,
+                    columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/play/page.tsx",
-            lineNumber: 728,
+            lineNumber: 721,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 727,
+        lineNumber: 720,
         columnNumber: 5
     }, this);
 }
-_c6 = ChatDrawer;
+_c6 = EquipmentDrawer;
+function ChatDrawer({ open, onClose, ownerId, characterName, combatLog }) {
+    _s2();
+    if (!ownerId) return null;
+    const tabs = [
+        {
+            id: "global",
+            label: "Global"
+        },
+        {
+            id: "logs",
+            label: "Logs"
+        },
+        {
+            id: "guild",
+            label: "Guild"
+        }
+    ];
+    const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("global");
+    const { message, setMessage, messages, error, sendMessage } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ChatPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useChatFeed"])(ownerId, characterName);
+    async function handleSubmit(event) {
+        event.preventDefault();
+        if (activeTab !== "global") return;
+        await sendMessage();
+    }
+    const disableInput = activeTab !== "global";
+    const visibleMessages = messages.slice(-20);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Drawer, {
+        open: open,
+        onClose: onClose,
+        title: "Chat",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "flex h-[60vh] flex-col gap-4 text-amber-50",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex rounded-full border border-white/10 bg-black/50 p-1 text-sm font-semibold uppercase tracking-[0.3em]",
+                    children: tabs.map((tab)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            type: "button",
+                            className: `flex-1 rounded-full px-3 py-2 transition ${activeTab === tab.id ? "bg-amber-200 text-stone-900" : "text-amber-100/70"}`,
+                            onClick: ()=>setActiveTab(tab.id),
+                            children: tab.label
+                        }, tab.id, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 789,
+                            columnNumber: 13
+                        }, this))
+                }, void 0, false, {
+                    fileName: "[project]/app/play/page.tsx",
+                    lineNumber: 787,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex-1 overflow-y-auto rounded-[28px] border border-white/10 bg-black/50 p-4",
+                    children: [
+                        activeTab === "global" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex flex-col gap-2 text-sm",
+                            children: [
+                                error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-red-300",
+                                    children: error
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 804,
+                                    columnNumber: 25
+                                }, this),
+                                visibleMessages.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-amber-100/70",
+                                    children: "Sem mensagens recentes."
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 806,
+                                    columnNumber: 17
+                                }, this),
+                                visibleMessages.map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "rounded-2xl border border-white/10 bg-black/60 px-3 py-2 text-amber-100",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xs uppercase tracking-[0.2em] text-amber-200/70",
+                                                children: [
+                                                    entry.characterName ?? entry.ownerId,
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "ml-2 text-[10px] text-amber-100/50",
+                                                        children: new Date(entry.createdAt).toLocaleTimeString()
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/play/page.tsx",
+                                                        lineNumber: 815,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/app/play/page.tsx",
+                                                lineNumber: 813,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "mt-1 text-base",
+                                                children: entry.message
+                                            }, void 0, false, {
+                                                fileName: "[project]/app/play/page.tsx",
+                                                lineNumber: 819,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, entry.id, true, {
+                                        fileName: "[project]/app/play/page.tsx",
+                                        lineNumber: 809,
+                                        columnNumber: 17
+                                    }, this))
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 803,
+                            columnNumber: 13
+                        }, this),
+                        activeTab === "logs" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex flex-col gap-2 text-xs text-amber-100",
+                            children: [
+                                combatLog.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-amber-100/60",
+                                    children: "Sem eventos recentes."
+                                }, void 0, false, {
+                                    fileName: "[project]/app/play/page.tsx",
+                                    lineNumber: 826,
+                                    columnNumber: 42
+                                }, this),
+                                combatLog.slice(-20).map((entry)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: `rounded-xl border px-3 py-1 font-semibold ${entry.tone === "xp" ? "border-green-200/40 text-green-200" : "border-red-200/40 text-red-200"}`,
+                                        children: entry.message
+                                    }, entry.id, false, {
+                                        fileName: "[project]/app/play/page.tsx",
+                                        lineNumber: 828,
+                                        columnNumber: 17
+                                    }, this))
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 825,
+                            columnNumber: 13
+                        }, this),
+                        activeTab === "guild" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-sm text-amber-100/70",
+                            children: "Chat de guilda em breve."
+                        }, void 0, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 842,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/play/page.tsx",
+                    lineNumber: 801,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                    onSubmit: handleSubmit,
+                    className: "flex flex-col gap-2 rounded-[28px] border border-white/10 bg-black/60 p-4",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                            htmlFor: "drawer-chat-message",
+                            className: "text-xs uppercase tracking-[0.3em] text-amber-100/70",
+                            children: "Mensagem"
+                        }, void 0, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 849,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                            id: "drawer-chat-message",
+                            className: "min-h-[90px] rounded-2xl border border-white/10 bg-black/40 p-3 text-sm text-amber-50 outline-none focus:border-amber-200",
+                            value: message,
+                            onChange: (event)=>setMessage(event.target.value),
+                            maxLength: 280,
+                            placeholder: disableInput ? "Selecione a aba Global para enviar mensagens." : "Digite sua mensagem",
+                            disabled: disableInput
+                        }, void 0, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 852,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            type: "submit",
+                            className: "rounded-2xl bg-gradient-to-r from-amber-200 to-amber-500 py-2 text-center text-sm font-bold uppercase tracking-[0.4em] text-stone-900 disabled:cursor-not-allowed disabled:opacity-40",
+                            disabled: disableInput || message.trim().length === 0,
+                            children: "Enviar"
+                        }, void 0, false, {
+                            fileName: "[project]/app/play/page.tsx",
+                            lineNumber: 861,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/play/page.tsx",
+                    lineNumber: 845,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/play/page.tsx",
+            lineNumber: 786,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/app/play/page.tsx",
+        lineNumber: 785,
+        columnNumber: 5
+    }, this);
+}
+_s2(ChatDrawer, "O1H3hKvwlnPJJZ5q3RsNo0abrGM=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ChatPanel$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useChatFeed"]
+    ];
+});
+_c7 = ChatDrawer;
 function PanelDrawer({ title, open, onClose, content }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Drawer, {
         open: open,
@@ -3276,11 +3459,11 @@ function PanelDrawer({ title, open, onClose, content }) {
         children: content
     }, void 0, false, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 766,
+        lineNumber: 886,
         columnNumber: 5
     }, this);
 }
-_c7 = PanelDrawer;
+_c8 = PanelDrawer;
 function MiniMapOverlay({ visible, position }) {
     if (!visible) return null;
     const MAP_WIDTH = 3200;
@@ -3295,7 +3478,7 @@ function MiniMapOverlay({ visible, position }) {
                 children: "MINI MAPA"
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 786,
+                lineNumber: 906,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3308,22 +3491,22 @@ function MiniMapOverlay({ visible, position }) {
                     }
                 }, void 0, false, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 788,
+                    lineNumber: 908,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/play/page.tsx",
-                lineNumber: 787,
+                lineNumber: 907,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 785,
+        lineNumber: 905,
         columnNumber: 5
     }, this);
 }
-_c8 = MiniMapOverlay;
+_c9 = MiniMapOverlay;
 const craftingRecipes = [
     {
         id: "life",
@@ -3357,7 +3540,7 @@ function CraftingDrawer({ open, onClose }) {
                             children: recipe.name
                         }, void 0, false, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 821,
+                            lineNumber: 941,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3367,7 +3550,7 @@ function CraftingDrawer({ open, onClose }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 822,
+                            lineNumber: 942,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3377,38 +3560,39 @@ function CraftingDrawer({ open, onClose }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/play/page.tsx",
-                            lineNumber: 823,
+                            lineNumber: 943,
                             columnNumber: 13
                         }, this)
                     ]
                 }, recipe.id, true, {
                     fileName: "[project]/app/play/page.tsx",
-                    lineNumber: 820,
+                    lineNumber: 940,
                     columnNumber: 11
                 }, this))
         }, void 0, false, {
             fileName: "[project]/app/play/page.tsx",
-            lineNumber: 818,
+            lineNumber: 938,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/play/page.tsx",
-        lineNumber: 817,
+        lineNumber: 937,
         columnNumber: 5
     }, this);
 }
-_c9 = CraftingDrawer;
-var _c, _c1, _c2, _c3, _c4, _c5, _c6, _c7, _c8, _c9;
+_c10 = CraftingDrawer;
+var _c, _c1, _c2, _c3, _c4, _c5, _c6, _c7, _c8, _c9, _c10;
 __turbopack_context__.k.register(_c, "CityPage");
 __turbopack_context__.k.register(_c1, "CityHud");
 __turbopack_context__.k.register(_c2, "QuickSlots");
-__turbopack_context__.k.register(_c3, "Drawer");
-__turbopack_context__.k.register(_c4, "InventoryDrawer");
-__turbopack_context__.k.register(_c5, "EquipmentDrawer");
-__turbopack_context__.k.register(_c6, "ChatDrawer");
-__turbopack_context__.k.register(_c7, "PanelDrawer");
-__turbopack_context__.k.register(_c8, "MiniMapOverlay");
-__turbopack_context__.k.register(_c9, "CraftingDrawer");
+__turbopack_context__.k.register(_c3, "TopCenterSlots");
+__turbopack_context__.k.register(_c4, "Drawer");
+__turbopack_context__.k.register(_c5, "InventoryDrawer");
+__turbopack_context__.k.register(_c6, "EquipmentDrawer");
+__turbopack_context__.k.register(_c7, "ChatDrawer");
+__turbopack_context__.k.register(_c8, "PanelDrawer");
+__turbopack_context__.k.register(_c9, "MiniMapOverlay");
+__turbopack_context__.k.register(_c10, "CraftingDrawer");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }

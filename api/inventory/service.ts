@@ -6,6 +6,7 @@ import {
 import { getInventory, saveInventory } from "@/lib/repositories";
 
 const STACK_LIMIT = 100;
+const MAX_SLOTS = 20;
 
 export async function listInventory(ownerId: string) {
   return getInventory(ownerId);
@@ -33,6 +34,9 @@ export async function addItem(payload: unknown) {
   }
 
   while (remaining > 0) {
+    if (current.length >= MAX_SLOTS) {
+      throw new Error("Inventário cheio");
+    }
     const amount = Math.min(slotLimit, remaining);
     current.push({
       ...data.item,
