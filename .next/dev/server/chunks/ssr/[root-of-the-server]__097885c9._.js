@@ -1067,6 +1067,7 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                 statsCallback = statsCallbackRef;
                 dropLayer;
                 groundDrops = [];
+                lootNotices = [];
                 preload() {
                     groundTiles.forEach((tile)=>{
                         this.load.image(`ground-${tile.id}`, tile.image);
@@ -1241,6 +1242,11 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                     const lancer = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$game$2f$lancers$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createLancer"])(this, index, LANCER_TINTS, this.worldWidth, this.worldHeight, LANCER_SHEET_RUN, LANCER_RUN_KEY);
                     this.lancers.push(lancer);
                 }
+                removeLancer(lancer) {
+                    lancer.sprite.setActive(false);
+                    lancer.label.setActive(false);
+                    this.lancers = this.lancers.filter((entry)=>entry !== lancer);
+                }
                 grantXp(amount) {
                     if (!this.playerOwnerId || !this.playerCharacterId || amount <= 0) return;
                     void (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$clientApi$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["postJSON"])("/api/character/xp", {
@@ -1267,8 +1273,11 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                             message: `${def.name} obtido`,
                             tone: "xp"
                         });
+                        this.showLootNotification(`+1 ${def.name}`, def.texture);
+                        playToneRef?.(760);
                     } catch  {
                         this.spawnGroundDrop(def, position);
+                        this.showLootNotification(`${def.name} caiu no chão`, def.texture);
                     }
                 }
                 spawnGroundDrop(def, position) {
@@ -1302,6 +1311,57 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                         sprite.destroy();
                         label.destroy();
                         this.groundDrops = this.groundDrops.filter((entry)=>entry.sprite !== sprite);
+                    });
+                }
+                showLootNotification(label, textureKey) {
+                    const maxNotices = 3;
+                    const positionIndex = Math.min(this.lootNotices.length, maxNotices - 1);
+                    const baseX = this.cameras.main.worldView.x + 110;
+                    const baseY = this.cameras.main.worldView.y + 90 + positionIndex * 46;
+                    const background = this.add.rectangle(0, 0, 220, 40, 0x000000, 0.6).setOrigin(0, 0.5).setStrokeStyle(1, 0xfff3c0, 0.35);
+                    const text = this.add.text(52, 0, label, {
+                        color: "#fff6ce",
+                        fontSize: "14px",
+                        fontStyle: "bold"
+                    }).setOrigin(0, 0.5);
+                    const children = [
+                        background,
+                        text
+                    ];
+                    if (textureKey && this.textures.exists(textureKey)) {
+                        const icon = this.add.image(28, 0, textureKey).setOrigin(0.5).setScale(0.7);
+                        children.push(icon);
+                    } else {
+                        const marker = this.add.text(28, 0, "★", {
+                            color: "#ffe07d",
+                            fontSize: "18px"
+                        }).setOrigin(0.5, 0.5);
+                        children.push(marker);
+                    }
+                    const notice = this.add.container(baseX, baseY, children);
+                    notice.setScrollFactor(0);
+                    this.lootNotices.push(notice);
+                    this.tweens.add({
+                        targets: notice,
+                        alpha: {
+                            from: 0,
+                            to: 1
+                        },
+                        duration: 150,
+                        onComplete: ()=>{
+                            this.time.delayedCall(2000, ()=>{
+                                this.tweens.add({
+                                    targets: notice,
+                                    alpha: 0,
+                                    y: notice.y - 20,
+                                    duration: 350,
+                                    onComplete: ()=>{
+                                        notice.destroy();
+                                        this.lootNotices = this.lootNotices.filter((entry)=>entry !== notice);
+                                    }
+                                });
+                            });
+                        }
                     });
                 }
                 handleDropRewards(position) {
@@ -1338,13 +1398,13 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                         awardGold: (amount)=>this.awardGold(amount),
                         recordBestiary: (monsterType)=>this.recordBestiaryKill(monsterType),
                         respawn: (delay)=>this.time.delayedCall(delay, ()=>{
-                                this.lancers = this.lancers.filter((entry)=>entry !== lancer);
                                 this.spawnLancer(Phaser.Math.Between(0, 1000));
                             }),
                         rewardItems: ()=>this.handleDropRewards({
                                 x: lancer.sprite.x,
                                 y: lancer.sprite.y
-                            })
+                            }),
+                        onRemove: ()=>this.removeLancer(lancer)
                     });
                 }
                 awardGold(amount) {
@@ -1355,6 +1415,8 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                         amount
                     }).then(({ gold })=>{
                         this.goldCallback?.(gold);
+                        this.showLootNotification(`+${amount} ouro`);
+                        playToneRef?.(700);
                     }).catch(()=>undefined);
                 }
                 recordBestiaryKill(monsterId) {
@@ -1467,14 +1529,14 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
         children: feedback
     }, void 0, false, {
         fileName: "[project]/components/CityPhaser.tsx",
-        lineNumber: 741,
+        lineNumber: 803,
         columnNumber: 24
     }, this);
     if (!mapData) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
         children: "Carregando mapa…"
     }, void 0, false, {
         fileName: "[project]/components/CityPhaser.tsx",
-        lineNumber: 742,
+        lineNumber: 804,
         columnNumber: 24
     }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1485,7 +1547,7 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                 ref: ref
             }, void 0, false, {
                 fileName: "[project]/components/CityPhaser.tsx",
-                lineNumber: 746,
+                lineNumber: 808,
                 columnNumber: 7
             }, this),
             orientationHint && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1493,7 +1555,7 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                 children: "Melhor experiência na horizontal — gire o dispositivo."
             }, void 0, false, {
                 fileName: "[project]/components/CityPhaser.tsx",
-                lineNumber: 748,
+                lineNumber: 810,
                 columnNumber: 9
             }, this),
             showPad && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1509,18 +1571,18 @@ function CityPhaser({ ownerId, characterId, characterName, characterLevel, chara
                         children: button.label
                     }, button.className, false, {
                         fileName: "[project]/components/CityPhaser.tsx",
-                        lineNumber: 753,
+                        lineNumber: 815,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/CityPhaser.tsx",
-                lineNumber: 751,
+                lineNumber: 813,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/CityPhaser.tsx",
-        lineNumber: 745,
+        lineNumber: 807,
         columnNumber: 5
     }, this);
 }

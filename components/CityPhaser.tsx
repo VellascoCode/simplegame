@@ -309,6 +309,7 @@ export function CityPhaser({
           sprite: Phaser.GameObjects.Image;
           label: Phaser.GameObjects.Text;
         }> = [];
+        private lootNotices: Phaser.GameObjects.Container[] = [];
 
         preload() {
           groundTiles.forEach((tile) => {
@@ -518,6 +519,12 @@ export function CityPhaser({
           this.lancers.push(lancer);
         }
 
+        private removeLancer(lancer: LancerRecord) {
+          lancer.sprite.setActive(false);
+          lancer.label.setActive(false);
+          this.lancers = this.lancers.filter((entry) => entry !== lancer);
+        }
+
         private grantXp(amount: number) {
           if (!this.playerOwnerId || !this.playerCharacterId || amount <= 0) return;
           void postJSON<CharacterStats>("/api/character/xp", {
@@ -544,8 +551,11 @@ export function CityPhaser({
               }
             });
             this.emitCombatLog({ message: `${def.name} obtido`, tone: "xp" });
+            this.showLootNotification(`+1 ${def.name}`, def.texture);
+            playToneRef?.(760);
           } catch {
             this.spawnGroundDrop(def, position);
+            this.showLootNotification(`${def.name} caiu no chão`, def.texture);
           }
         }
 
@@ -579,6 +589,56 @@ export function CityPhaser({
             sprite.destroy();
             label.destroy();
             this.groundDrops = this.groundDrops.filter((entry) => entry.sprite !== sprite);
+          });
+        }
+
+        private showLootNotification(label: string, textureKey?: string) {
+          const maxNotices = 3;
+          const positionIndex = Math.min(this.lootNotices.length, maxNotices - 1);
+          const baseX = this.cameras.main.worldView.x + 110;
+          const baseY = this.cameras.main.worldView.y + 90 + positionIndex * 46;
+          const background = this.add
+            .rectangle(0, 0, 220, 40, 0x000000, 0.6)
+            .setOrigin(0, 0.5)
+            .setStrokeStyle(1, 0xfff3c0, 0.35);
+          const text = this.add
+            .text(52, 0, label, {
+              color: "#fff6ce",
+              fontSize: "14px",
+              fontStyle: "bold"
+            })
+            .setOrigin(0, 0.5);
+          const children: Phaser.GameObjects.GameObject[] = [background, text];
+          if (textureKey && this.textures.exists(textureKey)) {
+            const icon = this.add.image(28, 0, textureKey).setOrigin(0.5).setScale(0.7);
+            children.push(icon);
+          } else {
+            const marker = this.add
+              .text(28, 0, "★", { color: "#ffe07d", fontSize: "18px" })
+              .setOrigin(0.5, 0.5);
+            children.push(marker);
+          }
+          const notice = this.add.container(baseX, baseY, children);
+          notice.setScrollFactor(0);
+          this.lootNotices.push(notice);
+          this.tweens.add({
+            targets: notice,
+            alpha: { from: 0, to: 1 },
+            duration: 150,
+            onComplete: () => {
+              this.time.delayedCall(2000, () => {
+                this.tweens.add({
+                  targets: notice,
+                  alpha: 0,
+                  y: notice.y - 20,
+                  duration: 350,
+                  onComplete: () => {
+                    notice.destroy();
+                    this.lootNotices = this.lootNotices.filter((entry) => entry !== notice);
+                  }
+                });
+              });
+            }
           });
         }
 
@@ -617,10 +677,10 @@ export function CityPhaser({
             recordBestiary: (monsterType) => this.recordBestiaryKill(monsterType),
             respawn: (delay) =>
               this.time.delayedCall(delay, () => {
-                this.lancers = this.lancers.filter((entry) => entry !== lancer);
                 this.spawnLancer(Phaser.Math.Between(0, 1000));
               }),
-            rewardItems: () => this.handleDropRewards({ x: lancer.sprite.x, y: lancer.sprite.y })
+            rewardItems: () => this.handleDropRewards({ x: lancer.sprite.x, y: lancer.sprite.y }),
+            onRemove: () => this.removeLancer(lancer)
           });
         }
 
@@ -633,6 +693,8 @@ export function CityPhaser({
           })
             .then(({ gold }) => {
               this.goldCallback?.(gold);
+              this.showLootNotification(`+${amount} ouro`);
+              playToneRef?.(700);
             })
             .catch(() => undefined);
         }
