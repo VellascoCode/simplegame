@@ -1,3 +1,4 @@
+import type Phaser from "phaser";
 import { LANCER_COOLDOWN } from "./constants";
 import type { LancerRecord } from "./types";
 import { showFloatingText } from "./utils";

@@ -1,5 +1,5 @@
+import type Phaser from "phaser";
 import {
-  MAP_TILE_SIZE,
   LANCER_SPEED,
   STOP_DISTANCE,
   MAX_ATTACKERS,

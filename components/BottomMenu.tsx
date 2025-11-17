@@ -50,8 +50,8 @@ export function BottomMenu({ variant = "page", buttons, square = false }: Bottom
     <nav className={baseNavClass}>
       {items.map((item) => {
         const baseButtonClass = square
-          ? "flex h-14 w-14 items-center justify-center rounded-md border border-white/15 bg-gradient-to-b from-amber-200/80 to-amber-700/70 text-xs font-semibold uppercase tracking-[0.08em] text-stone-900 shadow-lg"
-          : "rounded-full border border-white/15 bg-gradient-to-b from-amber-200/80 to-amber-700/70 px-5 py-2 text-sm font-semibold uppercase tracking-[0.08em] text-stone-900 shadow-lg";
+          ? "flex h-14 w-14 items-center justify-center rounded-md border border-orange-700 bg-gradient-to-b from-amber-200/80 to-amber-700/70 text-xs font-semibold uppercase tracking-[0.08em] text-stone-900 shadow-black shadow-lg"
+          : "rounded-full border border-orange-700 bg-gradient-to-b from-amber-200/80 to-amber-700/70 px-5 py-2 text-sm font-semibold uppercase tracking-[0.08em] text-stone-900 shadow-black shadow-lg";
         const activeClass = item.active ? "ring-2 ring-amber-300" : "";
         const buttonClass = `${baseButtonClass} ${activeClass}`.trim();
         return (
@@ -69,7 +69,7 @@ export function BottomMenu({ variant = "page", buttons, square = false }: Bottom
             aria-label={item.ariaLabel ?? item.label}
           >
             {item.icon ? (
-              <img src={item.icon} alt="" className="h-auto w-auto object-contain" />
+              <img src={item.icon} alt="" className="h-auto w-auto" />
             ) : (
               <span className="text-xs font-semibold uppercase tracking-[0.08em]">{item.label}</span>
             )}

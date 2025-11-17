@@ -1,4 +1,4 @@
-import { ObjectId, type OptionalUnlessRequiredId, type ModifyResult } from "mongodb";
+import { ObjectId, type OptionalUnlessRequiredId } from "mongodb";
 import { getCollection, hasMongoConnection } from "./db";
 import { getMemoryDB } from "./memoryStore";
 import type {
@@ -34,6 +34,7 @@ export async function insertUser(user: User) {
   if (hasMongoConnection()) {
     const users = await getCollection<UserDocument>("users");
     const { _id, ...doc } = user;
+    void _id;
     const result = await users.insertOne(doc as OptionalUnlessRequiredId<UserDocument>);
     return { ...doc, _id: String(result.insertedId) };
   }
@@ -58,6 +59,7 @@ export async function insertCharacter(character: Character) {
   if (hasMongoConnection()) {
     const characters = await getCollection<CharacterDocument>("characters");
     const { _id, ...doc } = character;
+    void _id;
     const result = await characters.insertOne(
       doc as OptionalUnlessRequiredId<CharacterDocument>
     );
@@ -483,36 +485,25 @@ export async function listOnline() {
   return memory.online.filter((o) => new Date(o.lastPing).getTime() >= cutoff);
 }
 
-function normalizeCharacter(
-  doc: CharacterDocument | (Character & { _id?: any })
-): Character {
-  const normalizedId =
-    typeof doc._id === "string" ? doc._id : doc._id?.toString?.();
-  return {
-    ...(structuredCloneCharacter(doc)),
-    _id: normalizedId
-  };
+type DocumentId = string | ObjectId | undefined;
+
+function normalizeDocumentId(id: DocumentId): string | undefined {
+  if (typeof id === "string") {
+    return id;
+  }
+  return id?.toString();
 }
 
-function normalizeUser(doc: UserDocument): User {
-  const normalizedId =
-    typeof doc._id === "string" ? doc._id : doc._id?.toString?.();
-  return {
-    ...(structuredCloneUser(doc)),
-    _id: normalizedId
-  };
+function normalizeCharacter(doc: CharacterDocument | Character): Character {
+  const normalized = { ...(doc as Character) };
+  normalized._id = normalizeDocumentId((doc as { _id?: DocumentId })._id);
+  return normalized;
 }
 
-function structuredCloneCharacter(
-  doc: CharacterDocument | (Character & { _id?: any })
-): Character {
-  const { _id, ...rest } = doc as Character;
-  return { ...rest };
-}
-
-function structuredCloneUser(doc: UserDocument | (User & { _id?: any })): User {
-  const { _id, ...rest } = doc as User;
-  return { ...rest };
+function normalizeUser(doc: UserDocument | User): User {
+  const normalized = { ...(doc as User) };
+  normalized._id = normalizeDocumentId((doc as { _id?: DocumentId })._id);
+  return normalized;
 }
 
 function defaultFurniture() {

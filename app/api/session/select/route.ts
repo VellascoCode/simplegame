@@ -8,9 +8,12 @@ export async function POST(request: Request) {
     return error("Sessão expirada", 401);
   }
 
-  const body = await request.json();
-  const characterId = typeof body.characterId === "string" ? body.characterId : "";
-  const map = typeof body.map === "string" ? body.map : "city";
+  const payload = (await request.json()) as Record<string, unknown>;
+  const sanitizeMapName = (value: string) => value.replace(/[^a-z0-9_-]/gi, "").toLowerCase() || "cidadecentral";
+  const rawCharacterId = payload.characterId;
+  const rawMap = payload.map;
+  const characterId = typeof rawCharacterId === "string" ? rawCharacterId : "";
+  const map = typeof rawMap === "string" && rawMap.trim() ? sanitizeMapName(rawMap) : "cidadecentral";
   if (!characterId) {
     return error("characterId obrigatório", 400);
   }
@@ -19,11 +22,13 @@ export async function POST(request: Request) {
     return error("Personagem não encontrado", 404);
   }
   const existing = (await getPlayerSession(ownerId)) ?? null;
+  const defaultPosition = existing?.position ?? { x: 4, y: 4 };
   const session = await savePlayerSession({
     ownerId,
     characterId,
+    characterName: character.name,
     map,
-    position: existing?.position ?? { x: 0, y: 0 },
+    position: defaultPosition,
     updatedAt: new Date().toISOString()
   });
   return ok(session);

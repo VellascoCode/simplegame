@@ -16,8 +16,10 @@ export async function POST(request: Request) {
   if (!ownerId) {
     return error("Sessão expirada", 401);
   }
-  const body = await request.json();
-  const slotsInput = Array.isArray(body.slots) ? body.slots : [];
+  const raw = (await request.json()) as unknown;
+  const slotsValue =
+    typeof raw === "object" && raw !== null && "slots" in raw ? (raw as { slots?: unknown }).slots : undefined;
+  const slotsInput = Array.isArray(slotsValue) ? slotsValue : [];
   if (slotsInput.length !== 4) {
     return error("slots deve conter 4 itens", 400);
   }

@@ -74,6 +74,7 @@ export type OnlinePresence = {
 export type PlayerSessionState = {
   ownerId: string;
   characterId: string;
+  characterName?: string;
   map: string;
   position: { x: number; y: number };
   updatedAt: string;

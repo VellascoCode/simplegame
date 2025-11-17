@@ -31,6 +31,6 @@ export async function login(payload: unknown) {
   return { id: user._id, email: user.email };
 }
 
-export async function logout() {
+export function logout() {
   return { success: true };
 }

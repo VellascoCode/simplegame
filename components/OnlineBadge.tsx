@@ -4,26 +4,35 @@ import { useEffect, useState } from "react";
 import { getJSON } from "@/lib/clientApi";
 import type { OnlinePresence } from "@/lib/models";
 
-export function OnlineBadge() {
+export function OnlineBadge({ enabled = true }: { enabled?: boolean }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (!enabled) {
+      setCount(0);
+      return;
+    }
     let active = true;
-    async function load() {
+    let timer: number | null = null;
+    const load = async () => {
+      if (!active) return;
       try {
         const list = await getJSON<OnlinePresence[]>("/api/online/list");
         if (active) setCount(list.length);
       } catch {
         if (active) setCount(0);
+      } finally {
+        if (active) {
+          timer = window.setTimeout(load, 10000);
+        }
       }
-    }
+    };
     load();
-    const interval = window.setInterval(load, 10000);
     return () => {
       active = false;
-      window.clearInterval(interval);
+      if (timer) window.clearTimeout(timer);
     };
-  }, []);
+  }, [enabled]);
 
   return (
     <div

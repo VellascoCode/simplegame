@@ -3,7 +3,7 @@ import { error, ok } from "@/lib/apiResponse";
 
 export async function POST(request: Request) {
   try {
-    const payload = await request.json();
+    const payload = (await request.json()) as unknown;
     const data = await login(payload);
     return ok(data);
   } catch (err) {

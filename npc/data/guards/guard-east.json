@@ -1,0 +1,31 @@
+{
+  "id": "guard-east",
+  "map": "cidadecentral",
+  "name": "Guardião Leste",
+  "initialTile": { "x": 7, "y": 5 },
+  "framePaths": [
+    "/tester/water/1.png",
+    "/tester/water/2.png",
+    "/tester/water/3.png",
+    "/tester/water/4.png",
+    "/tester/water/5.png",
+    "/tester/water/6.png",
+    "/tester/water/7.png",
+    "/tester/water/8.png",
+    "/tester/water/9.png",
+    "/tester/water/10.png",
+    "/tester/water/11.png",
+    "/tester/water/12.png"
+  ],
+  "hue": 140,
+  "speed": 140,
+  "speechTextColor": 12,
+  "speechBalloonColor": 13,
+  "nameColor": 11,
+  "quotes": [
+    "Sempre observando.",
+    "Nada escapa aos meus olhos.",
+    "Água tranquila por aqui."
+  ],
+  "wanderArea": { "minX": 6, "maxX": 9, "minY": 4, "maxY": 7 }
+}

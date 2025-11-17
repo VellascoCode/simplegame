@@ -1,0 +1,31 @@
+{
+  "id": "guard-south",
+  "map": "cidadecentral",
+  "name": "Guardião Sul",
+  "initialTile": { "x": 5, "y": 7 },
+  "framePaths": [
+    "/tester/water/1.png",
+    "/tester/water/2.png",
+    "/tester/water/3.png",
+    "/tester/water/4.png",
+    "/tester/water/5.png",
+    "/tester/water/6.png",
+    "/tester/water/7.png",
+    "/tester/water/8.png",
+    "/tester/water/9.png",
+    "/tester/water/10.png",
+    "/tester/water/11.png",
+    "/tester/water/12.png"
+  ],
+  "hue": 190,
+  "speed": 105,
+  "speechTextColor": 12,
+  "speechBalloonColor": 13,
+  "nameColor": 11,
+  "quotes": [
+    "Rios calmos hoje.",
+    "Sem novidades aqui.",
+    "Tudo tranquilo ao sul."
+  ],
+  "wanderArea": { "minX": 4, "maxX": 8, "minY": 6, "maxY": 9 }
+}

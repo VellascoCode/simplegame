@@ -1,3 +1,4 @@
+import type Phaser from "phaser";
 import { MAP_TILE_SIZE, COVER_DEPTH_OFFSET } from "./constants";
 import { getPhaserInstance } from "./phaserInstance";
 

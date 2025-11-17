@@ -4,14 +4,28 @@ import { useCallback, useEffect, useState } from "react";
 import { getJSON, postJSON } from "@/lib/clientApi";
 import type { ChatMessage } from "@/lib/models";
 
-export function useChatFeed(forcedOwnerId?: string, forcedCharacterName?: string) {
+type ChatFeedOptions = {
+  enabled?: boolean;
+  intervalMs?: number;
+};
+
+export function useChatFeed(
+  forcedOwnerId?: string,
+  forcedCharacterName?: string,
+  options?: ChatFeedOptions
+) {
   const [ownerId, setOwnerId] = useState(forcedOwnerId ?? "");
   const [name, setName] = useState(forcedCharacterName ?? "");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const pollingEnabled = options?.enabled ?? true;
+  const intervalMs = options?.intervalMs ?? 3000;
 
   useEffect(() => {
+    if (!pollingEnabled) {
+      return undefined;
+    }
     let active = true;
     async function load() {
       try {
@@ -27,12 +41,12 @@ export function useChatFeed(forcedOwnerId?: string, forcedCharacterName?: string
     }
 
     load();
-    const interval = setInterval(load, 3000);
+    const interval = window.setInterval(load, intervalMs);
     return () => {
       active = false;
-      clearInterval(interval);
+      window.clearInterval(interval);
     };
-  }, []);
+  }, [pollingEnabled, intervalMs]);
 
   useEffect(() => {
     if (forcedOwnerId) {
@@ -93,7 +107,7 @@ export function ChatPanel({
     messages,
     error,
     sendMessage
-  } = useChatFeed(forcedOwnerId, characterName);
+  } = useChatFeed(forcedOwnerId, characterName, { enabled: true });
 
   async function handleSend(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

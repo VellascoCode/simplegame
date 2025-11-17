@@ -7,13 +7,14 @@ const killSchema = z.object({
   faction: z.nativeEnum(FactionId)
 });
 
-export async function GET() {
+export function GET() {
   return ok(getFactionWarState());
 }
 
 export async function POST(request: Request) {
   try {
-    const payload = killSchema.parse(await request.json());
+    const raw = (await request.json()) as unknown;
+    const payload = killSchema.parse(raw);
     registerFactionDeath(payload.faction);
     return ok(getFactionWarState());
   } catch (err) {

@@ -41,10 +41,10 @@ const FALLBACK_MAP: CityMapData = {
 export async function readCityMap(): Promise<CityMapData> {
   try {
     const buffer = await fs.readFile(MAP_FILE, "utf-8");
-    const parsed = JSON.parse(buffer);
+    const parsed: unknown = JSON.parse(buffer);
     const normalized = normalizeCityMap(parsed);
     if (normalized) return normalized;
-  } catch (err) {
+  } catch {
     // ignored, fallback below
   }
   await saveCityMap(FALLBACK_MAP);
@@ -80,7 +80,7 @@ function normalizeCityMap(value: unknown): CityMapData | null {
 
 function normalizeLayer(layer: TileMatrix | undefined, width: number, height: number): TileMatrix {
   if (isValidMatrix(layer, width, height)) {
-    return layer as TileMatrix;
+    return layer;
   }
   return Array.from({ length: height }, () => Array.from({ length: width }, () => 0));
 }

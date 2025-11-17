@@ -19,8 +19,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const parsed = mapSchema.parse(body.map ?? body);
+    const raw = (await request.json()) as unknown;
+    const parsed = mapSchema.parse(extractMapPayload(raw));
     const map = await persistCityMap(parsed);
     return ok({ map });
   } catch (err) {
@@ -30,4 +30,14 @@ export async function POST(request: Request) {
 
 function getMessage(err: unknown) {
   return err instanceof Error ? err.message : "Mapa inválido";
+}
+
+function extractMapPayload(raw: unknown): unknown {
+  if (typeof raw === "object" && raw !== null && "map" in raw) {
+    const wrapper = raw as { map?: unknown };
+    if (wrapper.map !== undefined) {
+      return wrapper.map;
+    }
+  }
+  return raw;
 }

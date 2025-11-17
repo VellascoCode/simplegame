@@ -1,5 +1,6 @@
+import type Phaser from "phaser";
 import type { NPCRecord, CollisionZone } from "./types";
-import { PLAYER_SPEED, MAP_TILE_SIZE } from "./constants";
+import { PLAYER_SPEED } from "./constants";
 import { getPhaserInstance } from "./phaserInstance";
 
 type MovementArgs = {

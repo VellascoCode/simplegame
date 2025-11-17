@@ -1,5 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { Session } from "next-auth";
+import type { AuthOptions, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { findUserByEmail } from "@/lib/repositories";
 import { verifyPassword } from "@/lib/hash";
@@ -37,15 +37,18 @@ export const authOptions = {
   ],
   session: { strategy: "jwt" as const },
   callbacks: {
-    async jwt({ token, user }: JwtCallbackParams) {
+    jwt({ token, user }: JwtCallbackParams) {
       if (user?.id) {
         token.id = user.id;
       }
       return token;
     },
-    async session({ session, token }: SessionCallbackParams) {
-      if (session.user && token.id) {
-        session.user.id = token.id as string;
+    session({ session, token }: SessionCallbackParams) {
+      if (session.user) {
+        const tokenId = typeof token.id === "string" ? token.id : null;
+        if (tokenId) {
+          session.user.id = tokenId;
+        }
       }
       return session;
     }
@@ -54,4 +57,4 @@ export const authOptions = {
     signIn: "/"
   },
   secret: process.env.NEXTAUTH_SECRET
-};
+} satisfies AuthOptions;

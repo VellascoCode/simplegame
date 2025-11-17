@@ -65,9 +65,9 @@ const npcSprites: Record<string, CharacterSpriteConfig> = {
 };
 
 export function getCharacterSpriteConfig(sprite: string): CharacterSpriteConfig {
-  return characterSprites[sprite as keyof typeof characterSprites] ?? characterSprites.warriorblue;
+  return characterSprites[sprite] ?? characterSprites.warriorblue;
 }
 
 export function getNpcSpriteConfig(sprite: string): CharacterSpriteConfig {
-  return npcSprites[sprite as keyof typeof npcSprites] ?? npcSprites.lancer;
+  return npcSprites[sprite] ?? npcSprites.lancer;
 }

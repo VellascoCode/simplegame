@@ -1,0 +1,20 @@
+{
+  "id": "rafa",
+  "map": "cidadecentral",
+  "name": "Rafa",
+  "sprite": "/sprites/vilager1/walk.png",
+  "frames": 8,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 12, "y": 14 },
+  "hue": 31,
+  "speed": 70,
+  "speechTextColor": 12,
+  "speechBalloonColor": 14,
+  "nameColor": 11,
+  "wanderArea": { "minX": 9, "maxX": 19, "minY": 12, "maxY": 18 },
+  "quotes": [
+    "Já viu o novo prédio azul?",
+    "Estou pensando em abrir uma banca aqui.",
+    "A praça é perfeita para encontrar amigos."
+  ]
+}

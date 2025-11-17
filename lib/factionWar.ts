@@ -1,11 +1,15 @@
 import { FACTION_IDS, pickFactionTeams, type FactionName, type FactionWarState } from "./factions";
 
+type TimerHandle = ReturnType<typeof setTimeout>;
+
+type WarContainer = {
+  state: FactionWarState;
+  timer?: TimerHandle;
+  resetTimer?: TimerHandle;
+};
+
 type GlobalWithWarState = typeof globalThis & {
-  __FACTION_WAR_STATE__?: {
-    state: FactionWarState;
-    timer?: NodeJS.Timeout;
-    resetTimer?: NodeJS.Timeout;
-  };
+  __FACTION_WAR_STATE__?: WarContainer;
 };
 
 const globalWar = globalThis as GlobalWithWarState;
@@ -29,14 +33,14 @@ function createWarState(): FactionWarState {
   };
 }
 
-function ensureWarState() {
+function ensureWarState(): WarContainer {
   if (!globalWar.__FACTION_WAR_STATE__) {
     globalWar.__FACTION_WAR_STATE__ = {
       state: createWarState()
     };
     scheduleWarTimers();
   }
-  return globalWar.__FACTION_WAR_STATE__!;
+  return globalWar.__FACTION_WAR_STATE__;
 }
 
 function scheduleWarTimers() {
@@ -60,7 +64,7 @@ function resetWarState() {
   if (!globalWar.__FACTION_WAR_STATE__) {
     globalWar.__FACTION_WAR_STATE__ = { state: createWarState() };
   } else {
-    globalWar.__FACTION_WAR_STATE__!.state = createWarState();
+    globalWar.__FACTION_WAR_STATE__.state = createWarState();
   }
   scheduleWarTimers();
 }

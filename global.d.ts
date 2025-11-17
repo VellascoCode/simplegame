@@ -1,6 +1,4 @@
-declare namespace JSX {
-  type Element = any;
-  interface IntrinsicElements {
-    [elemName: string]: any;
-  }
-}
+/// <reference types="react" />
+/// <reference types="react-dom" />
+
+export {};
