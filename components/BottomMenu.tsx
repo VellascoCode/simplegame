@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const menuLinks: ReadonlyArray<MenuButton> = [
@@ -68,11 +69,7 @@ export function BottomMenu({ variant = "page", buttons, square = false }: Bottom
             }}
             aria-label={item.ariaLabel ?? item.label}
           >
-            {item.icon ? (
-              <img src={item.icon} alt="" className="h-auto w-auto" />
-            ) : (
-              <span className="text-xs font-semibold uppercase tracking-[0.08em]">{item.label}</span>
-            )}
+            {item.icon ? <Image src={item.icon} alt="" width={28} height={28} /> : <span className="text-xs font-semibold uppercase tracking-[0.08em]">{item.label}</span>}
           </button>
         );
       })}

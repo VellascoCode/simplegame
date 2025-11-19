@@ -1,0 +1,35 @@
+{
+  "id": "refugio-verdant-guardian",
+  "map": "refugio",
+  "name": "Guardião Esmeralda",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "size": { "width": 120, "height": 120 },
+  "anchor": { "x": 0.5, "y": 1 },
+  "speed": 80,
+  "hp": 10,
+  "respawnDelay": 6,
+  "tint": 562870,
+  "attackInterval": 1,
+  "attackDamage": { "min": 1, "max": 2 },
+  "attackRange": 0.9,
+  "playerAttackInterval": 1,
+  "playerDamage": { "min": 1, "max": 3 },
+  "xpReward": { "min": 4, "max": 5 },
+  "goldRange": { "min": 4, "max": 7 },
+  "leashRadius": 4,
+  "rarity": "S",
+  "levelRange": { "min": 20, "max": 30 },
+  "lootTable": [
+    { "id": "seiva-esmeralda", "name": "Seiva Esmeralda", "icon": "/itens/item31.png", "chance": 0.35, "min": 1, "max": 2 }
+  ],
+  "quotes": [
+    "As raízes me fortalecem.",
+    "Nenhum passo além deste círculo.",
+    "Respeite o equilíbrio da floresta."
+  ],
+  "messageInterval": { "min": 3, "max": 5 },
+  "spawnTile": { "x": 4, "y": 6 }
+}

@@ -12,7 +12,14 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 ## 2. Estrutura de Assets (assets.md)
 - Tiles base: arquivos `tile*.png` (100×100) em `/public/tilesets/` são convertidos para blocos 64×64 pelo Phaser. Basta adicionar novos `tileN.png` ou `details/dN.png`/`buildings/*.png` e o manifest `/api/tiles` já os expõe ao editor/cena.
 - Paletas extras: `/public/tilesets/details/` (detalhes sobre o piso) e `/public/tilesets/buildings/` (estruturas grandes). Bloqueios/sobreposições são configurados no editor via camadas `collision` e `cover`.
-- Personagens provisórios em `/public/sprites/characters` (atualmente `sprites/warriorblue/walk.png`, 6 frames de 192 px + idle de mesmo tamanho).
+- Personagens provisórios em `/public/sprites/characters` (atualmente `sprites/warriorblue/walk.png`, 6 frames de 192 px + idle de mesmo tamanho) e o novo `pinguin1/walk.png` (5 frames 112×128 após o corte).
+- Cartas espirituais em `/public/spirit/{1..4}.png` definem a identidade do personagem-controller (ver `lib/data/spirits.json`).
+- Atributos iniciais do personagem (Força, Destreza, Inteligência, Constituição e Sorte) começam em 10 pontos cada e são salvos com 5 pontos livres (`attributePoints`) para gastos futuros.
+- NPCs amigáveis foram reorganizados em `npc/data/{mapa}/nome.json` — guardas usam `warriorblue` (6 frames 192×192, `size` reduzido para 128 px) e vilagers usam `vilager1` (8 frames, 128 px). Monstros agressivos ficam em `monsters/data/{mapa}/` e reutilizam o mesmo spritesheet (`warriorblue` por padrão).
+- Tiles especiais: `/tilesets/tile104.png` marca portais/teleportes e `/effect/teleport.png` traz 11 frames (128 px) usados na animação de teletransporte.
+- Estrutura completa do repositório documentada em `docs/estruturacao.md`.
+- Curva de XP → nível está centralizada em `lib/data/leveling.json` (padrão 50 XP por nível, sem carregar excedente); qualquer ajuste deve ser feito neste arquivo para refletir no runtime e no backend.
+- Runtime ativo: todo código PIXI fica em `pixi/runtime/**` e o host em `components/PixiGame.tsx`; o motor legado (incluindo `CityPhaser`, hooks e helpers em `legacy/phaser/game/**`) ficou isolado em `legacy/phaser/**` e não deve ser modificado.
 - Criaturas básicas em `/public/sprites/creatures` (floresta).
 - Ícones e itens em `/public/itens` e `/public/icons` para inventário/lojas.
 - HUD inspirado em GUI medieval criado via Tailwind + gradientes em `globals.css` (sem depender de `/public/gui`).
@@ -31,7 +38,7 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 ## 4. Fluxo do Jogador (Telar e Testar)
 1. Registrar ou logar pela página inicial (`/`), armazenando o `ownerId`.
 2. Criar até 4 personagens para o mesmo usuário; se já tiver 4, remover/atualizar manualmente pelo banco antes de novos testes.
-3. Após login, usar a seção “Minha conta” (mesma página) para criar e selecionar até 4 personagens.
+3. Após login, usar a seção “Minha conta” para escolher o espírito (Tyna/Arna/Solia/Maja), o corpo iniciante (warrior ou pingu) e uma das 4 cores disponíveis antes de salvar o personagem.
 4. O botão “Jogar” envia automaticamente para `/city?ownerId=<id>&characterId=<id>`; não alterar URLs manualmente.
 5. Verificar inventário resumido (cards à direita) e abrir o painel completo pela ação “Ver inventário” (slide).
 6. Prosseguir para `/house`, `/farm`, `/forest`, `/shops`, `/chat` conforme etapas do README.
@@ -40,6 +47,17 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 ## 5. Checklist de Testes Iniciais
 - [ ] Registro e login retornam `id` do usuário.
 - [ ] Criação de personagem respeita limite de 4 por `ownerId`.
+- [ ] Seletor de espíritos + cores persiste `spiritId` e `spriteColor` (ver documento no banco).
+- [ ] Cada personagem inicia com atributos 10/10/10/10/10 + 5 pontos livres gravados no documento do banco.
+- [ ] Ao entrar em `/play`, a engine PIXI carrega o sprite/cor do personagem selecionado sem erros de boot.
+- [ ] Portais usam `tile104` no mapa e exibem a animação `effect/teleport.png` + mensagem “Teletransportando...” durante 2 segundos antes de trocar de mapa.
+- [ ] HUD in-game exibe Cidade + X/Y + barras de Vida/Mana/XP com dados vindos de `/api/session/state` (sem requisições adicionais durante o loop).
+- [ ] Monstro agressivo no mapa Refúgio respawna a cada 5s (quando não houver nenhum), persegue o jogador e concede 1-2 XP ao morrer (HP 10, dano do jogador = 1–3).
+- [ ] Combate mostra feedback completo: ataques a cada segundo com texto flutuante (dano e XP) e efeitos sonoros diferentes para golpe, dano recebido e morte.
+- [ ] Ao alcançar 50 XP o personagem sobe de nível, a barra volta para 0 e aparece a mensagem “LVL {n} | Classe” acima da cabeça (rótulo fixo + texto flutuante).
+- [ ] Monstros deixam cadáver (64×64) por 1 minuto e loot configurado em `monsters/data/<mapa>/*.json` — o jogador coleta ao pisar e recebe aviso com ícone + texto.
+- [ ] Combate respeita o grid 3×3: cada monstro ocupa um dos 8 SQMs ao redor do player, não divide slot, anda SQM a SQM e só pode atacar/receber dano quando estiver adjacente (1 tile de distância) ao jogador.
+- [ ] `docs/estruturacao.md` atualizado sempre que movermos arquivos.
 - [ ] Listagem exibe personagens existentes e permite selecionar um.
 - [ ] Navegação para `/city` carrega o `ownerId` selecionado e mantém integração com inventário/online/chat.
 - [ ] Rotas `/api/check/*` continuam respondendo `{ status: "ok" }`.

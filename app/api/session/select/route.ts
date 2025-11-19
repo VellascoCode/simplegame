@@ -1,6 +1,7 @@
 import { findCharacterById, getPlayerSession, savePlayerSession } from "@/lib/repositories";
 import { error, ok } from "@/lib/apiResponse";
 import { getOwnerIdFromSession } from "@/lib/authSession";
+import type { SpriteOptionValue } from "@/lib/characterSpriteOptions";
 
 export async function POST(request: Request) {
   const ownerId = await getOwnerIdFromSession();
@@ -27,6 +28,10 @@ export async function POST(request: Request) {
     ownerId,
     characterId,
     characterName: character.name,
+    characterSprite: (character.sprite ?? "warriorblue") as SpriteOptionValue,
+    spriteColor: character.spriteColor,
+    spiritId: character.spiritId,
+    stats: character.stats,
     map,
     position: defaultPosition,
     updatedAt: new Date().toISOString()

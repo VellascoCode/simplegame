@@ -1,0 +1,35 @@
+{
+  "id": "refugio-frost-guardian",
+  "map": "refugio",
+  "name": "Guardião Gélido",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "size": { "width": 120, "height": 120 },
+  "anchor": { "x": 0.5, "y": 1 },
+  "speed": 72,
+  "hp": 10,
+  "respawnDelay": 6,
+  "tint": 6184542,
+  "attackInterval": 1,
+  "attackDamage": { "min": 1, "max": 2 },
+  "attackRange": 0.9,
+  "playerAttackInterval": 1,
+  "playerDamage": { "min": 1, "max": 3 },
+  "xpReward": { "min": 3, "max": 4 },
+  "goldRange": { "min": 3, "max": 6 },
+  "leashRadius": 4,
+  "rarity": "A",
+  "levelRange": { "min": 10, "max": 20 },
+  "lootTable": [
+    { "id": "coroa-glacial", "name": "Coroa Glacial", "icon": "/itens/item30.png", "chance": 0.4, "min": 1, "max": 1 }
+  ],
+  "quotes": [
+    "O frio lhe fará desistir.",
+    "Protejo estes cristais eternos.",
+    "Os ventos respondem a mim."
+  ],
+  "messageInterval": { "min": 3, "max": 5 },
+  "spawnTile": { "x": 7, "y": 6 }
+}

@@ -504,22 +504,10 @@ label {
 }
 
 .character-display {
-  width: 96px;
-  height: 96px;
+  width: 128px;
+  height: 128px;
+  --sprite-frame-count: 6;
   image-rendering: pixelated;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
-}
-
-.character-display.variant-guerreiro {
-  filter: hue-rotate(35deg) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
-}
-
-.character-display.variant-arqueira {
-  filter: hue-rotate(140deg) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
-}
-
-.character-display.variant-mago {
-  filter: hue-rotate(220deg) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
 }
 
 @keyframes character-walk {
@@ -527,8 +515,92 @@ label {
     background-position: 0 0;
   }
   to {
-    background-position: -600% 0;
+    background-position: calc(-100% * var(--sprite-frame-count, 6)) 0;
   }
+}
+
+.spirit-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.spirit-card {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  padding: 10px;
+  background: rgba(15, 6, 2, 0.6);
+  transition: border 0.2s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.spirit-card img {
+  border-radius: 12px;
+}
+
+.spirit-card.selected {
+  border-color: #ffce73;
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(255, 206, 115, 0.35);
+}
+
+.sprite-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.sprite-card {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  padding: 12px;
+  background: rgba(15, 6, 2, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border 0.2s ease, transform 0.2s ease;
+}
+
+.sprite-card .character-display {
+  margin: 0 auto;
+}
+
+.sprite-card.selected {
+  border-color: #ffce73;
+  box-shadow: 0 0 12px rgba(255, 206, 115, 0.3);
+  transform: translateY(-2px);
+}
+
+.color-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+
+.color-option {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 10px;
+  background: rgba(10, 4, 1, 0.7);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 2px;
+  transition: border 0.2s ease, transform 0.2s ease;
+}
+
+.color-option small {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.color-option.active {
+  border-color: #ffce73;
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(255, 206, 115, 0.3);
 }
 
 .character-radio {

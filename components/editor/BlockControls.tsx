@@ -4,8 +4,8 @@ import React from "react";
 
 interface BlockControlsProps {
   blockMode: boolean;
-  onToggleBlock(): void;
-  onUnblockAll(): void;
+  onToggleBlock: () => void;
+  onUnblockAll: () => void;
 }
 
 export function BlockControls({ blockMode, onToggleBlock, onUnblockAll }: BlockControlsProps) {

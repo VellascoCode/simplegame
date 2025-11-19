@@ -1,0 +1,36 @@
+{
+  "id": "refugio-shadow-champion",
+  "map": "refugio",
+  "name": "Campeão das Sombras",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "size": { "width": 120, "height": 120 },
+  "anchor": { "x": 0.5, "y": 1 },
+  "speed": 90,
+  "hp": 14,
+  "respawnDelay": 7,
+  "tint": 9109504,
+  "attackInterval": 0.9,
+  "attackDamage": { "min": 2, "max": 3 },
+  "attackRange": 1,
+  "playerAttackInterval": 1,
+  "playerDamage": { "min": 2, "max": 4 },
+  "xpReward": { "min": 3, "max": 5 },
+  "goldRange": { "min": 5, "max": 9 },
+  "leashRadius": 5,
+  "rarity": "SS",
+  "levelRange": { "min": 30, "max": 50 },
+  "lootTable": [
+    { "id": "alma-sombria", "name": "Alma Sombria", "icon": "/itens/item10.png", "chance": 0.45, "min": 1, "max": 3 },
+    { "id": "aco-escuro", "name": "Aço Escuro", "icon": "/itens/item1.png", "chance": 0.3, "min": 1, "max": 2 }
+  ],
+  "quotes": [
+    "Sombras obedecem à minha lâmina.",
+    "Ainda existe coragem em você?",
+    "Não atravesse este círculo." 
+  ],
+  "messageInterval": { "min": 3, "max": 5 },
+  "spawnTile": { "x": 6, "y": 8 }
+}

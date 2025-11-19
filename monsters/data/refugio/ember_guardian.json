@@ -1,0 +1,35 @@
+{
+  "id": "refugio-ember-guardian",
+  "map": "refugio",
+  "name": "Guardião Rubro",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "size": { "width": 120, "height": 120 },
+  "anchor": { "x": 0.5, "y": 1 },
+  "speed": 78,
+  "hp": 10,
+  "respawnDelay": 6,
+  "tint": 16007990,
+  "attackInterval": 1,
+  "attackDamage": { "min": 1, "max": 2 },
+  "attackRange": 0.9,
+  "playerAttackInterval": 1,
+  "playerDamage": { "min": 1, "max": 3 },
+  "xpReward": { "min": 2, "max": 3 },
+  "goldRange": { "min": 2, "max": 5 },
+  "leashRadius": 4,
+  "rarity": "B",
+  "levelRange": { "min": 5, "max": 10 },
+  "lootTable": [
+    { "id": "brasa-eterna", "name": "Brasa Eterna", "icon": "/itens/item10.png", "chance": 0.45, "min": 1, "max": 2 }
+  ],
+  "quotes": [
+    "Sinta o calor das chamas do refúgio.",
+    "Ninguém ultrapassa estas colunas.",
+    "Minhas brasas nunca apagam."
+  ],
+  "messageInterval": { "min": 3, "max": 5 },
+  "spawnTile": { "x": 5, "y": 4 }
+}

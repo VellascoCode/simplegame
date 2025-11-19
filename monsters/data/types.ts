@@ -1,0 +1,40 @@
+export type MonsterDefinition = {
+  id: string;
+  map: string;
+  name: string;
+  sprite: string;
+  frames: number;
+  frameWidth: number;
+  frameHeight: number;
+  anchor?: { x: number; y: number };
+  size?: { width?: number; height?: number };
+  tint?: number;
+  speed: number;
+  hp: number;
+  respawnDelay: number;
+  quotes?: string[];
+  messageInterval?: { min: number; max: number };
+  spawnTile?: { x: number; y: number };
+  attackInterval?: number;
+  attackDamage?: { min: number; max: number };
+  attackRange?: number;
+  playerAttackInterval?: number;
+  playerDamage?: { min: number; max: number };
+  leashRadius?: number;
+  xpReward?: { min: number; max: number };
+  rarity: string;
+  levelRange: { min: number; max: number };
+  goldRange?: { min: number; max: number };
+  lootTable?: LootDefinition[];
+};
+
+export type LootDefinition = {
+  id: string;
+  name: string;
+  icon: string;
+  chance: number;
+  min: number;
+  max: number;
+  stackable?: boolean;
+  maxStack?: number;
+};

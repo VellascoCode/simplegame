@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getJSON } from "@/lib/clientApi";
 import type { InventoryItem } from "@/lib/models";
@@ -48,7 +49,7 @@ export function InventorySummary({
           return (
             <div key={item.id} className="inventory-summary-card">
               <div className="inventory-mini-slot">
-                {icon ? <img src={icon} alt={item.name} /> : <span>{item.name}</span>}
+                {icon ? <Image src={icon} alt={item.name} width={40} height={40} /> : <span>{item.name}</span>}
                 <span className="quantity">{item.quantity}</span>
               </div>
               <p className="text-xs text-amber-100/80">{item.name}</p>

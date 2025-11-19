@@ -2,11 +2,11 @@
 
 import React from "react";
 
-interface OverlayControlsProps {
+type OverlayControlsProps = {
   overlayMode: boolean;
   disabled: boolean;
-  onToggle(): void;
-}
+  onToggle: () => void;
+};
 
 export function OverlayControls({ overlayMode, disabled, onToggle }: OverlayControlsProps) {
   return (

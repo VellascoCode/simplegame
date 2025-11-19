@@ -1,0 +1,34 @@
+[
+  {
+    "id": "spirit1",
+    "image": "/spirit/1.png",
+    "nome": "Tyna",
+    "classe": "Demônio",
+    "elemento": "Trevas",
+    "mundo": "Madjor"
+  },
+  {
+    "id": "spirit2",
+    "image": "/spirit/2.png",
+    "nome": "Arna",
+    "classe": "Elfa",
+    "elemento": "Vento",
+    "mundo": "Tinvyr"
+  },
+  {
+    "id": "spirit3",
+    "image": "/spirit/3.png",
+    "nome": "Solia",
+    "classe": "Orc",
+    "elemento": "Natureza",
+    "mundo": "Farhul"
+  },
+  {
+    "id": "spirit4",
+    "image": "/spirit/4.png",
+    "nome": "Maja",
+    "classe": "Humana",
+    "elemento": "Ar",
+    "mundo": "Asvelia"
+  }
+]

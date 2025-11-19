@@ -1,0 +1,22 @@
+{
+  "id": "villager-tyna",
+  "map": "cidadecentral",
+  "name": "Tyna",
+  "sprite": "/sprites/vilager1/walk.png",
+  "frames": 8,
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 14, "y": 12 },
+  "hue": 38,
+  "speed": 70,
+  "speechTextColor": 12,
+  "speechBalloonColor": 14,
+  "nameColor": 11,
+  "wanderArea": { "minX": 12, "maxX": 20, "minY": 10, "maxY": 15 },
+  "quotes": [
+    "A praça é meu lugar favorito.",
+    "Já viu os guardiões treinando?",
+    "Precisamos de mais ervas para poções."
+  ]
+}

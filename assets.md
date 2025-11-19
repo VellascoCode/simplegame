@@ -109,6 +109,10 @@ Uso:
   - Esquerda: aplicar `setFlipX(true)` para espelhar.
   - Cima/baixo: manter a animação lateral apenas movendo o sprite verticalmente.
 - `public/sprites/warriorblue/idle.png` replica o sprite parado; as animações (idle/run) são configuradas em `lib/characterSprites.ts` para manter cada personagem com metadados de frames/tamanho.
+- Guardas amigáveis e monstros agressivos reaproveitam `warriorblue/walk.png` (6 frames, 192×192) definindo `frameWidth/frameHeight` e `size` nos arquivos `npc/data/**` e `monsters/data/**`.
+- Villagers usam `public/sprites/vilager1/walk.png` (8 frames, 128×128 por frame).
+- Monstros agressivos (ex.: Sentinela Sombria) ficam descritos em `monsters/data/<mapa>/*.json` e podem reutilizar sprites existentes (`/sprites/lancer/walk.png`, etc.) informando `frameWidth/frameHeight/size`.
+- `public/sprites/pinguin1/walk.png` traz 5 frames (112×128) — altura 128 px, largura 112 px por frame, usado para o corpo “Pingu Explorador”.
 
 ---
 
@@ -161,7 +165,32 @@ Uso:
 
 ---
 
-# 9. Como o CODEX deve usar estes assets
+# 9. Espíritos Controladores
+Local: `/public/spirit`
+
+Arquivos:
+- `1.png`, `2.png`, `3.png`, `4.png`
+
+Uso:
+- Cartas na criação de personagem (landing `/`) para representar os seres que assumem o corpo iniciante.
+- Os metadados (nome, classe, elemento, mundo) ficam em `lib/data/spirits.json` e são consumidos na UI e na API ao salvar `spiritId`.
+
+---
+
+# 10. Efeitos
+Local: `/public/effect`
+
+Arquivos:
+- `teleport.png` — spritesheet 11 frames (128 px) usado no efeito de teleporte.
+- `lvlup.png` — spritesheet 8 frames (128×116) usado na animação de level up do personagem.
+- `itens/dead.png` — sprite 64×64 exibido no corpo do monstro derrotado.
+
+Uso:
+- A animação é registrada em `lib/effects.ts` e carregada no runtime Pixi para o feedback visual dos portais (`tile104`), do level up (efeito “LVL {n}”) e dos corpos/loot drops dos monstros.
+
+---
+
+# 11. Como o CODEX deve usar estes assets
 1. Importar tilesets com `Phaser.Tilemap` usando grid 32×32  
 2. Carregar as imagens via:
    ```ts

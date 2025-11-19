@@ -9,9 +9,13 @@ export type NpcDefinition = {
   id: string;
   map: string;
   name: string;
+  role?: string;
   initialTile: { x: number; y: number };
   sprite?: string;
   frames?: number;
+  frameWidth?: number;
+  frameHeight?: number;
+  frameSpacing?: number;
   framePaths?: string[];
   anchor?: { x: number; y: number };
   size?: { width?: number; height?: number };

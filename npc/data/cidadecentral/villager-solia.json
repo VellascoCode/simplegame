@@ -1,0 +1,22 @@
+{
+  "id": "villager-solia",
+  "map": "cidadecentral",
+  "name": "Solia",
+  "sprite": "/sprites/vilager1/walk.png",
+  "frames": 8,
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 12, "y": 14 },
+  "hue": 320,
+  "speed": 65,
+  "speechTextColor": 12,
+  "speechBalloonColor": 14,
+  "nameColor": 11,
+  "wanderArea": { "minX": 10, "maxX": 18, "minY": 13, "maxY": 18 },
+  "quotes": [
+    "Guardo sementes para a próxima estação.",
+    "As lojinhas logo estarão abertas.",
+    "Já conversou com o guardião carmesim?"
+  ]
+}

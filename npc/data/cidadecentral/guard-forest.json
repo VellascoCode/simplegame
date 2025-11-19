@@ -1,0 +1,23 @@
+{
+  "id": "guard-forest",
+  "map": "cidadecentral",
+  "name": "Guardião Esmeralda",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 5, "y": 7 },
+  "tint": 6265984,
+  "speed": 105,
+  "size": { "width": 128, "height": 128 },
+  "speechTextColor": 12,
+  "speechBalloonColor": 13,
+  "nameColor": 11,
+  "wanderArea": { "minX": 4, "maxX": 7, "minY": 7, "maxY": 9 },
+  "quotes": [
+    "Protegendo o acesso à mata.",
+    "A energia aqui é tranquila.",
+    "Fique atento aos teleportes."
+  ]
+}

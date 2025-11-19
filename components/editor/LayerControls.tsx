@@ -7,11 +7,11 @@ type BrushValue = 1 | 2 | 3;
 
 interface LayerControlsProps {
   activeLayer: LayerValue;
-  onLayerChange(layer: LayerValue): void;
+  onLayerChange: (layer: LayerValue) => void;
   brushSize: BrushValue;
-  onBrushChange(size: BrushValue): void;
+  onBrushChange: (size: BrushValue) => void;
   eraserMode: boolean;
-  onToggleEraser(): void;
+  onToggleEraser: () => void;
 }
 
 const LAYER_LABELS: Record<LayerValue, string> = {

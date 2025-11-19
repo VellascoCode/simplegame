@@ -1,0 +1,23 @@
+{
+  "id": "guard-azure",
+  "map": "cidadecentral",
+  "name": "Guardião Azul",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 7, "y": 6 },
+  "tint": 5592575,
+  "speed": 120,
+  "size": { "width": 128, "height": 128 },
+  "speechTextColor": 12,
+  "speechBalloonColor": 13,
+  "nameColor": 11,
+  "wanderArea": { "minX": 6, "maxX": 9, "minY": 6, "maxY": 8 },
+  "quotes": [
+    "Fluxo estabilizado.",
+    "A torre azul está segura.",
+    "Reportando: sem ameaças."
+  ]
+}

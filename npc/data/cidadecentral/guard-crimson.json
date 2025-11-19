@@ -1,0 +1,23 @@
+{
+  "id": "guard-crimson",
+  "map": "cidadecentral",
+  "name": "Guardião Carmesim",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 4, "y": 5 },
+  "tint": 14534912,
+  "speed": 115,
+  "size": { "width": 128, "height": 128 },
+  "speechTextColor": 12,
+  "speechBalloonColor": 13,
+  "nameColor": 11,
+  "wanderArea": { "minX": 3, "maxX": 6, "minY": 4, "maxY": 6 },
+  "quotes": [
+    "Alerta total no portão ocidental.",
+    "A chama nunca apaga.",
+    "Rotina de vigilância completa."
+  ]
+}

@@ -5,8 +5,8 @@ import React from "react";
 interface DimensionControlsProps {
   cols: number;
   rows: number;
-  onColsChange(value: number): void;
-  onRowsChange(value: number): void;
+  onColsChange: (value: number) => void;
+  onRowsChange: (value: number) => void;
 }
 
 export function DimensionControls({ cols, rows, onColsChange, onRowsChange }: DimensionControlsProps) {

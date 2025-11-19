@@ -11,9 +11,11 @@ export type CharacterSpriteConfig = {
   idle: AnimationConfig;
   attack?: AnimationConfig;
   tint?: number;
+  previewScale?: number;
 };
 
 const baseSize = { frameWidth: 192, frameHeight: 192 };
+const pinguSize = { frameWidth: 112, frameHeight: 128 };
 
 export const characterSprites: Record<string, CharacterSpriteConfig> = {
   warriorblue: {
@@ -34,7 +36,23 @@ export const characterSprites: Record<string, CharacterSpriteConfig> = {
       ...baseSize,
       frames: 4,
       frameRate: 10
-    }
+    },
+    previewScale: 1.1
+  },
+  pingu: {
+    run: {
+      sheet: "/sprites/pinguin1/walk.png",
+      ...pinguSize,
+      frames: 5,
+      frameRate: 8
+    },
+    idle: {
+      sheet: "/sprites/pinguin1/walk.png",
+      ...pinguSize,
+      frames: 5,
+      frameRate: 5
+    },
+    previewScale: 0.65
   }
 };
 

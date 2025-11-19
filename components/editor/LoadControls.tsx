@@ -5,8 +5,8 @@ import React from "react";
 interface LoadControlsProps {
   maps: string[];
   selectedMap: string;
-  onSelect(value: string): void;
-  onLoad(): void;
+  onSelect: (value: string) => void;
+  onLoad: () => void;
 }
 
 export function LoadControls({ maps, selectedMap, onSelect, onLoad }: LoadControlsProps) {

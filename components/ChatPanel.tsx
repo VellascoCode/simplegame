@@ -40,8 +40,10 @@ export function useChatFeed(
       }
     }
 
-    load();
-    const interval = window.setInterval(load, intervalMs);
+    void load();
+    const interval = window.setInterval(() => {
+      void load();
+    }, intervalMs);
     return () => {
       active = false;
       window.clearInterval(interval);

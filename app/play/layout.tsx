@@ -3,6 +3,8 @@
 export const runtime = "nodejs";
 export const preferredRegion = "home";
 
-export default function PlayLayout({ children }: { children: React.ReactNode }) {
+import type { ReactNode } from "react";
+
+export default function PlayLayout({ children }: { children: ReactNode }) {
   return children;
 }

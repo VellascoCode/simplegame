@@ -1,4 +1,11 @@
-import { characterCreateSchema, characterGoldSchema, characterXpSchema, type Character } from "@/lib/models";
+import {
+  characterCreateSchema,
+  characterGoldSchema,
+  characterXpSchema,
+  characterAttributesSchema,
+  type Character,
+  type CharacterAttributes
+} from "@/lib/models";
 import {
   countCharacters,
   findCharacterById,
@@ -8,6 +15,8 @@ import {
   updateCharacterStats
 } from "@/lib/repositories";
 import { resolveLevel } from "@/lib/progression";
+import { defaultSpriteColor } from "@/lib/characterSpriteOptions";
+import { defaultSpiritId } from "@/lib/characterSpirits";
 
 export async function createCharacter(payload: unknown) {
   const data = characterCreateSchema.parse(payload);
@@ -17,10 +26,28 @@ export async function createCharacter(payload: unknown) {
   }
 
   const now = new Date().toISOString();
+  const spriteColor = data.spriteColor ?? defaultSpriteColor;
+  const spiritId = data.spiritId ?? defaultSpiritId;
+  const baseAttributes: CharacterAttributes = {
+    strength: 10,
+    dexterity: 10,
+    intelligence: 10,
+    constitution: 10,
+    luck: 10
+  };
+  const attributes = {
+    ...baseAttributes,
+    ...(data.attributes ? characterAttributesSchema.parse(data.attributes) : {})
+  };
+  const attributePoints = data.attributePoints ?? 5;
   const character: Character = {
     ownerId: data.ownerId,
     name: data.name,
     sprite: data.sprite,
+    spriteColor,
+    spiritId,
+    attributes,
+    attributePoints,
     inventory: [],
     stats: {
       level: 1,

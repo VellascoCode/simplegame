@@ -22,6 +22,23 @@ type MemoryDB = {
   sessions: PlayerSessionState[];
   quickSlots: QuickSlotLayout[];
   bestiary: BestiaryProfile[];
+  mapArtifacts: Record<
+    string,
+    {
+      corpses: Array<{ id: string; tile: { x: number; y: number }; expiresAt: number }>;
+      loot: Array<{
+        id: string;
+        itemId: string;
+        name: string;
+        icon: string;
+        tile: { x: number; y: number };
+        quantity: number;
+        expiresAt: number;
+        stackable?: boolean;
+        maxStack?: number;
+      }>;
+    }
+  >;
 };
 
 const memoryDb: MemoryDB = {
@@ -34,7 +51,8 @@ const memoryDb: MemoryDB = {
   online: [],
   sessions: [],
   quickSlots: [],
-  bestiary: []
+  bestiary: [],
+  mapArtifacts: {}
 };
 
 export function getMemoryDB() {

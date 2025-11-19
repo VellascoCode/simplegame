@@ -1,0 +1,22 @@
+{
+  "id": "villager-maja",
+  "map": "cidadecentral",
+  "name": "Maja",
+  "sprite": "/sprites/vilager1/walk.png",
+  "frames": 8,
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 9, "y": 11 },
+  "hue": 120,
+  "speed": 90,
+  "speechTextColor": 12,
+  "speechBalloonColor": 14,
+  "nameColor": 11,
+  "wanderArea": { "minX": 8, "maxX": 15, "minY": 9, "maxY": 13 },
+  "quotes": [
+    "Trago notícias da floresta.",
+    "Os guardas variam cores para confundir.",
+    "Um dia visitarei todos os teleportes."
+  ]
+}

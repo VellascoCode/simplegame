@@ -2,13 +2,13 @@
 
 import React from "react";
 
-interface MapMetaProps {
+type MapMetaProps = {
   mapName: string;
   status: string;
-  onMapNameChange(value: string): void;
-  onSave(): void;
-  onSaveAs(): void;
-}
+  onMapNameChange: (value: string) => void;
+  onSave: () => void;
+  onSaveAs: () => void;
+};
 
 export function MapMeta({ mapName, status, onMapNameChange, onSave, onSaveAs }: MapMetaProps) {
   return (

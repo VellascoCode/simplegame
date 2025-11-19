@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getJSON, postJSON } from "@/lib/clientApi";
 import type { InventoryItem } from "@/lib/models";
@@ -56,19 +57,25 @@ export function InventoryPanel({
       setItems([]);
       return;
     }
-    loadInventory(ownerId);
-  }, [ownerId]);
-
-  async function loadInventory(id: string) {
-    try {
-      const response = await getJSON<InventoryItem[]>(`/api/inventory/get?ownerId=${id}`);
-      setItems(response);
-      setFeedback(null);
-      onItemsChange?.(response);
-    } catch (err) {
-      setFeedback(getMessage(err));
-    }
-  }
+    let cancelled = false;
+    const fetchInventory = async () => {
+      try {
+        const response = await getJSON<InventoryItem[]>(`/api/inventory/get?ownerId=${ownerId}`);
+        if (cancelled) return;
+        setItems(response);
+        setFeedback(null);
+        onItemsChange?.(response);
+      } catch (err) {
+        if (!cancelled) {
+          setFeedback(getMessage(err));
+        }
+      }
+    };
+    void fetchInventory();
+    return () => {
+      cancelled = true;
+    };
+  }, [ownerId, onItemsChange]);
 
   async function handleQuickAdd(item: typeof presetItems[number]) {
     if (!ownerId) return;
@@ -130,7 +137,7 @@ export function InventoryPanel({
               type="button"
               onClick={() => handleConsume(slot.id)}
             >
-              {def?.icon ? <img src={def.icon} alt={slot.name} /> : <span>{slot.name}</span>}
+              {def?.icon ? <Image src={def.icon} alt={slot.name} width={48} height={48} /> : <span>{slot.name}</span>}
               <span className="quantity">{slot.quantity}</span>
             </button>
           );

@@ -1,17 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { getJSON, postJSON } from "@/lib/clientApi";
 import type { Character } from "@/lib/models";
-
-const spriteOptions = ["default", "guerreiro", "arqueira", "mago"];
+import {
+  spriteOptions,
+  spriteColorOptions,
+  defaultSprite,
+  defaultSpriteColor,
+  type SpriteOptionValue,
+  type SpriteColorValue
+} from "@/lib/characterSpriteOptions";
+import {
+  characterSpirits,
+  defaultSpiritId,
+  type CharacterSpiritId
+} from "@/lib/characterSpirits";
 
 type CharacterListResponse = {
   characters: Character[];
 };
 
+type CharacterFormState = {
+  ownerId: string;
+  name: string;
+  sprite: SpriteOptionValue;
+  spriteColor: SpriteColorValue;
+  spiritId: CharacterSpiritId;
+};
+
+const defaultForm: CharacterFormState = {
+  ownerId: "",
+  name: "",
+  sprite: defaultSprite,
+  spriteColor: defaultSpriteColor,
+  spiritId: defaultSpiritId
+};
+
 export default function CharacterPage() {
-  const [form, setForm] = useState({ ownerId: "", name: "", sprite: spriteOptions[0] });
+  const [form, setForm] = useState<CharacterFormState>(defaultForm);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,7 +46,7 @@ export default function CharacterPage() {
 
   const characterLimitReached = characters.length >= 4;
 
-  async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCreate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!form.ownerId) {
       setMessage("Informe o ownerId para criar personagens.");
@@ -70,7 +97,11 @@ export default function CharacterPage() {
       </div>
       <div className="grid">
         <div className="card">
-          <form onSubmit={handleCreate}>
+          <form
+            onSubmit={(event) => {
+              void handleCreate(event);
+            }}
+          >
             <label htmlFor="ownerId">Owner ID</label>
             <input
               id="ownerId"
@@ -91,11 +122,54 @@ export default function CharacterPage() {
             <select
               id="sprite"
               value={form.sprite}
-              onChange={(event) => setForm((prev) => ({ ...prev, sprite: event.target.value }))}
+              onChange={(event) =>
+                setForm((prev) => ({
+                  ...prev,
+                  sprite: event.target.value as SpriteOptionValue
+                }))
+              }
               disabled={characterLimitReached}
             >
               {spriteOptions.map((option) => (
-                <option key={option}>{option}</option>
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="spriteColor">Cor</label>
+            <select
+              id="spriteColor"
+              value={form.spriteColor}
+              onChange={(event) =>
+                setForm((prev) => ({
+                  ...prev,
+                  spriteColor: Number(event.target.value) as SpriteColorValue
+                }))
+              }
+              disabled={characterLimitReached}
+            >
+              {spriteColorOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="spirit">Espírito</label>
+            <select
+              id="spirit"
+              value={form.spiritId}
+              onChange={(event) =>
+                setForm((prev) => ({
+                  ...prev,
+                  spiritId: event.target.value
+                }))
+              }
+              disabled={characterLimitReached}
+            >
+              {characterSpirits.map((spirit) => (
+                <option key={spirit.id} value={spirit.id}>
+                  {spirit.nome}
+                </option>
               ))}
             </select>
             <button className="button" disabled={loading || characterLimitReached}>
@@ -105,7 +179,13 @@ export default function CharacterPage() {
         </div>
         <div className="card">
           <h3>Personagens do usuário</h3>
-          <button className="button" type="button" onClick={handleLoad}>
+          <button
+            className="button"
+            type="button"
+            onClick={() => {
+              void handleLoad();
+            }}
+          >
             Carregar personagens
           </button>
           {loadingList && <p>Carregando…</p>}

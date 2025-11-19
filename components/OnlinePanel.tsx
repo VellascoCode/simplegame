@@ -14,7 +14,7 @@ export function OnlinePanel({ ownerId }: { ownerId: string }) {
   useEffect(() => {
     let active = true;
 
-    async function load() {
+    const load = async () => {
       try {
         const presences = await getJSON<OnlinePresence[]>("/api/online/list");
         if (active) {
@@ -23,10 +23,12 @@ export function OnlinePanel({ ownerId }: { ownerId: string }) {
       } catch (err) {
         console.warn("Falha ao carregar online", err);
       }
-    }
+    };
 
-    load();
-    const interval = setInterval(load, 10000);
+    void load();
+    const interval = setInterval(() => {
+      void load();
+    }, 10000);
     return () => {
       active = false;
       clearInterval(interval);
@@ -38,16 +40,18 @@ export function OnlinePanel({ ownerId }: { ownerId: string }) {
       return;
     }
 
-    async function ping() {
+    const ping = async () => {
       try {
         await postJSON("/api/online/ping", { ownerId });
       } catch (err) {
         console.warn("Falha ao enviar ping", err);
       }
-    }
+    };
 
-    ping();
-    const interval = setInterval(ping, 10000);
+    void ping();
+    const interval = setInterval(() => {
+      void ping();
+    }, 10000);
     return () => {
       clearInterval(interval);
     };

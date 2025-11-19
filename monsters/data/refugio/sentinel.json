@@ -1,0 +1,35 @@
+{
+  "id": "refugio-sentinel",
+  "map": "refugio",
+  "name": "Sentinela Sombria",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "size": { "width": 120, "height": 120 },
+  "anchor": { "x": 0.5, "y": 1 },
+  "speed": 85,
+  "hp": 10,
+  "respawnDelay": 5,
+  "tint": 12632256,
+  "attackInterval": 1,
+  "attackDamage": { "min": 1, "max": 2 },
+  "attackRange": 0.9,
+  "playerAttackInterval": 1,
+  "playerDamage": { "min": 1, "max": 3 },
+  "xpReward": { "min": 1, "max": 2 },
+  "goldRange": { "min": 1, "max": 4 },
+  "leashRadius": 5,
+  "rarity": "C",
+  "levelRange": { "min": 1, "max": 5 },
+  "lootTable": [
+    { "id": "sombralho", "name": "Sombralho", "icon": "/itens/item1.png", "chance": 0.5, "min": 1, "max": 2 }
+  ],
+  "quotes": [
+    "O refúgio pertence às sombras.",
+    "Você não deveria estar aqui.",
+    "Sentirá a lâmina espectral!"
+  ],
+  "messageInterval": { "min": 3, "max": 5 },
+  "spawnTile": { "x": 3, "y": 3 }
+}

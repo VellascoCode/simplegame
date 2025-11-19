@@ -1,11 +1,12 @@
 "use client";
 
+import Image from "next/image";
+import { useMemo, useState, type ReactNode } from "react";
+import { PixiGame, type EntityListSnapshot } from "@/components/PixiGame";
+import { BottomMenu } from "@/components/BottomMenu";
+
 export const runtime = "nodejs";
 export const preferredRegion = "home";
-
-import { useMemo, useState, type ReactNode } from "react";
-import { PixiGame } from "@/components/PixiGame";
-import { BottomMenu } from "@/components/BottomMenu";
 
 export default function PlayPixiOnlyPage() {
   const [ready, setReady] = useState(false);
@@ -15,6 +16,9 @@ export default function PlayPixiOnlyPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [minimapVisible, setMinimapVisible] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [mapListOpen, setMapListOpen] = useState(false);
+  const [entitySnapshot, setEntitySnapshot] = useState<EntityListSnapshot>({ monsters: [], npcs: [] });
 
   const overlayButtons = useMemo(
     () => [
@@ -59,16 +63,34 @@ export default function PlayPixiOnlyPage() {
         label: "CFG",
         ariaLabel: "Configurações",
         onClick: () => setSettingsOpen(true)
+      },
+      {
+        id: "maplist",
+        label: "LIST",
+        icon: "/icons/viewmap.png",
+        ariaLabel: "Alternar lista do mapa",
+        onClick: () => setMapListOpen((previous) => !previous),
+        active: mapListOpen
       }
     ],
-    [minimapVisible]
+    [minimapVisible, mapListOpen]
   );
 
   return (
-    <section className="city-shell min-h-screen bg-[#05070c] pt-12">
+    <section className="city-shell min-h-screen bg-[#05070c] pt-6">
       <div className="map-layout mx-auto h-[calc(100vh-6rem)] max-h-[calc(100vh-6rem)] w-full max-w-[1280px] overflow-hidden px-4">
         <div className="map-stage relative h-full">
-          <PixiGame onReadyChange={setReady} bottomOverlay={<BottomMenu variant="overlay" square buttons={overlayButtons} />} />
+          <PixiGame
+            onReadyChange={setReady}
+            onEntityListChange={setEntitySnapshot}
+            bottomOverlay={<BottomMenu square buttons={overlayButtons} />}
+          />
+          <FloatingMenu
+            menuOpen={menuOpen}
+            onToggleMenu={() => setMenuOpen((prev) => !prev)}
+            buttons={overlayButtons}
+          />
+          {mapListOpen && <MapListPanel snapshot={entitySnapshot} onClose={() => setMapListOpen(false)} />}
           {!ready && (
             <div className="absolute inset-0 z-10 flex items-center justify-center rounded-[28px] bg-black/70 text-amber-100">
               Inicializando mapa PIXI…
@@ -128,6 +150,86 @@ function OverlayPanel({ title, onClose, children }: OverlayPanelProps) {
           </button>
         </div>
         {children}
+      </div>
+    </div>
+  );
+}
+
+function FloatingMenu({ menuOpen, onToggleMenu, buttons }: { menuOpen: boolean; onToggleMenu: () => void; buttons: ReadonlyArray<{ id: string; label: string; icon?: string; onClick?: () => void; active?: boolean; ariaLabel?: string }> }) {
+  return (
+    <div className="pointer-events-none absolute right-6 top-6 z-30 flex flex-col items-end gap-3">
+      <button
+        type="button"
+        className="pointer-events-auto rounded-full border border-white/30 bg-black/70 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-amber-100 shadow-lg shadow-black"
+        onClick={onToggleMenu}
+      >
+          {menuOpen ? "Fechar Menu" : "Menu Rápido"}
+      </button>
+      <div
+        className={`pointer-events-auto transition-all duration-300 ${
+          menuOpen ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0"
+        }`}
+      >
+        <div className="rounded-3xl border border-white/15 bg-[#05070c]/95 p-4 shadow-2xl shadow-black">
+          <div className="grid grid-cols-2 gap-3">
+            {buttons.map((button) => (
+              <button
+                key={button.id}
+                type="button"
+                onClick={() => button.onClick?.()}
+                aria-label={button.ariaLabel ?? button.label}
+                className={`flex h-12 items-center justify-center rounded-xl border border-orange-700 bg-gradient-to-b from-amber-200/80 to-amber-700/70 text-xs font-semibold uppercase tracking-[0.1em] text-stone-900 shadow-black shadow-lg ${
+                  button.active ? "ring-2 ring-amber-300" : ""
+                }`}
+              >
+                {button.icon ? <Image src={button.icon} alt="" className="h-6 w-6" width={24} height={24} /> : button.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MapListPanel({ snapshot, onClose }: { snapshot: EntityListSnapshot; onClose: () => void }) {
+  const toHex = (color: number) => `#${Math.max(0, color).toString(16).padStart(6, "0")}`;
+  const merged = [
+    ...snapshot.npcs.map((entry) => ({ ...entry, type: "NPC", dangerColor: 0x6ee7b7, hpText: entry.hpText ?? "—" })),
+    ...snapshot.monsters.map((entry) => ({ ...entry, type: "Monstro" }))
+  ];
+  return (
+    <div className="pointer-events-auto absolute right-6 top-32 z-20 w-80 max-h-[70vh] overflow-y-auto rounded-3xl border border-white/20 bg-[#05070c]/95 p-4 shadow-2xl shadow-black">
+      <div className="mb-3 flex items-center justify-between text-amber-100">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-amber-300/70">Mapa</p>
+          <h3 className="text-lg font-semibold text-amber-50">NPCs e Monstros</h3>
+        </div>
+        <button type="button" onClick={onClose} className="rounded-full border border-white/20 px-3 py-1 text-xs uppercase text-amber-100 hover:bg-white/10">
+          Fechar
+        </button>
+      </div>
+      <div className="space-y-3">
+        {merged.map((entry) => {
+          const borderColor = toHex(entry.dangerColor ?? 0xffffff);
+          const classLabel = entry.type === "Monstro" ? entry.rarity ?? "M" : entry.type;
+          const hpLabel = entry.hpText ? `HP ${entry.hpText}` : "HP —";
+          const levelLabel =
+            typeof entry.level === "number" && entry.level > 0 ? `Lv.${entry.level}` : entry.type === "Monstro" ? "Lv.—" : "";
+          return (
+            <div key={`${entry.type}-${entry.id}`} className="rounded-2xl border bg-white/5 px-3 py-2 shadow-inner" style={{ borderColor }}>
+              <div className="mb-1 grid grid-cols-[auto,1fr,auto] items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-amber-200">
+                <span>{classLabel}</span>
+                <p className="text-center text-base font-semibold tracking-normal text-white">{entry.name}</p>
+                <span style={{ color: borderColor }}>{entry.danger}</span>
+              </div>
+              <p className="text-xs text-amber-300/80">
+                {levelLabel ? `${levelLabel} | ${hpLabel}` : hpLabel}
+              </p>
+            </div>
+          );
+        })}
+        {merged.length === 0 && <p className="text-center text-sm text-amber-100/70">Sem entidades visíveis.</p>}
       </div>
     </div>
   );

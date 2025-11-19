@@ -5,7 +5,7 @@ import type { siteNavLinks } from "./constants";
 type SiteNavLink = (typeof siteNavLinks)[number];
 
 interface SiteNavigationProps {
-  links: SiteNavLink[];
+  links: ReadonlyArray<SiteNavLink>;
 }
 
 export const SiteNavigation: FC<SiteNavigationProps> = ({ links }) => {

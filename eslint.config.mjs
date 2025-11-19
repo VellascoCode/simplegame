@@ -7,12 +7,28 @@ import prettier from "eslint-config-prettier";
 import js from "@eslint/js";
 import globals from "globals";
 
+if (typeof globalThis.structuredClone !== "function") {
+  globalThis.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+}
+
+const abortSignalKey = "AbortSignal";
+const abortSignalCtor = typeof globalThis[abortSignalKey] !== "undefined" ? globalThis[abortSignalKey] : null;
+if (abortSignalCtor && typeof abortSignalCtor.prototype.throwIfAborted !== "function") {
+  abortSignalCtor.prototype.throwIfAborted = function throwIfAborted() {
+    if (this.aborted) {
+      const error = new Error("Operation was aborted");
+      error.name = "AbortError";
+      throw error;
+    }
+  };
+}
+
 const tsRules = tsPlugin.configs["recommended-type-checked"].rules;
 const nextRules = nextPlugin.configs["core-web-vitals"].rules;
 
 export default [
   {
-    ignores: ["node_modules", ".next", "maps", "maps-data", "public/tester"]
+    ignores: ["node_modules", ".next", "maps", "maps-data", "public/tester", "legacy", "app/play-legacy"]
   },
   js.configs.recommended,
   {
@@ -25,7 +41,9 @@ export default [
       },
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        React: true,
+        JSX: true
       }
     },
     plugins: {
@@ -37,7 +55,16 @@ export default [
       ...tsRules,
       ...nextRules,
       "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn"
+      "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          checksVoidReturn: {
+            arguments: false,
+            attributes: false
+          }
+        }
+      ]
     }
   },
   {

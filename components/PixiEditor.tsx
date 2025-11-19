@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatedSprite, Application, Assets, Container, Graphics, Texture } from "pixi.js";
+import { AnimatedSprite, Application, Assets, Container, Graphics, Texture, type FederatedPointerEvent } from "pixi.js";
 import { TileSelect } from "./editor/TileSelect";
 import { LayerControls } from "./editor/LayerControls";
 import { OverlayControls } from "./editor/OverlayControls";
@@ -35,6 +35,11 @@ type MapPayload = {
   tiles?: Matrix<string>;
   blocks?: Matrix<boolean>;
   buildingOverlay?: Matrix<OverlaySlice>;
+};
+
+type MapListResponse = {
+  maps?: string[];
+  tiles?: string[];
 };
 
 export function PixiEditor() {
@@ -186,7 +191,7 @@ export function PixiEditor() {
       try {
         const response = await fetch("/api/maps/list");
         if (!response.ok) throw new Error("Failed to list maps");
-        const data = await response.json();
+        const data = (await response.json()) as MapListResponse;
         setMaps(data.maps ?? []);
         setTilePaths(data.tiles ?? []);
         if ((data.tiles ?? []).length > 0) {
@@ -206,7 +211,7 @@ export function PixiEditor() {
       }
     };
     void fetchInitial();
-  }, [applyEditorMatrices, requestedMap]);
+  }, [applyEditorMatrices, requestedMap, loadMapByName, setOrbTile]);
 
   useEffect(() => {
     if (!tilePaths.length) return;
@@ -214,10 +219,12 @@ export function PixiEditor() {
       const paths = [...tilePaths, ...FIRE_FRAMES];
       await Assets.load(paths);
       tilePaths.forEach((path) => {
-        const texture = Assets.get(path) as Texture | undefined;
+        const texture = Assets.get<Texture | undefined>(path);
         if (texture) texturesRef.current[path] = texture;
       });
-      orbTexturesRef.current = FIRE_FRAMES.map((path) => Assets.get(path) as Texture).filter(Boolean);
+      orbTexturesRef.current = FIRE_FRAMES.map((path) => Assets.get<Texture | undefined>(path)).filter(
+        (value): value is Texture => value instanceof Texture
+      );
       setSceneVersion((version) => version + 1);
     };
     void loadTextures();
@@ -299,7 +306,7 @@ export function PixiEditor() {
       worldLayer.addChild(buildingTopLayer);
 
       worldLayer.eventMode = "static";
-      worldLayer.on("pointerdown", (event: any) => {
+      worldLayer.on("pointerdown", (event: FederatedPointerEvent) => {
         if (!tileLayer0Ref.current) return;
         const local = tileLayer0Ref.current.toLocal(event.global);
         const tileX = Math.floor(local.x / TILE_SIZE);
@@ -336,12 +343,12 @@ export function PixiEditor() {
       app.destroy(true);
       appRef.current = null;
     };
-  }, [handlePaintTile]);
+  }, [handlePaintTile, updateOrb]);
 
   useEffect(() => {
     if (!ready || !tilePaths.length || !tilesLayer0.length) return;
     rebuildScene();
-  }, [ready, tilePaths, tilesLayer0, tilesLayer1, tilesLayer2, buildingOverlay, blocks, cols, rows, sceneVersion]);
+  }, [ready, tilePaths, tilesLayer0, tilesLayer1, tilesLayer2, buildingOverlay, blocks, cols, rows, sceneVersion, rebuildScene]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -355,7 +362,7 @@ export function PixiEditor() {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, []);
+  }, [attemptOrbMove]);
 
   const fillLayer = useCallback((layer: 0 | 1 | 2, tilePath: string) => {
     const next = createMatrix(rowsRef.current, colsRef.current, tilePath);
@@ -413,7 +420,7 @@ export function PixiEditor() {
     setSceneVersion((version) => version + 1);
   };
 
-  const rebuildScene = () => {
+  const rebuildScene = useCallback(() => {
     if (!tileLayer0Ref.current || !tileLayer1Ref.current || !tileLayer2Ref.current || !blockLayerRef.current || !gridRef.current) {
       return;
     }
@@ -439,9 +446,9 @@ export function PixiEditor() {
     });
     drawGrid(gridRef.current, cols, rows);
     ensureOrbSprite();
-  };
+  }, [tilesLayer0, tilesLayer1, tilesLayer2, buildingOverlay, blocks, rows, cols, activeLayer, ensureOrbSprite]);
 
-  const ensureOrbSprite = () => {
+  const ensureOrbSprite = useCallback(() => {
     if (!worldLayerRef.current || !orbTexturesRef.current.length) return;
     if (!orbSpriteRef.current) {
       const sprite = new AnimatedSprite(orbTexturesRef.current);
@@ -454,9 +461,9 @@ export function PixiEditor() {
       worldLayerRef.current.addChild(sprite);
     }
     updateOrbWorldPosition();
-  };
+  }, [updateOrbWorldPosition]);
 
-  const setOrbTile = (x: number, y: number, maxCols = colsRef.current, maxRows = rowsRef.current) => {
+  const setOrbTile = useCallback((x: number, y: number, maxCols = colsRef.current, maxRows = rowsRef.current) => {
     orbTileRef.current = {
       x: clamp(x, 0, maxCols - 1),
       y: clamp(y, 0, maxRows - 1)
@@ -465,15 +472,27 @@ export function PixiEditor() {
     orbTargetRef.current = null;
     orbMoveElapsedRef.current = 0;
     updateOrbWorldPosition();
-  };
+  }, [updateOrbWorldPosition]);
 
-  const updateOrbWorldPosition = () => {
+  const followOrb = useCallback(() => {
+    if (!worldLayerRef.current || !appRef.current || !orbSpriteRef.current) return;
+    const renderer = appRef.current.renderer;
+    const viewportWidth = renderer.width;
+    const viewportHeight = renderer.height;
+    const worldWidth = colsRef.current * TILE_SIZE;
+    const worldHeight = rowsRef.current * TILE_SIZE;
+    const targetX = clamp(orbSpriteRef.current.position.x - viewportWidth / 2, 0, Math.max(0, worldWidth - viewportWidth));
+    const targetY = clamp(orbSpriteRef.current.position.y - viewportHeight / 2, 0, Math.max(0, worldHeight - viewportHeight));
+    worldLayerRef.current.position.set(-targetX, -targetY);
+  }, []);
+
+  const updateOrbWorldPosition = useCallback(() => {
     if (!orbSpriteRef.current) return;
     orbSpriteRef.current.position.set(orbTileRef.current.x * TILE_SIZE + TILE_SIZE / 2, orbTileRef.current.y * TILE_SIZE + TILE_SIZE / 2);
     followOrb();
-  };
+  }, [followOrb]);
 
-  const attemptOrbMove = (dx: number, dy: number): boolean => {
+  const attemptOrbMove = useCallback((dx: number, dy: number): boolean => {
     if (orbMovingRef.current) return false;
     const nextX = clamp(orbTileRef.current.x + dx, 0, cols - 1);
     const nextY = clamp(orbTileRef.current.y + dy, 0, rows - 1);
@@ -490,9 +509,9 @@ export function PixiEditor() {
     orbMovingRef.current = true;
     orbMoveElapsedRef.current = 0;
     return true;
-  };
+  }, [cols, rows]);
 
-  const updateOrb = (deltaMS: number) => {
+  const updateOrb = useCallback((deltaMS: number) => {
     if (!orbSpriteRef.current) return;
     orbHueRef.current = (orbHueRef.current + deltaMS * 0.0002) % 1;
     orbSpriteRef.current.tint = hslToHex(orbHueRef.current, 0.75, 0.6);
@@ -509,19 +528,7 @@ export function PixiEditor() {
       }
     }
     followOrb();
-  };
-
-  const followOrb = () => {
-    if (!worldLayerRef.current || !appRef.current || !orbSpriteRef.current) return;
-    const renderer = appRef.current.renderer;
-    const viewportWidth = renderer.width;
-    const viewportHeight = renderer.height;
-    const worldWidth = colsRef.current * TILE_SIZE;
-    const worldHeight = rowsRef.current * TILE_SIZE;
-    const targetX = clamp(orbSpriteRef.current.position.x - viewportWidth / 2, 0, Math.max(0, worldWidth - viewportWidth));
-    const targetY = clamp(orbSpriteRef.current.position.y - viewportHeight / 2, 0, Math.max(0, worldHeight - viewportHeight));
-    worldLayerRef.current.position.set(-targetX, -targetY);
-  };
+  }, [followOrb]);
 
   function drawGrid(graphics: Graphics | null, gridCols: number, gridRows: number): void {
     if (!graphics) return;
@@ -541,11 +548,11 @@ export function PixiEditor() {
     }
   }
 
-  const loadMapByName = async (name: string) => {
+  const loadMapByName = useCallback(async (name: string) => {
     try {
       const response = await fetch(`/api/maps/load?map=${encodeURIComponent(name)}`);
       if (!response.ok) throw new Error("Map not found");
-      const data: MapPayload = await response.json();
+      const data = (await response.json()) as MapPayload;
       setMapName(data.name);
       setCols(data.cols);
       setRows(data.rows);
@@ -558,7 +565,7 @@ export function PixiEditor() {
       console.error(error);
       setStatus("Erro ao carregar mapa");
     }
-  };
+  }, [applyEditorMatrices, setOrbTile]);
 
   const persistMap = async (name: string) => {
     try {
@@ -582,7 +589,7 @@ export function PixiEditor() {
       setStatus(`Mapa "${name}" salvo com sucesso`);
       const listResponse = await fetch("/api/maps/list");
       if (listResponse.ok) {
-        const listData = await listResponse.json();
+        const listData = (await listResponse.json()) as MapListResponse;
         setMaps(listData.maps ?? []);
       }
     } catch (error) {

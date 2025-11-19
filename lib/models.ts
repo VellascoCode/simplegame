@@ -1,4 +1,8 @@
 import { z } from "zod";
+import type { SpriteOptionValue, SpriteColorValue } from "./characterSpriteOptions";
+import { spriteOptionValues, spriteColorValues } from "./characterSpriteOptions";
+import type { CharacterSpiritId } from "./characterSpirits";
+import { characterSpiritIds } from "./characterSpirits";
 
 export type InventoryItem = {
   id: string;
@@ -23,11 +27,23 @@ export type CharacterStats = {
   energy: number;
 };
 
+export type CharacterAttributes = {
+  strength: number;
+  dexterity: number;
+  intelligence: number;
+  constitution: number;
+  luck: number;
+};
+
 export type Character = {
   _id?: string;
   ownerId: string;
   name: string;
   sprite: string;
+  spriteColor?: SpriteColorValue;
+  spiritId?: CharacterSpiritId;
+  attributes: CharacterAttributes;
+  attributePoints: number;
   inventory: InventoryItem[];
   stats: CharacterStats;
   gold: number;
@@ -75,6 +91,10 @@ export type PlayerSessionState = {
   ownerId: string;
   characterId: string;
   characterName?: string;
+  characterSprite?: SpriteOptionValue;
+  spriteColor?: SpriteColorValue;
+  spiritId?: CharacterSpiritId;
+  stats?: CharacterStats;
   map: string;
   position: { x: number; y: number };
   updatedAt: string;
@@ -93,10 +113,33 @@ export const registerSchema = z.object({
 
 export const loginSchema = registerSchema;
 
+const spriteValueEnum = z.enum(spriteOptionValues as [SpriteOptionValue, ...SpriteOptionValue[]]);
+const spriteColorEnum = z.union([
+  z.literal(spriteColorValues[0]),
+  z.literal(spriteColorValues[1]),
+  z.literal(spriteColorValues[2]),
+  z.literal(spriteColorValues[3])
+]);
+const spiritValueEnum = z.enum(
+  characterSpiritIds as [CharacterSpiritId, ...CharacterSpiritId[]]
+);
+const attributeValueSchema = z.number().int().min(0).max(999);
+export const characterAttributesSchema = z.object({
+  strength: attributeValueSchema,
+  dexterity: attributeValueSchema,
+  intelligence: attributeValueSchema,
+  constitution: attributeValueSchema,
+  luck: attributeValueSchema
+});
+
 export const characterCreateSchema = z.object({
   ownerId: z.string().min(1),
   name: z.string().min(3).max(20),
-  sprite: z.string().min(1)
+  sprite: spriteValueEnum,
+  spriteColor: spriteColorEnum.optional(),
+  spiritId: spiritValueEnum.optional(),
+  attributes: characterAttributesSchema.partial().optional(),
+  attributePoints: z.number().int().min(0).max(999).optional()
 });
 
 export const characterGoldSchema = z.object({

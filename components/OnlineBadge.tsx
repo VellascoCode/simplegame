@@ -23,11 +23,13 @@ export function OnlineBadge({ enabled = true }: { enabled?: boolean }) {
         if (active) setCount(0);
       } finally {
         if (active) {
-          timer = window.setTimeout(load, 10000);
+          timer = window.setTimeout(() => {
+            void load();
+          }, 10000);
         }
       }
     };
-    load();
+    void load();
     return () => {
       active = false;
       if (timer) window.clearTimeout(timer);

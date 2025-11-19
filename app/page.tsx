@@ -11,8 +11,8 @@ import { LandingSections } from "@/components/home/LandingSections";
 import { CharacterPanel } from "@/components/home/CharacterPanel";
 import { AuthModal } from "@/components/home/AuthModal";
 import { siteNavLinks } from "@/components/home/constants";
-
-const spriteOptions = ["default", "guerreiro", "arqueira", "mago"];
+import { defaultSprite, defaultSpriteColor } from "@/lib/characterSpriteOptions";
+import { defaultSpiritId } from "@/lib/characterSpirits";
 
 type AuthResult = { id: string; email: string };
 
@@ -38,7 +38,12 @@ export default function HomePage() {
   const [loadingAuth, setLoadingAuth] = useState(false);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState("");
-  const [characterForm, setCharacterForm] = useState({ name: "", sprite: spriteOptions[0] });
+  const [characterForm, setCharacterForm] = useState({
+    name: "",
+    sprite: defaultSprite,
+    spriteColor: defaultSpriteColor,
+    spiritId: defaultSpiritId
+  });
   const [characterFeedback, setCharacterFeedback] = useState<string | null>(null);
   const [refreshingCharacters, setRefreshingCharacters] = useState(false);
   const [modalView, setModalView] = useState<ModalView>(null);
@@ -196,9 +201,16 @@ export default function HomePage() {
       await postJSON<Character>("/api/character/create", {
         ownerId,
         name: characterForm.name,
-        sprite: characterForm.sprite
+        sprite: characterForm.sprite,
+        spriteColor: characterForm.spriteColor,
+        spiritId: characterForm.spiritId
       });
-      setCharacterForm({ name: "", sprite: spriteOptions[0] });
+      setCharacterForm({
+        name: "",
+        sprite: defaultSprite,
+        spriteColor: defaultSpriteColor,
+        spiritId: defaultSpiritId
+      });
       await refreshCharacters(ownerId);
       setCharacterFeedback("Personagem criado.");
     } catch (err) {
@@ -254,7 +266,6 @@ export default function HomePage() {
           characterForm={characterForm}
           onChangeCharacterForm={handleCharacterFormChange}
           onCreateCharacter={handleCreateCharacter}
-          spriteOptions={spriteOptions}
           characterLimitReached={characterLimitReached}
           lastRoute={lastRoute}
           onContinueLastRoute={handleContinueRoute}

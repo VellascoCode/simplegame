@@ -1,0 +1,23 @@
+{
+  "id": "guard-amber",
+  "map": "cidadecentral",
+  "name": "Guardião Âmbar",
+  "sprite": "/sprites/warriorblue/walk.png",
+  "frames": 6,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 6, "y": 5 },
+  "tint": 16753920,
+  "speed": 110,
+  "size": { "width": 128, "height": 128 },
+  "speechTextColor": 12,
+  "speechBalloonColor": 13,
+  "nameColor": 11,
+  "wanderArea": { "minX": 5, "maxX": 8, "minY": 4, "maxY": 6 },
+  "quotes": [
+    "Segurando a linha central.",
+    "Nada passa pela patrulha amarela.",
+    "Mantenha-se atento!"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "villager-arna",
+  "map": "cidadecentral",
+  "name": "Arna",
+  "sprite": "/sprites/vilager1/walk.png",
+  "frames": 8,
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "anchor": { "x": 0.5, "y": 1 },
+  "initialTile": { "x": 16, "y": 13 },
+  "hue": 190,
+  "speed": 80,
+  "speechTextColor": 12,
+  "speechBalloonColor": 14,
+  "nameColor": 11,
+  "wanderArea": { "minX": 14, "maxX": 22, "minY": 11, "maxY": 16 },
+  "quotes": [
+    "Coleciono rumores do outro mundo.",
+    "O teleporte está estável hoje.",
+    "A fonte canta sempre diferente."
+  ]
+}

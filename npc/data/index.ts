@@ -1,14 +1,14 @@
 import type { NpcDefinition } from "./types";
-import elisa from "./villagers/elisa.json";
-import rafa from "./villagers/rafa.json";
-import clara from "./villagers/clara.json";
-import nico from "./villagers/nico.json";
-import guardNorth from "./guards/guard-north.json";
-import guardSouth from "./guards/guard-south.json";
-import guardEast from "./guards/guard-east.json";
-import guardWest from "./guards/guard-west.json";
+import guardAmber from "./cidadecentral/guard-amber.json";
+import guardAzure from "./cidadecentral/guard-azure.json";
+import guardForest from "./cidadecentral/guard-forest.json";
+import guardCrimson from "./cidadecentral/guard-crimson.json";
+import villagerTyna from "./cidadecentral/villager-tyna.json";
+import villagerArna from "./cidadecentral/villager-arna.json";
+import villagerSolia from "./cidadecentral/villager-solia.json";
+import villagerMaja from "./cidadecentral/villager-maja.json";
 
-const RAW_NPCS = [elisa, rafa, clara, nico, guardNorth, guardSouth, guardEast, guardWest];
+const RAW_NPCS = [guardAmber, guardAzure, guardForest, guardCrimson, villagerTyna, villagerArna, villagerSolia, villagerMaja];
 
 export const NPC_DATA: NpcDefinition[] = RAW_NPCS.map((npc) => npc as NpcDefinition);
 
