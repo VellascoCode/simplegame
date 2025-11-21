@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { getJSON, postJSON } from "@/lib/clientApi";
+
 import type { ChatMessage } from "@/lib/models";
+
+import { getJSON, postJSON } from "@/lib/clientApi";
 
 type ChatFeedOptions = {
   enabled?: boolean;
@@ -131,7 +133,12 @@ export function ChatPanel({
           {messages.length === 0 && <li>Nenhuma mensagem.</li>}
         </ul>
       </div>
-      <form className="chat-form" onSubmit={handleSend}>
+      <form
+        className="chat-form"
+        onSubmit={(event) => {
+          void handleSend(event);
+        }}
+      >
         {!forcedOwnerId && (
           <input
             id="chat-owner"

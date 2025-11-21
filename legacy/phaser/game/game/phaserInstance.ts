@@ -1,6 +1,8 @@
-let phaserInstance: typeof import("phaser") | null = null;
+import type * as PhaserType from "phaser";
 
-export function setPhaserInstance(instance: typeof import("phaser")) {
+let phaserInstance: typeof PhaserType | null = null;
+
+export function setPhaserInstance(instance: typeof PhaserType) {
   phaserInstance = instance;
 }
 

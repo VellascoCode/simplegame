@@ -1,12 +1,14 @@
-import Image from "next/image";
 import type { FC } from "react";
+
+import Image from "next/image";
+
 import {
   assetHighlights,
   featureHighlights,
-  roadmapSteps,
   loreSections,
-  showcaseClasses,
-  roadmapTiles
+  roadmapSteps,
+  roadmapTiles,
+  showcaseClasses
 } from "./constants";
 
 interface LandingSectionsProps {

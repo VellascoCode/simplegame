@@ -1,4 +1,7 @@
-import { Container, FederatedPointerEvent, Graphics, Text } from "pixi.js";
+import type { FederatedPointerEvent } from "pixi.js";
+
+import { Container, Graphics, Text } from "pixi.js";
+
 import type { CameraController } from "@/src/pixi/Camera";
 import type { Direction } from "@/src/pixi/Player";
 
@@ -84,12 +87,15 @@ export class InputController {
   };
 
   private handlePointerTap = (event: FederatedPointerEvent): void => {
-    let current = event.target;
+    if (!(event.target instanceof Container)) {
+      return;
+    }
+    let current: Container | null = event.target;
     while (current) {
       if (current === this.overlayLayer) {
         return;
       }
-      current = current.parent;
+      current = current.parent ?? null;
     }
     const world = this.camera.toWorld(event.global.x, event.global.y);
     const tileX = Math.floor(world.x / this.tileSize);

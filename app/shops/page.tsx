@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { postJSON } from "@/lib/clientApi";
+
 import { InventoryPanel } from "@/components/InventoryPanel";
+import { postJSON } from "@/lib/clientApi";
 
 type ShopItem = {
   id: string;
@@ -94,7 +95,13 @@ export default function ShopsPage() {
               {shop.items.map((item) => (
                 <li key={item.id}>
                   {item.name}{" "}
-                  <button className="button" type="button" onClick={() => buy(item)}>
+                  <button
+                    className="button"
+                    type="button"
+                    onClick={() => {
+                      void buy(item);
+                    }}
+                  >
                     Comprar
                   </button>
                 </li>
@@ -105,7 +112,11 @@ export default function ShopsPage() {
         <div className="card">
           <h3>Loja 3 — Compra do Jogador</h3>
           <p>Informe o ID do item e quantidade para vender (remover do inventário).</p>
-          <form onSubmit={sell}>
+          <form
+            onSubmit={(event) => {
+              void sell(event);
+            }}
+          >
             <label htmlFor="sell-id">Item ID</label>
             <input
               id="sell-id"

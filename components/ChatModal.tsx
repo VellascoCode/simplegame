@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import { ChatPanel } from "@/components/ChatPanel";
 
 export function ChatModal({ ownerId, characterName }: { ownerId?: string; characterName?: string }) {

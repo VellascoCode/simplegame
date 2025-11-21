@@ -383,7 +383,6 @@ export class MonsterActor {
     const color = RARITY_COLORS[this.rarity] ?? 0xfcd34d;
     this.rarityLabel.text = this.rarity;
     this.rarityLabel.style.fill = color;
-    this.rarityLabel.dirty = true;
     this.updateInfoBackground();
   }
 
@@ -392,7 +391,6 @@ export class MonsterActor {
     this.dangerColor = color;
     this.dangerLabel.text = label;
     this.dangerLabel.style.fill = color;
-    this.dangerLabel.dirty = true;
     this.updateInfoBackground();
   }
 
@@ -416,7 +414,6 @@ export class MonsterActor {
 
   private updateHpLabel(): void {
     this.hpLabel.text = `${this.hp}/${this.maxHp}`;
-    this.hpLabel.dirty = true;
     this.updateInfoBackground();
   }
 

@@ -1,25 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Application, Assets, Container, Rectangle, Sprite, Texture, AnimatedSprite, Graphics, Text } from "pixi.js";
 import type { FederatedPointerEvent } from "pixi.js";
-import { Tilemap } from "@/pixi/runtime/Tilemap";
-import { Player } from "@/pixi/runtime/Player";
-import { Camera } from "@/pixi/runtime/Camera";
-import { InputController } from "@/pixi/runtime/InputController";
-import { Hud } from "@/pixi/runtime/Hud";
-import { createOverlayMatrix, splitTexture, type OverlaySlice } from "@/pixi/utils/overlay";
-import { getNpcsForMap, type NpcDefinition } from "@/npc/data";
-import { NpcActor } from "@/pixi/runtime/npcs/NpcActor";
-import { getMonstersForMap, type MonsterDefinition } from "@/monsters/data";
-import { MonsterActor } from "@/pixi/runtime/monsters/MonsterActor";
-import { getCharacterSpriteConfig } from "@/lib/characterSprites";
-import type { SpriteOptionValue, SpriteColorValue } from "@/lib/characterSpriteOptions";
+
+import { AnimatedSprite, Application, Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+
+import type { SpriteColorValue, SpriteOptionValue } from "@/lib/characterSpriteOptions";
+
 import { getSpriteColorTint } from "@/lib/characterSpriteOptions";
+import { getCharacterSpriteConfig } from "@/lib/characterSprites";
 import { levelUpEffect, teleportEffect } from "@/lib/effects";
 import { resolveLevel, xpForLevel, xpNeededForNextLevel } from "@/lib/progression";
-import { FloatingTextManager } from "@/pixi/runtime/effects/FloatingText";
+import { getMonstersForMap, type MonsterDefinition } from "@/monsters/data";
+import { getNpcsForMap, type NpcDefinition } from "@/npc/data";
 import { playAttackSound, playDamageSound, playDeathSound, playLevelUpSound, playXpSound } from "@/pixi/runtime/audio";
+import { Camera } from "@/pixi/runtime/Camera";
+import { FloatingTextManager } from "@/pixi/runtime/effects/FloatingText";
+import { Hud } from "@/pixi/runtime/Hud";
+import { InputController } from "@/pixi/runtime/InputController";
+import { MonsterActor } from "@/pixi/runtime/monsters/MonsterActor";
+import { NpcActor } from "@/pixi/runtime/npcs/NpcActor";
+import { Player } from "@/pixi/runtime/Player";
+import { Tilemap } from "@/pixi/runtime/Tilemap";
+import { createOverlayMatrix, type OverlaySlice, splitTexture } from "@/pixi/utils/overlay";
 
 const TILE_SIZE = 64;
 const FALLBACK_MAP_NAME = "Cidade Central";
@@ -1094,15 +1097,20 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         worldHeight: tilemap.worldHeight
       });
 
-      hud.updatePosition(player.tilePosition);
+      if (!player) {
+        throw new Error("Player not initialized");
+      }
+      const activePlayer = player;
+
+      hud.updatePosition(activePlayer.tilePosition);
 
       input = new InputController(
         overlayLayer,
         (direction) => {
-          player.tryMove(direction);
+          activePlayer.tryMove(direction);
         },
         (direction, held) => {
-          player.setDirectionHeld(direction, held);
+          activePlayer.setDirectionHeld(direction, held);
         }
       );
       input.updateLayout(rendererWidth, rendererHeight);
@@ -1111,7 +1119,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
       pointerHandler = (event: FederatedPointerEvent) => {
         const worldPoint = camera.worldFromScreen(event.global.x, event.global.y);
         const tilePoint = tilemap.worldToTile(worldPoint.x, worldPoint.y);
-        player.moveTo(tilePoint);
+        activePlayer.moveTo(tilePoint);
       };
       app.stage.on("pointerdown", pointerHandler);
 
@@ -1139,11 +1147,12 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
       };
 
       app.ticker.add((ticker) => {
-        if (!player) return;
+        const activePlayer = player;
+        if (!activePlayer) return;
         const delta = ticker.deltaMS / 1000;
-        player.update(delta);
+        activePlayer.update(delta);
         npcActors.forEach((npc) => npc.update(delta));
-        const playerTile = player.tilePosition;
+        const playerTile = activePlayer.tilePosition;
         const assignedSlots = new Map<number, string>();
         monsterState.forEach((state, id) => {
           if (state.slot !== null) {
@@ -1209,7 +1218,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         monsterState.forEach((state) => {
           const actor = state.actor;
           if (!actor) return;
-          actor.update(delta, player.position);
+          actor.update(delta, activePlayer.position);
           actor.updateThreatDisplay(xpStats.level);
           const retaliation = actor.tryReceivePlayerAttack(delta);
           if (retaliation) {
@@ -1248,8 +1257,8 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
           artifactPersistTimerRef.current = 0;
           void persistArtifacts();
         }
-        camera.update(player.position);
-        hud.updatePosition(player.tilePosition);
+        camera.update(activePlayer.position);
+        hud.updatePosition(activePlayer.tilePosition);
         floatingTextManager?.update(delta);
         if (levelUpBannerTimer > 0) {
           levelUpBannerTimer = Math.max(0, levelUpBannerTimer - delta);

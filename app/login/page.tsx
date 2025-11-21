@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { postJSON } from "@/lib/clientApi";
 
 type AuthResult = { id: string; email: string };
@@ -49,7 +50,11 @@ export default function LoginPage() {
       <div className="grid">
         <div className="card">
           <h3>Registro</h3>
-          <form onSubmit={handleRegister}>
+          <form
+            onSubmit={(event) => {
+              void handleRegister(event);
+            }}
+          >
             <label htmlFor="register-email">E-mail</label>
             <input
               id="register-email"
@@ -78,7 +83,11 @@ export default function LoginPage() {
         </div>
         <div className="card">
           <h3>Login</h3>
-          <form onSubmit={handleLogin}>
+          <form
+            onSubmit={(event) => {
+              void handleLogin(event);
+            }}
+          >
             <label htmlFor="login-email">E-mail</label>
             <input
               id="login-email"

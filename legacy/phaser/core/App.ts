@@ -1,4 +1,4 @@
-import { Application, Container, type ApplicationOptions, type Ticker } from "pixi.js";
+import { Application, type ApplicationOptions, Container, type Ticker } from "pixi.js";
 
 export interface GameScene {
   container: Container;

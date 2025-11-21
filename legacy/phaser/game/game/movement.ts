@@ -1,5 +1,7 @@
 import type * as PhaserType from "phaser";
-import type { NPCRecord, CollisionZone } from "./types";
+
+import type { CollisionZone, NPCRecord } from "./types";
+
 import { PLAYER_SPEED } from "./constants";
 import { getPhaserInstance } from "./phaserInstance";
 

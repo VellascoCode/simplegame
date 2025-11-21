@@ -1,11 +1,12 @@
 import { Container, Rectangle } from "pixi.js";
+
 import { BaseScene, type GameApp } from "@/src/core/App";
+import { CameraController } from "@/src/pixi/Camera";
+import { Hud } from "@/src/pixi/Hud";
+import { InputController } from "@/src/pixi/InputController";
 import { MapRenderer } from "@/src/pixi/MapRenderer";
 import { PlayerEntity } from "@/src/pixi/Player";
-import { CameraController } from "@/src/pixi/Camera";
-import { InputController } from "@/src/pixi/InputController";
 import { createNpcOrb, type NpcOrb } from "@/src/pixi/sprites/NpcOrb";
-import { Hud } from "@/src/pixi/Hud";
 
 const TILE_SIZE = 48;
 const MAP_COLS = 40;
@@ -71,7 +72,7 @@ export class WorldScene extends BaseScene {
 
     this.hud = new Hud(MAP_NAME);
     this.overlayLayer.addChild(this.hud.view);
-    this.hud.resize();
+    this.hud.resize(this.game.width);
 
     this.lastViewport = { width: this.game.width, height: this.game.height };
   }
@@ -80,7 +81,7 @@ export class WorldScene extends BaseScene {
     this.player.update(deltaSeconds);
     this.npcs.forEach((npc) => npc.update(deltaSeconds));
     this.camera.update(this.player.position);
-    this.hud.updatePosition(this.player.tilePosition);
+    this.hud.update(this.player.tilePosition);
     this.handleResize();
   }
 
@@ -96,7 +97,7 @@ export class WorldScene extends BaseScene {
     this.container.hitArea = new Rectangle(0, 0, this.game.width, this.game.height);
     this.camera.resize(this.game.width, this.game.height);
     this.input.resize(this.game.width, this.game.height);
-    this.hud.resize();
+    this.hud.resize(this.game.width);
     this.lastViewport = { width: this.game.width, height: this.game.height };
   }
 

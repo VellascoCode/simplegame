@@ -1,4 +1,4 @@
-import { Container, Graphics } from "pixi.js";
+import { type Container, Graphics } from "pixi.js";
 
 export type Drop = {
   id: string;

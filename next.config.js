@@ -4,12 +4,6 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     reactCompiler: false
-  },
-  eslint: {
-    ignoreDuringBuilds: true
-  },
-  typescript: {
-    ignoreBuildErrors: true
   }
 };
 

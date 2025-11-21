@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getJSON } from "@/lib/clientApi";
+
 import type { InventoryItem } from "@/lib/models";
+
 import { InventoryPanel } from "@/components/InventoryPanel";
+import { getJSON } from "@/lib/clientApi";
 
 const iconMap: Record<string, string> = {
   item1: "/itens/item1.png",

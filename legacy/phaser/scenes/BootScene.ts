@@ -1,4 +1,5 @@
 import { Text } from "pixi.js";
+
 import { BaseScene, type GameApp } from "@/src/core/App";
 import { Loader } from "@/src/core/Loader";
 import { WorldScene } from "@/src/scenes/WorldScene";

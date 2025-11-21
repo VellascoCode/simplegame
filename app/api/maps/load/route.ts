@@ -1,6 +1,6 @@
 "use server";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { loadMap } from "@/lib/maps";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {

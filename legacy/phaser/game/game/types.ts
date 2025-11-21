@@ -1,4 +1,5 @@
 import type * as Phaser from "phaser";
+
 import type { MonsterType } from "./constants";
 
 export type NPCRecord = {

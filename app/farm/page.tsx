@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { getJSON, postJSON } from "@/lib/clientApi";
+
 import type { FarmState } from "@/lib/models";
+
+import { getJSON, postJSON } from "@/lib/clientApi";
 
 export default function FarmPage() {
   const [ownerId, setOwnerId] = useState("");
@@ -60,7 +62,14 @@ export default function FarmPage() {
           value={ownerId}
           onChange={(event) => setOwnerId(event.target.value)}
         />
-        <button className="button" style={{ marginTop: 12 }} type="button" onClick={load}>
+        <button
+          className="button"
+          style={{ marginTop: 12 }}
+          type="button"
+          onClick={() => {
+            void load();
+          }}
+        >
           Carregar Fazenda
         </button>
         {feedback && <p>{feedback}</p>}
@@ -81,7 +90,11 @@ export default function FarmPage() {
             </ul>
           </div>
           <div className="card">
-            <form onSubmit={handlePlant}>
+            <form
+              onSubmit={(event) => {
+                void handlePlant(event);
+              }}
+            >
               <h3>Plantar</h3>
               <label htmlFor="plot-select">Plot</label>
               <select
@@ -103,7 +116,11 @@ export default function FarmPage() {
             </form>
           </div>
           <div className="card">
-            <form onSubmit={handleHarvest}>
+            <form
+              onSubmit={(event) => {
+                void handleHarvest(event);
+              }}
+            >
               <h3>Colher</h3>
               <p>Selecione o mesmo plot para liberar e coletar itens.</p>
               <label htmlFor="plot-select-harvest">Plot</label>

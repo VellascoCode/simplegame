@@ -51,7 +51,8 @@ export class NpcOrb {
     if (config.tint) {
       this.view.tint = config.tint;
     }
-    this.view.position.set(...this.tileToWorld(this.currentTile.x, this.currentTile.y));
+    const initialPosition = this.tileToWorld(this.currentTile.x, this.currentTile.y);
+    this.view.position.set(initialPosition.x, initialPosition.y);
   }
 
   update(deltaSeconds: number): void {
@@ -91,8 +92,11 @@ export class NpcOrb {
     }
   }
 
-  private tileToWorld(tileX: number, tileY: number): [number, number] {
-    return [tileX * this.tileSize + this.tileSize / 2, tileY * this.tileSize + this.tileSize / 2];
+  private tileToWorld(tileX: number, tileY: number): { x: number; y: number } {
+    return {
+      x: tileX * this.tileSize + this.tileSize / 2,
+      y: tileY * this.tileSize + this.tileSize / 2
+    };
   }
 
   private isInsideBounds(tileX: number, tileY: number): boolean {

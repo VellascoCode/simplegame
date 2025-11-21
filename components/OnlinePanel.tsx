@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { getJSON, postJSON } from "@/lib/clientApi";
 
 type OnlinePresence = {

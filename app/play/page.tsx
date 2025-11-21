@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState, type ReactNode } from "react";
-import { PixiGame, type EntityListSnapshot } from "@/components/PixiGame";
+import { type ReactNode, useMemo, useState } from "react";
+
 import { BottomMenu } from "@/components/BottomMenu";
+import { type EntityListSnapshot, PixiGame } from "@/components/PixiGame";
 
 export const runtime = "nodejs";
 export const preferredRegion = "home";
@@ -194,10 +195,24 @@ function FloatingMenu({ menuOpen, onToggleMenu, buttons }: { menuOpen: boolean; 
 
 function MapListPanel({ snapshot, onClose }: { snapshot: EntityListSnapshot; onClose: () => void }) {
   const toHex = (color: number) => `#${Math.max(0, color).toString(16).padStart(6, "0")}`;
-  const merged = [
-    ...snapshot.npcs.map((entry) => ({ ...entry, type: "NPC", dangerColor: 0x6ee7b7, hpText: entry.hpText ?? "—" })),
-    ...snapshot.monsters.map((entry) => ({ ...entry, type: "Monstro" }))
-  ];
+  type NpcEntry = EntityListSnapshot["npcs"][number];
+  type MonsterEntry = EntityListSnapshot["monsters"][number];
+  type CombinedEntry =
+    | (NpcEntry & { type: "NPC"; dangerColor: number; hpText: string; level?: number })
+    | (MonsterEntry & { type: "Monstro" });
+
+  const npcEntries: CombinedEntry[] = snapshot.npcs.map((entry) => ({
+    ...entry,
+    type: "NPC" as const,
+    dangerColor: 0x6ee7b7,
+    hpText: entry.hpText ?? "—",
+    level: undefined
+  }));
+  const monsterEntries: CombinedEntry[] = snapshot.monsters.map((entry) => ({
+    ...entry,
+    type: "Monstro" as const
+  }));
+  const merged: CombinedEntry[] = [...npcEntries, ...monsterEntries];
   return (
     <div className="pointer-events-auto absolute right-6 top-32 z-20 w-80 max-h-[70vh] overflow-y-auto rounded-3xl border border-white/20 bg-[#05070c]/95 p-4 shadow-2xl shadow-black">
       <div className="mb-3 flex items-center justify-between text-amber-100">
@@ -215,7 +230,11 @@ function MapListPanel({ snapshot, onClose }: { snapshot: EntityListSnapshot; onC
           const classLabel = entry.type === "Monstro" ? entry.rarity ?? "M" : entry.type;
           const hpLabel = entry.hpText ? `HP ${entry.hpText}` : "HP —";
           const levelLabel =
-            typeof entry.level === "number" && entry.level > 0 ? `Lv.${entry.level}` : entry.type === "Monstro" ? "Lv.—" : "";
+            entry.type === "Monstro"
+              ? typeof entry.level === "number" && entry.level > 0
+                ? `Lv.${entry.level}`
+                : "Lv.—"
+              : "";
           return (
             <div key={`${entry.type}-${entry.id}`} className="rounded-2xl border bg-white/5 px-3 py-2 shadow-inner" style={{ borderColor }}>
               <div className="mb-1 grid grid-cols-[auto,1fr,auto] items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-amber-200">

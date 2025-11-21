@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getJSON, postJSON } from "@/lib/clientApi";
+
 import type { InventoryItem } from "@/lib/models";
+
 import { useXp } from "@/hooks/useXp";
+import { getJSON, postJSON } from "@/lib/clientApi";
 
 const SLOT_COUNT = 20;
 const GRID_COLUMNS = 5;
@@ -135,7 +137,9 @@ export function InventoryPanel({
               key={`${slot.id}-${index}`}
               className="inventory-slot"
               type="button"
-              onClick={() => handleConsume(slot.id)}
+              onClick={() => {
+                void handleConsume(slot.id);
+              }}
             >
               {def?.icon ? <Image src={def.icon} alt={slot.name} width={48} height={48} /> : <span>{slot.name}</span>}
               <span className="quantity">{slot.quantity}</span>
@@ -152,7 +156,9 @@ export function InventoryPanel({
               key={item.id}
               className="button"
               type="button"
-              onClick={() => handleQuickAdd(item)}
+              onClick={() => {
+                void handleQuickAdd(item);
+              }}
               style={{ textAlign: "center" }}
             >
               {itemDefinitions[item.id].name}

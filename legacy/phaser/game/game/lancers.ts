@@ -1,8 +1,10 @@
 import type * as PhaserType from "phaser";
+
 import type { LancerRecord } from "./types";
-import { LANCER_SCALE, LANCER_HP, MonsterType } from "./constants";
-import { randomPoint, showFloatingText } from "./utils";
+
+import { LANCER_HP, LANCER_SCALE, MonsterType } from "./constants";
 import { grantRewards } from "./drops";
+import { randomPoint, showFloatingText } from "./utils";
 
 export function createLancer(
   scene: PhaserType.Scene,

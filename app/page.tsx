@@ -1,18 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import { getJSON, postJSON } from "@/lib/clientApi";
+import { useRouter } from "next/navigation";
+import { type FormEvent, useCallback, useEffect, useState } from "react";
+
 import type { Character } from "@/lib/models";
+
 import { BottomMenu } from "@/components/BottomMenu";
-import { SiteNavigation } from "@/components/home/SiteNavigation";
-import { LandingSections } from "@/components/home/LandingSections";
-import { CharacterPanel } from "@/components/home/CharacterPanel";
 import { AuthModal } from "@/components/home/AuthModal";
+import { CharacterPanel } from "@/components/home/CharacterPanel";
 import { siteNavLinks } from "@/components/home/constants";
-import { defaultSprite, defaultSpriteColor } from "@/lib/characterSpriteOptions";
+import { LandingSections } from "@/components/home/LandingSections";
+import { SiteNavigation } from "@/components/home/SiteNavigation";
 import { defaultSpiritId } from "@/lib/characterSpirits";
+import { defaultSprite, defaultSpriteColor } from "@/lib/characterSpriteOptions";
+import { getJSON, postJSON } from "@/lib/clientApi";
 
 type AuthResult = { id: string; email: string };
 

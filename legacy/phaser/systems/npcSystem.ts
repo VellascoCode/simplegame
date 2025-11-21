@@ -1,4 +1,5 @@
-import { Container } from "pixi.js";
+import type { Container } from "pixi.js";
+
 import { NPC } from "@/src/entities/NPC";
 
 export class NPCSystem {

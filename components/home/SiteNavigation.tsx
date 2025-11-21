@@ -1,5 +1,7 @@
-import Image from "next/image";
 import type { FC } from "react";
+
+import Image from "next/image";
+
 import type { siteNavLinks } from "./constants";
 
 type SiteNavLink = (typeof siteNavLinks)[number];

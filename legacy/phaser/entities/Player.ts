@@ -1,4 +1,4 @@
-import { Container, Graphics, Point } from "pixi.js";
+import { Container, Graphics, type Point } from "pixi.js";
 
 export class Player extends Container {
   private readonly body: Graphics;

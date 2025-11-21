@@ -64,6 +64,7 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 - [ ] Após `.env` preenchido, confirmar que dados persistem no MongoDB.
 - [ ] Editor `/editor` protegido por PIN `8989` acessa normalmente, permitindo desenhar o grid.
 - [ ] JSON exportado no editor pode ser reutilizado dentro do `CityScene`.
+- [ ] `npm run lint` e o build de produção (`npx node@18.19.1 ./node_modules/next/dist/bin/next build` em ambientes com Node 16) concluem sem erros — o Next voltou a rodar lint + checagem de tipos em todo o projeto (Pixi, legado/Phaser, auth).
 
 ## 6. Sincronização Contínua
 - Toda alteração funcional deve atualizar simultaneamente `TRACKER.md` e este `passoapasso.md`.

@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
-import type { GetServerSessionOptions } from "next-auth/next";
+
 import { authOptions } from "@/lib/authOptions";
 
-const serverSessionOptions: GetServerSessionOptions = { ...authOptions };
+const serverSessionOptions = { ...authOptions };
 
 export async function getOwnerIdFromSession(): Promise<string | null> {
   const session = await getServerSession(serverSessionOptions);

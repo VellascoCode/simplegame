@@ -1,90 +1,102 @@
+// eslint.config.js
 import process from "node:process";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import nextPlugin from "@next/eslint-plugin-next";
 import reactHooks from "eslint-plugin-react-hooks";
+import react from "eslint-plugin-react";
+import perfectionist from "eslint-plugin-perfectionist";
 import prettier from "eslint-config-prettier";
 import js from "@eslint/js";
 import globals from "globals";
 
+// Polyfills (mantidos)
 if (typeof globalThis.structuredClone !== "function") {
   globalThis.structuredClone = (value) => JSON.parse(JSON.stringify(value));
 }
 
-const abortSignalKey = "AbortSignal";
-const abortSignalCtor = typeof globalThis[abortSignalKey] !== "undefined" ? globalThis[abortSignalKey] : null;
-if (abortSignalCtor && typeof abortSignalCtor.prototype.throwIfAborted !== "function") {
-  abortSignalCtor.prototype.throwIfAborted = function throwIfAborted() {
-    if (this.aborted) {
-      const error = new Error("Operation was aborted");
-      error.name = "AbortError";
-      throw error;
-    }
-  };
-}
-
+// Regras base
 const tsRules = tsPlugin.configs["recommended-type-checked"].rules;
 const nextRules = nextPlugin.configs["core-web-vitals"].rules;
 
 export default [
-  {
-    ignores: ["node_modules", ".next", "maps", "maps-data", "public/tester", "legacy", "app/play-legacy"]
-  },
+  { ignores: ["node_modules", ".next", "out", "build", "public"] },
+
   js.configs.recommended,
+
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         project: "./tsconfig.json",
-        tsconfigRootDir: process.cwd()
+        tsconfigRootDir: process.cwd(),
       },
       globals: {
         ...globals.browser,
         ...globals.node,
         React: true,
-        JSX: true
-      }
+        JSX: true,
+      },
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
       "@next/next": nextPlugin,
-      "react-hooks": reactHooks
+      "react-hooks": reactHooks,
+      react,
+      perfectionist,
     },
     rules: {
       ...tsRules,
       ...nextRules,
+
+      // React
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      "@typescript-eslint/no-misused-promises": [
+      "react/react-in-jsx-scope": "off",
+      "react/self-closing-comp": "error",
+
+      // TypeScript rigor máximo
+      "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports", fixStyle: "inline-type-imports" }],
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: { arguments: false } }],
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+
+      // PERFECTIONIST – CONFIGURAÇÃO QUE NUNCA QUEBRA (2025)
+      "perfectionist/sort-imports": [
         "error",
         {
-          checksVoidReturn: {
-            arguments: false,
-            attributes: false
-          }
-        }
-      ]
-    }
+          type: "natural",
+          order: "asc",
+          groups: [
+            "type",
+            ["builtin", "external"],
+            "internal-type",
+            "internal",
+            ["parent-type", "sibling-type", "index-type"],
+            ["parent", "sibling", "index"],
+            "side-effect",
+            "object",
+            "unknown",
+          ],
+          newlinesBetween: "always",
+          // REMOVIDO internalPattern → é a causa do erro!
+          // O perfectionist já detecta automaticamente @/ e ~/ se estiver no tsconfig
+        },
+      ],
+      "perfectionist/sort-named-imports": "error",
+      "perfectionist/sort-exports": "error",
+      "perfectionist/sort-named-exports": "error",
+    },
   },
+
+  // Arquivos JS de configuração
   {
-    files: ["next.config.js", "postcss.config.js"],
-    languageOptions: {
-      parserOptions: {
-        ecmaVersion: 2021,
-        sourceType: "module",
-        project: null
-      },
-      globals: globals.node
-    }
+    files: ["next.config.*", "postcss.config.*", "tailwind.config.*", "middleware.ts"],
+    languageOptions: { globals: globals.node },
   },
-  {
-    files: ["lib/authOptions.ts", "lib/authSession.ts", "app/api/auth/\\[...nextauth\\]/route.ts"],
-    rules: {
-      "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-unsafe-argument": "off",
-      "@typescript-eslint/no-unsafe-member-access": "off"
-    }
-  },
-  prettier
+
+  // PRETTIER SEMPRE NO FINAL
+  prettier,
 ];

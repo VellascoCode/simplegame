@@ -3,19 +3,22 @@
 export const runtime = "nodejs";
 export const preferredRegion = "home";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { PixiGame } from "@/components/PixiGame";
-import { OnlineBadge } from "@/components/OnlineBadge";
-import { BottomMenu } from "@/components/BottomMenu";
-import { InventoryPanel } from "@/components/InventoryPanel";
-import { useChatFeed } from "@/components/ChatPanel";
-import { getJSON, postJSON } from "@/lib/clientApi";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { type FormEvent, type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+
 import type { Character, InventoryItem } from "@/lib/models";
-import { xpForLevel } from "@/lib/progression";
 import type { BestiaryEntry } from "@/models/Bestiary";
+
+import { BottomMenu } from "@/components/BottomMenu";
+import { useChatFeed } from "@/components/ChatPanel";
+import { InventoryPanel } from "@/components/InventoryPanel";
+import { OnlineBadge } from "@/components/OnlineBadge";
+import { PixiGame } from "@/components/PixiGame";
 import { useXp } from "@/hooks/useXp";
+import { getJSON, postJSON } from "@/lib/clientApi";
+import { xpForLevel } from "@/lib/progression";
 
 type SessionState = {
   ownerId: string;
@@ -194,7 +197,7 @@ export default function CityPage() {
     router.replace("/");
   };
 
-  async function handleLeavePlay() {
+  function handleLeavePlay() {
     setGameReady(false);
     setCombatLog([]);
     goHome();
@@ -373,7 +376,13 @@ export default function CityPage() {
                   <p>Owner ID: {characterInfo.ownerId}</p>
                   <p>Personagem ativo: {characterInfo.name}</p>
                   <p>Nível: {characterInfo.stats.level}</p>
-                  <button type="button" className="button mt-4" onClick={handleFullLogout}>
+                  <button
+                    type="button"
+                    className="button mt-4"
+                    onClick={() => {
+                      void handleFullLogout();
+                    }}
+                  >
                     Logout
                   </button>
                 </div>
@@ -466,9 +475,11 @@ function PlayTopNav({ links }: { links: typeof playNavLinks }) {
     <header className="fixed left-0 right-0 top-0 z-30 border-b border-white/10 bg-black/85 shadow-[0_10px_30px_rgba(0,0,0,0.7)] backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center gap-8 px-4 py-3">
         <div className="flex items-center gap-3">
-          <img
+          <Image
             src="/weapons/club/200.png"
             alt="Mystic Tales"
+            width={56}
+            height={56}
             className="h-14 w-14 rounded-sm border border-white/15 bg-black/40 p-1"
           />
           <div>
@@ -487,7 +498,7 @@ function PlayTopNav({ links }: { links: typeof playNavLinks }) {
               type="button"
               className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-left text-amber-100 transition hover:bg-white/10"
             >
-              <img src={link.icon} alt="" className="h-8 w-8 object-contain" />
+              <Image src={link.icon} alt="" width={32} height={32} className="h-8 w-8 object-contain" />
               <div>
                 <p className="text-xs font-semibold leading-tight">{link.label}</p>
                 <p className="text-[9px] uppercase tracking-[0.18em] text-amber-100/70">
@@ -534,14 +545,14 @@ function QuickSlots({
     item31: 60
   };
 
-  if (!ownerId) return null;
-
   useEffect(() => {
-    if (!ownerId) return;
-    void loadInventory();
-    void loadSlotRefs();
+    if (!ownerId) {
+      setItems([]);
+      setSlotRefs([null, null, null, null]);
+      return;
+    }
 
-    async function loadInventory() {
+    const loadInventory = async () => {
       try {
         const response = await getJSON<InventoryItem[]>(`/api/inventory/get?ownerId=${ownerId}`);
         setItems(response);
@@ -549,16 +560,19 @@ function QuickSlots({
       } catch {
         setItems([]);
       }
-    }
+    };
 
-    async function loadSlotRefs() {
+    const loadSlotRefs = async () => {
       try {
         const response = await getJSON<{ slots: Array<string | null> }>("/api/quickslots");
         setSlotRefs(response.slots);
       } catch {
         setSlotRefs([null, null, null, null]);
       }
-    }
+    };
+
+    void loadInventory();
+    void loadSlotRefs();
   }, [ownerId, refreshKey]);
 
   const resolvedSlots = useMemo(
@@ -567,6 +581,7 @@ function QuickSlots({
   );
 
   async function consumeSlot(index: number) {
+    if (!ownerId) return;
     const slot = resolvedSlots[index];
     if (!slot) {
       setPickerSlot(index);
@@ -592,6 +607,7 @@ function QuickSlots({
   }
 
   async function assignSlot(item: InventoryItem, index: number) {
+    if (!ownerId) return;
     const nextRefs = slotRefs.map((ref, slotIndex) => (slotIndex === index ? item.id : ref));
     setSlotRefs(nextRefs);
     setPickerSlot(null);
@@ -629,6 +645,10 @@ function QuickSlots({
 
   const quickSlots = [0, 1, 2, 3].map((slotIndex) => resolvedSlots[slotIndex] ?? null);
 
+  if (!ownerId) {
+    return null;
+  }
+
   return (
     <div className="pointer-events-auto absolute right-2 top-20 flex flex-col items-end gap-4 sm:right-4 md:top-24">
       <div className="relative rounded-[28px] border border-white/10 bg-black/70 p-2 shadow-xl">
@@ -640,11 +660,13 @@ function QuickSlots({
                 key={index}
                 type="button"
                 className={`relative flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-lg text-amber-100 transition hover:border-amber-200 ${slot ? "shadow-lg" : ""}`}
-                onClick={() => consumeSlot(index)}
+                onClick={() => {
+                  void consumeSlot(index);
+                }}
               >
                 <span className="absolute left-1 top-1 text-[10px] text-amber-200">{index + 1}</span>
                 {slot && icon ? (
-                  <img src={icon} alt={slot.name} className="h-7 w-7 object-contain" />
+                  <Image src={icon} alt={slot.name} width={28} height={28} className="h-7 w-7 object-contain" />
                 ) : (
                   <span>•</span>
                 )}
@@ -666,7 +688,9 @@ function QuickSlots({
                     key={item.id}
                     type="button"
                     className="rounded-lg border border-white/10 bg-black/40 px-3 py-1.5 text-left text-amber-100 hover:border-amber-200"
-                    onClick={() => assignSlot(item, pickerSlot)}
+                    onClick={() => {
+                      void assignSlot(item, pickerSlot);
+                    }}
                   >
                     {item.name} ({item.quantity})
                   </button>
@@ -935,7 +959,6 @@ function ChatDrawer({
   characterName?: string;
   combatLog: CombatEvent[];
 }) {
-  if (!ownerId) return null;
   const tabs = [
     { id: "global", label: "Global" },
     { id: "logs", label: "Logs" },
@@ -943,8 +966,9 @@ function ChatDrawer({
   ] as const;
   type TabId = (typeof tabs)[number]["id"];
   const [activeTab, setActiveTab] = useState<TabId>("global");
-  const { message, setMessage, messages, error, sendMessage } = useChatFeed(ownerId, characterName, {
-    enabled: open,
+  const effectiveOwnerId = ownerId ?? "";
+  const { message, setMessage, messages, error, sendMessage } = useChatFeed(effectiveOwnerId, characterName, {
+    enabled: open && Boolean(ownerId),
     intervalMs: 5000
   });
 
@@ -956,6 +980,14 @@ function ChatDrawer({
 
   const disableInput = activeTab !== "global";
   const visibleMessages = messages.slice(-20);
+
+  if (!ownerId) {
+    return (
+      <Drawer open={open} onClose={onClose} title="Chat">
+        <p className="text-sm text-amber-100">Selecione um personagem para acessar o chat.</p>
+      </Drawer>
+    );
+  }
 
   return (
     <Drawer open={open} onClose={onClose} title="Chat">
@@ -1019,7 +1051,9 @@ function ChatDrawer({
           )}
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(event) => {
+            void handleSubmit(event);
+          }}
           className="flex flex-col gap-2 rounded-[28px] border border-white/10 bg-black/60 p-4"
         >
           <label htmlFor="drawer-chat-message" className="text-xs uppercase tracking-[0.3em] text-amber-100/70">

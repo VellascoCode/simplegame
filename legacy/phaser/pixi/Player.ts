@@ -1,4 +1,5 @@
 import { Container } from "pixi.js";
+
 import { createPlayerOrb } from "@/src/pixi/sprites/PlayerOrb";
 
 export type Direction = "up" | "down" | "left" | "right";

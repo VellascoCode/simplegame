@@ -1,8 +1,10 @@
-import CredentialsProvider from "next-auth/providers/credentials";
-import type { AuthOptions, Session } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-import { findUserByEmail } from "@/lib/repositories";
+
+import CredentialsProvider from "next-auth/providers/credentials";
+
 import { verifyPassword } from "@/lib/hash";
+import { findUserByEmail } from "@/lib/repositories";
 
 type JwtCallbackParams = {
   token: JWT;
@@ -57,4 +59,4 @@ export const authOptions = {
     signIn: "/"
   },
   secret: process.env.NEXTAUTH_SECRET
-} satisfies AuthOptions;
+} satisfies NextAuthOptions;

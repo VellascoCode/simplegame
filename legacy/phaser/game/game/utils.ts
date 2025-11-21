@@ -1,5 +1,6 @@
 import type * as PhaserType from "phaser";
-import { MAP_TILE_SIZE, COVER_DEPTH_OFFSET } from "./constants";
+
+import { COVER_DEPTH_OFFSET, MAP_TILE_SIZE } from "./constants";
 import { getPhaserInstance } from "./phaserInstance";
 
 export function worldToTile(x: number, y: number) {

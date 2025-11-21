@@ -113,7 +113,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = registerSchema;
 
-const spriteValueEnum = z.enum(spriteOptionValues as [SpriteOptionValue, ...SpriteOptionValue[]]);
+const spriteValueEnum = z.enum([...spriteOptionValues] as [SpriteOptionValue, ...SpriteOptionValue[]]);
 const spriteColorEnum = z.union([
   z.literal(spriteColorValues[0]),
   z.literal(spriteColorValues[1]),

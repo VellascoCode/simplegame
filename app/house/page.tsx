@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { getJSON, postJSON } from "@/lib/clientApi";
+
 import type { HouseFurniture, HouseState } from "@/lib/models";
+
+import { getJSON, postJSON } from "@/lib/clientApi";
 
 export default function HousePage() {
   const [ownerId, setOwnerId] = useState("");
@@ -58,7 +60,14 @@ export default function HousePage() {
           value={ownerId}
           onChange={(event) => setOwnerId(event.target.value)}
         />
-        <button className="button" style={{ marginTop: 12 }} type="button" onClick={load}>
+        <button
+          className="button"
+          style={{ marginTop: 12 }}
+          type="button"
+          onClick={() => {
+            void load();
+          }}
+        >
           Carregar Casa
         </button>
         {feedback && <p>{feedback}</p>}
@@ -77,7 +86,11 @@ export default function HousePage() {
             </ul>
           </div>
           <div className="card">
-            <form onSubmit={save}>
+            <form
+              onSubmit={(event) => {
+                void save(event);
+              }}
+            >
               <h3>Atualizar mobília</h3>
               <label htmlFor="furniture-id">Móvel</label>
               <select

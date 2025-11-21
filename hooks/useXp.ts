@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+
 import { postJSON } from "@/lib/clientApi";
 
 export function useXp(ownerId: string, characterId?: string) {

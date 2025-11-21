@@ -1,19 +1,22 @@
-import Image from "next/image";
 import type { CSSProperties, FormEvent } from "react";
+
+import Image from "next/image";
+
 import type { Character } from "@/lib/models";
-import { getCharacterSpriteConfig } from "@/lib/characterSprites";
+
 import {
-  spriteOptions,
-  spriteColorOptions,
+  type CharacterSpiritId,
+  characterSpirits,
+  getCharacterSpirit
+} from "@/lib/characterSpirits";
+import {
   getSpriteColorFilter,
+  spriteColorOptions,
   type SpriteColorValue,
+  spriteOptions,
   type SpriteOptionValue
 } from "@/lib/characterSpriteOptions";
-import {
-  characterSpirits,
-  getCharacterSpirit,
-  type CharacterSpiritId
-} from "@/lib/characterSpirits";
+import { getCharacterSpriteConfig } from "@/lib/characterSprites";
 
 type CharacterFormState = {
   name: string;

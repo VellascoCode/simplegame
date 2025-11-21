@@ -1,4 +1,5 @@
 import type * as PhaserType from "phaser";
+
 import { getPhaserInstance } from "./phaserInstance";
 
 const NPC_MESSAGES = ["Bem-vindo!"];

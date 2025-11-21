@@ -1,6 +1,8 @@
 import type { Container } from "pixi.js";
+
+import type { Player } from "@/src/entities/Player";
+
 import { Enemy } from "@/src/entities/Enemy";
-import { Player } from "@/src/entities/Player";
 
 export type CombatLogEntry = {
   message: string;

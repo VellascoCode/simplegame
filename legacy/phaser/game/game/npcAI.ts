@@ -1,14 +1,16 @@
 import type * as PhaserType from "phaser";
+
+import type { LancerRecord, NPCRecord } from "./types";
+
 import {
-  LANCER_SPEED,
-  STOP_DISTANCE,
-  MAX_ATTACKERS,
   LANCER_SEPARATION_FORCE,
-  LANCER_SEPARATION_RADIUS
+  LANCER_SEPARATION_RADIUS,
+  LANCER_SPEED,
+  MAX_ATTACKERS,
+  STOP_DISTANCE
 } from "./constants";
-import type { NPCRecord, LancerRecord } from "./types";
-import { randomPoint } from "./utils";
 import { getPhaserInstance } from "./phaserInstance";
+import { randomPoint } from "./utils";
 
 export function spawnNPCs(
   scene: PhaserType.Scene,

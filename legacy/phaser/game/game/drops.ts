@@ -1,4 +1,5 @@
 import type * as PhaserType from "phaser";
+
 import { GOLD_REWARD_MAX, GOLD_REWARD_MIN } from "./constants";
 import { getPhaserInstance } from "./phaserInstance";
 

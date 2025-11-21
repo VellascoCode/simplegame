@@ -1,6 +1,8 @@
 import type * as PhaserType from "phaser";
-import { LANCER_COOLDOWN } from "./constants";
+
 import type { LancerRecord } from "./types";
+
+import { LANCER_COOLDOWN } from "./constants";
 import { showFloatingText } from "./utils";
 
 export function triggerHeroAttack(

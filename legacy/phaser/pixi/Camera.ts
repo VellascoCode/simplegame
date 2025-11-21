@@ -1,4 +1,6 @@
-import { Container, Point } from "pixi.js";
+import type { Container } from "pixi.js";
+
+import { Point } from "pixi.js";
 
 export type CameraConfig = {
   container: Container;

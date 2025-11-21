@@ -1,53 +1,38 @@
 "use client";
 
 import type * as PhaserType from "phaser";
-import { useEffect, useRef, useState } from "react";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import type { CollisionZone, LancerRecord, NPCRecord } from "@/legacy/phaser/game/types";
 import type { CityMapData } from "@/lib/mapTypes";
 import type { CharacterStats } from "@/lib/models";
-import type { FactionWarState } from "@/lib/factions";
-import { getCharacterSpriteConfig, getNpcSpriteConfig } from "@/lib/characterSprites";
 import type { TileManifest } from "@/lib/tileManifest";
-import { postJSON } from "@/lib/clientApi";
 import type { BestiaryEntry } from "@/models/Bestiary";
-import {
-  MAP_TILE_SIZE,
-  PINCH_SCALE,
-  PLAYER_SPEED,
-  HERO_SCALE,
-  LANCER_SCALE,
-  LANCER_COUNT,
-  LANCER_HP,
-  LANCER_SPEED,
-  LANCER_COOLDOWN,
-  ATTACK_DISTANCE,
-  STOP_DISTANCE,
-  HERO_DAMAGE_MIN,
-  HERO_DAMAGE_MAX,
-  LANCER_DAMAGE_MIN,
-  LANCER_DAMAGE_MAX,
-  MAX_ATTACKERS,
-  LANCER_SEPARATION_RADIUS,
-  LANCER_SEPARATION_FORCE,
-  GOLD_REWARD_MIN,
-  GOLD_REWARD_MAX,
-  COVER_DEPTH_OFFSET,
-  LANCER_XP_REWARD,
-  SMALL_CRYSTAL_DROP_CHANCE,
-  MEDIUM_CRYSTAL_DROP_CHANCE,
-  GROUND_DROP_TTL,
-  MonsterType
-} from "@/legacy/phaser/game/constants";
-import type { CollisionZone, LancerRecord, NPCRecord } from "@/legacy/phaser/game/types";
-import { createFloorTexture, renderDetails, renderBuildings, buildCollisionZones } from "@/legacy/phaser/game/layers";
-import { handlePlayerMovement } from "@/legacy/phaser/game/movement";
-import { spawnNPCs, updateNPCs, updateLancers } from "@/legacy/phaser/game/npcAI";
+
 import { handleCombat } from "@/legacy/phaser/game/combat";
-import { clampPlayerDepth, randomPoint } from "@/legacy/phaser/game/utils";
-import { triggerHeroAttack, triggerLancerAttack } from "@/legacy/phaser/game/playerActions";
-import { setPhaserInstance } from "@/legacy/phaser/game/phaserInstance";
+import {
+  COVER_DEPTH_OFFSET,
+  GROUND_DROP_TTL,
+  HERO_SCALE,
+  LANCER_COUNT,
+  LANCER_XP_REWARD,
+  MAP_TILE_SIZE,
+  MEDIUM_CRYSTAL_DROP_CHANCE,
+  PINCH_SCALE,
+  SMALL_CRYSTAL_DROP_CHANCE
+} from "@/legacy/phaser/game/constants";
 import { scheduleNpcSpeech } from "@/legacy/phaser/game/dialog";
 import { createLancer, handleLancerDeath } from "@/legacy/phaser/game/lancers";
+import { buildCollisionZones, createFloorTexture, renderBuildings, renderDetails } from "@/legacy/phaser/game/layers";
+import { handlePlayerMovement } from "@/legacy/phaser/game/movement";
+import { spawnNPCs, updateLancers, updateNPCs } from "@/legacy/phaser/game/npcAI";
+import { setPhaserInstance } from "@/legacy/phaser/game/phaserInstance";
+import { triggerHeroAttack, triggerLancerAttack } from "@/legacy/phaser/game/playerActions";
+import { clampPlayerDepth } from "@/legacy/phaser/game/utils";
 import { useSessionPosition } from "@/legacy/phaser/hooks/useSessionPosition";
+import { getCharacterSpriteConfig, getNpcSpriteConfig } from "@/lib/characterSprites";
+import { postJSON } from "@/lib/clientApi";
 
 const HERO_CONFIG = getCharacterSpriteConfig("warriorblue");
 const HERO_RUN_KEY = "hero-run";
@@ -63,7 +48,6 @@ const LANCER_RUN_KEY = "lancer-run";
 const LANCER_ATTACK_KEY = "lancer-attack";
 const LANCER_SHEET_RUN = "lancer-run-sheet";
 const LANCER_SHEET_ATTACK = "lancer-attack-sheet";
-const BESTIARY_MONSTER_ID = MonsterType.Lancer;
 const NPC_COLORS = [0x5dade2, 0xffa07a, 0xfff176, 0xa569bd];
 const LANCER_TINTS = [0xffe066, 0x7dc8ff, 0xff7d7d, 0x94f1a4, 0xd5b4ff, 0xffc48c];
 const DROP_TEXTURES = [
@@ -78,6 +62,16 @@ type DropDefinition = typeof CRYSTAL_DROPS[keyof typeof CRYSTAL_DROPS];
 
 type MapResponse = {
   map: CityMapData;
+};
+
+let phaserModule: typeof PhaserType | null = null;
+
+const loadPhaserModule = async () => {
+  if (!phaserModule) {
+    phaserModule = (await import("phaser")) as typeof PhaserType;
+    setPhaserInstance(phaserModule);
+  }
+  return phaserModule;
 };
 
 const dPad = [
@@ -97,8 +91,6 @@ type CityPhaserProps = {
   characterId: string;
   characterName?: string;
   characterLevel?: number;
-  characterXp?: number;
-  warState?: FactionWarState | null;
   initialPosition?: { x: number; y: number };
   onPositionChange?: (position: { x: number; y: number }) => void;
   onCombatEvent?: (event: CombatEvent) => void;
@@ -114,8 +106,6 @@ export function CityPhaser({
   characterId,
   characterName,
   characterLevel,
-  characterXp,
-  warState,
   initialPosition,
   onPositionChange,
   onCombatEvent,
@@ -193,7 +183,7 @@ export function CityPhaser({
     };
   }, []);
 
-  const playTone = (frequency: number, duration = 0.25) => {
+  const playTone = useCallback((frequency: number, duration = 0.25) => {
     try {
       let ctx = audioRef.current;
       if (!ctx || ctx.state === "closed") {
@@ -212,7 +202,7 @@ export function CityPhaser({
     } catch {
       // ignore audio failures
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetch("/api/tiles")
@@ -265,10 +255,9 @@ export function CityPhaser({
     let game: PhaserType.Game | null = null;
     const container = ref.current;
 
-    (async () => {
+    const bootGame = async () => {
       await new Promise((resolve) => setTimeout(resolve, 250));
-      const Phaser = await import("phaser");
-      setPhaserInstance(Phaser);
+      const phaser = await loadPhaserModule();
       const mapReference = mapData;
       const groundTiles = tileManifest.ground;
       const detailTiles = tileManifest.details;
@@ -284,17 +273,17 @@ export function CityPhaser({
       const bestiaryCallbackRef = bestiaryHandlerRef.current;
       const statsCallbackRef = statsHandlerRef.current;
 
-      class CityScene extends Phaser.Scene {
-        private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-        private player!: Phaser.GameObjects.Sprite;
-        private floorLayer?: Phaser.Tilemaps.TilemapLayer;
-        private detailLayer?: Phaser.Tilemaps.TilemapLayer;
-        private map?: Phaser.Tilemaps.Tilemap;
+      class CityScene extends phaser.Scene {
+        private cursors!: PhaserType.Types.Input.Keyboard.CursorKeys;
+        private player!: PhaserType.GameObjects.Sprite;
+        private floorLayer?: PhaserType.Tilemaps.TilemapLayer;
+        private detailLayer?: PhaserType.Tilemaps.TilemapLayer;
+        private map?: PhaserType.Tilemaps.Tilemap;
         private npcs: NPCRecord[] = [];
         private collisionZones: CollisionZone[] = [];
         private worldWidth = 0;
         private worldHeight = 0;
-        private playerLabel?: Phaser.GameObjects.Text;
+        private playerLabel?: PhaserType.GameObjects.Text;
         private heroName = playerLabel;
         private heroLevel = playerLevel;
         private lancers: LancerRecord[] = [];
@@ -304,12 +293,12 @@ export function CityPhaser({
         private readonly goldCallback = goldCallbackRef;
         private readonly bestiaryCallback = bestiaryCallbackRef;
         private readonly statsCallback = statsCallbackRef;
-        private dropLayer?: Phaser.GameObjects.Layer;
+        private dropLayer?: PhaserType.GameObjects.Layer;
         private groundDrops: Array<{
-          sprite: Phaser.GameObjects.Image;
-          label: Phaser.GameObjects.Text;
+          sprite: PhaserType.GameObjects.Image;
+          label: PhaserType.GameObjects.Text;
         }> = [];
-        private lootNotices: Phaser.GameObjects.Container[] = [];
+        private lootNotices: PhaserType.GameObjects.Container[] = [];
 
         preload() {
           groundTiles.forEach((tile) => {
@@ -371,7 +360,10 @@ export function CityPhaser({
         }
 
         private configureInput() {
-          this.cursors = this.input.keyboard!.createCursorKeys();
+          const keyboard = this.input.keyboard;
+          if (keyboard) {
+            this.cursors = keyboard.createCursorKeys();
+          }
         }
 
         private createAnimations() {
@@ -608,7 +600,7 @@ export function CityPhaser({
               fontStyle: "bold"
             })
             .setOrigin(0, 0.5);
-          const children: Phaser.GameObjects.GameObject[] = [background, text];
+          const children: PhaserType.GameObjects.GameObject[] = [background, text];
           if (textureKey && this.textures.exists(textureKey)) {
             const icon = this.add.image(28, 0, textureKey).setOrigin(0.5).setScale(0.7);
             children.push(icon);
@@ -643,7 +635,7 @@ export function CityPhaser({
         }
 
         private handleDropRewards(position: { x: number; y: number }) {
-          const highRoll = Phaser.Math.Between(1, 100);
+          const highRoll = phaser.Math.Between(1, 100);
           if (highRoll <= MEDIUM_CRYSTAL_DROP_CHANCE) {
             void this.rewardCrystal(CRYSTAL_DROPS.medium, position);
             return;
@@ -677,7 +669,7 @@ export function CityPhaser({
             recordBestiary: (monsterType) => this.recordBestiaryKill(monsterType),
             respawn: (delay) =>
               this.time.delayedCall(delay, () => {
-                this.spawnLancer(Phaser.Math.Between(0, 1000));
+                this.spawnLancer(phaser.Math.Between(0, 1000));
               }),
             rewardItems: () => this.handleDropRewards({ x: lancer.sprite.x, y: lancer.sprite.y }),
             onRemove: () => this.removeLancer(lancer)
@@ -761,11 +753,11 @@ export function CityPhaser({
       };
 
       const initialSize = getSize();
-      game = new Phaser.Game({
-        type: Phaser.AUTO,
+      game = new phaser.Game({
+        type: phaser.AUTO,
         width: initialSize.width,
         height: initialSize.height,
-        parent: ref.current!,
+        parent: container,
         backgroundColor: "#1a0a05",
         scene: CityScene,
         render: { pixelArt: true, antialias: false }
@@ -781,7 +773,8 @@ export function CityPhaser({
       window.addEventListener("resize", handleResize);
       const cleanup = () => window.removeEventListener("resize", handleResize);
       game.events?.once("destroy", cleanup);
-    })();
+    };
+    void bootGame();
 
     return () => {
       if (game) {
@@ -795,7 +788,7 @@ export function CityPhaser({
       }
       readyHandlerRef.current?.(false);
     };
-  }, [mapData, tileManifest, ownerId, characterId, syncSessionPosition]);
+  }, [mapData, tileManifest, ownerId, characterId, syncSessionPosition, characterName, characterLevel, initialPosition, playTone]);
 
   const startDirection = (dx: number, dy: number) => () => setVirtualDirection({ dx, dy });
   const stopDirection = () => setVirtualDirection({ dx: 0, dy: 0 });

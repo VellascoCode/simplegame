@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { postJSON } from "@/lib/clientApi";
 
 export default function ForestPage() {
@@ -30,7 +31,14 @@ export default function ForestPage() {
           value={ownerId}
           onChange={(event) => setOwnerId(event.target.value)}
         />
-        <button className="button" style={{ marginTop: 12 }} type="button" onClick={handleKill}>
+        <button
+          className="button"
+          style={{ marginTop: 12 }}
+          type="button"
+          onClick={() => {
+            void handleKill();
+          }}
+        >
           Matar Criatura
         </button>
         {log && <p>{log}</p>}

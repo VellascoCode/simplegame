@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getJSON } from "@/lib/clientApi";
+
 import type { OnlinePresence } from "@/lib/models";
+
+import { getJSON } from "@/lib/clientApi";
 
 export function OnlineBadge({ enabled = true }: { enabled?: boolean }) {
   const [count, setCount] = useState(0);

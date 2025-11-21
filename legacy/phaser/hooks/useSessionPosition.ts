@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+
 import { MAP_TILE_SIZE } from "@/legacy/phaser/game/constants";
 
 export function useSessionPosition(

@@ -1,6 +1,6 @@
 "use server";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { saveMap } from "@/lib/maps";
 import type { RawMapData } from "@/lib/maps";
 

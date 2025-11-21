@@ -34,6 +34,9 @@
 - Motor PIXI monitora a conectividade: se o servidor ou rede cair, o mapa pausa, exibe aviso (“Sem conexão / Reconectando”) e só recarrega quando a conexão volta, evitando jogo offline/cheats.
 - Bug do MonsterActor quebrando o runtime (acesso `worldPosition` após `destroy`) foi corrigido com cache da última posição, eliminando o erro “Cannot read properties of null”.
 - Camada de detalhes ganhou paleta própria (`public/tilesets/details/`) e o editor consegue alternar entre piso/detalhes/construções com pincéis 1×1~3×3.
+- Build do `/pixieditor` estabilizado reorganizando os hooks (`setOrbTile`, `loadMapByName`, etc.) em `components/PixiEditor.tsx`, eliminando o `ReferenceError: Cannot access 'eX' before initialization` durante o `next build`.
+- `next.config.js` voltou a executar lint e checagem de tipos no `next build` (remoção de `ignoreDuringBuilds`/`ignoreBuildErrors`) e a tipagem foi corrigida em toda a base (MapListPanel/TileSelect do editor, guardas do `PixiGame`, utilitários legacy em `legacy/phaser/**`, enums de sprites e `lib/auth*`), permitindo builds limpos mesmo em ambientes Node 16 usando `npx node@18.19.1`.
+- Script `npm run lint` agora roda `eslint .` sem filtro de extensão e o legado foi sanado: `app/play-legacy/page.tsx` não tem mais hooks condicionais (QuickSlots/ChatDrawer foram refeitos e passaram a usar `next/image`), o runtime Phaser (`legacy/phaser/**`) teve imports/constantes corrigidos (carregamento dinâmico do Phaser, dependências dos `useEffect`, InputController seguro, etc.) e o build do Next volta a completar sem erros de tipagem.
 - Personagem principal usa `public/sprites/warriorblue/walk.png` com animação e escala maior (≈140 px) para coincidir com o layout solicitado.
 - Layout global sem sidebar fixa — hub `/` centraliza toda navegação.
 - Estilização geral ajustada para tons de madeira (cards, botões, modais) em vez dos assets anteriores.

@@ -1,5 +1,7 @@
 import type * as PhaserType from "phaser";
+
 import type { LancerRecord } from "./types";
+
 import {
   HERO_DAMAGE_MAX,
   HERO_DAMAGE_MIN,
@@ -7,8 +9,8 @@ import {
   LANCER_DAMAGE_MAX,
   LANCER_DAMAGE_MIN
 } from "./constants";
-import { showFloatingText } from "./utils";
 import { getPhaserInstance } from "./phaserInstance";
+import { showFloatingText } from "./utils";
 
 type CombatDeps = {
   scene: PhaserType.Scene;

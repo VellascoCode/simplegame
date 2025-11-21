@@ -1,5 +1,6 @@
 import { Point } from "pixi.js";
-import { Player } from "@/src/entities/Player";
+
+import type { Player } from "@/src/entities/Player";
 
 const DEFAULT_BOUNDS = { width: 960, height: 540 };
 
