@@ -65,11 +65,37 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 - [ ] Editor `/editor` protegido por PIN `8989` acessa normalmente, permitindo desenhar o grid.
 - [ ] JSON exportado no editor pode ser reutilizado dentro do `CityScene`.
 - [ ] `npm run lint` e o build de produção (`npx node@18.19.1 ./node_modules/next/dist/bin/next build` em ambientes com Node 16) concluem sem erros — o Next voltou a rodar lint + checagem de tipos em todo o projeto (Pixi, legado/Phaser, auth).
+- [ ] Sistema de skills/classes ativo: modelos ampliados (classe tier/base/avançada/elite, skills com XP/nível) com criação automática de todas as skills ao carregar personagem e painéis deslizantes em `/play` exibindo classe e progresso de skills.
+- [ ] Páginas estáticas `/wiki/skills` e `/wiki/classes` disponíveis com layout estilo GUI de madeira (painéis de skills/classes, barras de progresso e diagramas de progressão totalmente visuais e responsivos).
 
 ## 6. Sincronização Contínua
 - Toda alteração funcional deve atualizar simultaneamente `TRACKER.md` e este `passoapasso.md`.
 - Novos assets ou mapas adicionados precisam ser registrados em `TRACKER.md` (seções de MAPAS/ASSETS) e referenciados aqui.
 - Testes executados devem ser marcados no checklist acima, adicionando comentários sobre data/resultado quando necessário.
+- UI de `/wiki/skills` ajustada para seguir apenas classes Tailwind permitidas (cores padrão, rounded-md, p-1..4 e bordas 1/2/4, sem sintaxe com colchetes).
+- Header de `/wiki/skills` reposicionado com botões em linha (três variações), ícone no título e banner de skills ocupando toda a largura do container.
+- Refinado o layout de `/wiki/skills`: títulos ampliados, ícone de skills maior, banner mais baixo e responsivo, espaçamentos externos reduzidos, padding interno ampliado, sombras pesadas removidas e bordas múltiplas usando border-4/border-2.
+<<<<<<< ours
+<<<<<<< ours
+- WoodPanel/MedievalCard/CardWooden atualizados com bordas duplas, pregos azul-escuro nos cantos e paleta madeira âmbar/vermelha/azul-oceano.
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+- Fundos dos componentes de madeira trocados para cores sólidas (âmbar/vermelho/preto) com areia clara para textos, mantendo pregos azul-escuro e bordas quádruplas.
+- Textos internos dos cards/painéis ajustados para tons escuros (stone) sobre fundo claro para melhor contraste.
+<<<<<<< ours
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 
 ## 7. Admin / Editor de Mapas
 - Rota `/editor` (client component) exige PIN `8989` para liberar a UI.
