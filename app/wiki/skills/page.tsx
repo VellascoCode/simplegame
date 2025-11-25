@@ -1,4 +1,4 @@
-import { WoodPanel, WoodenButton, MedievalSection, MedievalIconFrame, MedievalCard, RoyalCard, RoyalSection } from "@/components/wiki/WoodenUi";
+import { WoodPanel, WoodenButton, MedievalSection, MedievalCard, RoyalCard, RoyalSection } from "@/components/wiki/WoodenUi";
 import Image from "next/image";
 
 export const runtime = "nodejs";
@@ -186,9 +186,9 @@ export default function SkillsWikiPage() {
             <div className="grid gap-3 md:grid-cols-3">
               <RoyalCard title="Conquistas por categoria" variant="redRoyal">
                 <div className="flex flex-wrap gap-2">
-                  <WoodenButton label="Coleta — Selo dourado" variant="wood" className="px-2 text-xs" />
-                  <WoodenButton label="Produção — Selo de runas" variant="wood" className="px-2 text-xs" />
-                  <WoodenButton label="Combate — Selo de batalha" variant="redRoyal" className="px-2 text-xs" />
+                  <WoodenButton label="Coleta — Selo dourado" variant="wood" className="px-2 text-xs shadow-black/60" />
+                  <WoodenButton label="Produção — Selo de runas" variant="wood" className="px-2 text-xs shadow-black/60" />
+                  <WoodenButton label="Combate — Selo de batalha" variant="redRoyal" className="px-2 text-xs shadow-black/60" />
                 </div>
               </RoyalCard>
 
@@ -264,14 +264,16 @@ type SkillCategoryProps = {
 function SkillCategory({ title, items, iconSrc }: SkillCategoryProps) {
   const categoryIcon = title === "Coleta" ? "/icons/gathering.png" : iconSrc;
   return (
-    <MedievalSection title={title}>
-      <div className="flex items-center gap-4 p-3">
-        {categoryIcon && (
-          <div className="h-16 w-16 overflow-hidden rounded-md border-2 border-amber-900 bg-stone-900 shadow-md shadow-black/50">
-            <Image src={categoryIcon} alt={title} width={64} height={64} className="h-full w-full object-contain" />
-          </div>
-        )}
-      </div>
+    <MedievalSection
+      title={
+        <span className="flex items-center gap-2">
+          {categoryIcon && (
+            <Image src={categoryIcon} alt={title} width={24} height={24} className="h-6 w-6 rounded-md border border-amber-900 bg-stone-900 shadow-md shadow-black/50" />
+          )}
+          <span>{title}</span>
+        </span>
+      }
+    >
       <SkillsGrid items={items} category={title} />
     </MedievalSection>
   );

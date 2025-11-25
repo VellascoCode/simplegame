@@ -42,12 +42,12 @@ type WoodPanelProps = {
 
 export function WoodPanel({ children, className }: WoodPanelProps) {
   return (
-    <div className={`relative rounded-sm bg-gradient-to-br from-stone-900 via-stone-950 to-slate-900 border-4 border-stone-950 p-3 shadow-2xl ${className ?? ""}`}>
+    <div className={`relative rounded-md bg-gradient-to-br from-stone-900 via-stone-950 to-slate-900 border-4 border-stone-950 p-3 shadow-2xl ${className ?? ""}`}>
       <Nails />
       <WoodGrain />
-      <div className="relative rounded-sm border-4 border-orange-900/60 bg-gradient-to-br from-stone-800 to-stone-950 p-2">
-        <div className="rounded-sm border-2 border-amber-800/30 bg-slate-950/50 p-2">
-          <div className="rounded-sm border-2 border-amber-900/30 bg-gradient-to-br from-stone-800 to-stone-900 p-3 text-stone-300 shadow-inner">
+      <div className="relative rounded-md border-4 border-orange-900/60 bg-gradient-to-br from-stone-800 to-stone-950 p-2">
+        <div className="rounded-md border-2 border-amber-800/30 bg-slate-950/50 p-2">
+          <div className="rounded-md border-2 border-amber-900/30 bg-gradient-to-br from-stone-800 to-stone-900 p-3 text-stone-300 shadow-inner">
             {children}
           </div>
         </div>
@@ -57,7 +57,7 @@ export function WoodPanel({ children, className }: WoodPanelProps) {
 }
 
 type MedievalSectionProps = {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
   className?: string;
 };
@@ -75,7 +75,7 @@ export function MedievalSection({ title, children, className }: MedievalSectionP
 }
 
 type RoyalSectionProps = {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
   variant?: "redRoyal" | "blueRoyal";
   className?: string;
@@ -110,8 +110,8 @@ export function RoyalSection({ title, children, variant = "redRoyal", className 
 }
 
 type MedievalCardProps = {
-  title?: string;
-  subtitle?: string;
+  title?: ReactNode;
+  subtitle?: ReactNode;
   children: ReactNode;
   className?: string;
   size?: "sm" | "md" | "lg";

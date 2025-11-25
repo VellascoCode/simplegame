@@ -82,6 +82,10 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 - Adicionada seção de protótipo de gamificação na `/wiki/skills` com conquistas, builds sugeridas, compatibilidade e rota de progressão.
 - Novas variantes de botão (red, wooden, redRoyal, blueRoyal) e cards/seções royal aplicadas no protótipo de gamificação da `/wiki/skills` com lista de modelos de botões exibida.
 - Limpeza de variantes duplicadas dos botões (apenas wood/sand/secondary/danger/redRoyal/blueRoyal), ajuste de sombras/rounded-md e cards/skills com ícones + descrições e ícone de categoria em “Coleta”.
+- Ícone de categoria Coleta alinhado ao título, ícones/descrições por skill e remoção da linha de categoria dentro dos cards na página `/wiki/skills`.
+- Navbar fixada (64px) e SidebarWooden reposicionada com altura calculada e scroll próprio para evitar sobreposição com o header; LayoutContainer recebe padding-top e padding-left para acomodar o layout.
+- Reescrita do layout global: app/layout.tsx agora usa NavHeader + SideMenu fixos (WoodenUI), com sidebar expansível e {children} na área de conteúdo.
+- Layout universal criado com navbar (NavbarWooden), sidebar responsiva (SidebarWooden) e contêiner com breadcrumbs/painel de jogo (LayoutContainer) integrados em `app/layout.tsx`.
 - Corrigido caminho do ícone de Gem Collecting, removida linha de categoria dentro dos cards e mantido ícone de categoria em linha ao título “Coleta”.
 >>>>>>> theirs
 =======
