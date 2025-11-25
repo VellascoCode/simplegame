@@ -77,6 +77,12 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 - Refinado o layout de `/wiki/skills`: títulos ampliados, ícone de skills maior, banner mais baixo e responsivo, espaçamentos externos reduzidos, padding interno ampliado, sombras pesadas removidas e bordas múltiplas usando border-4/border-2.
 - WoodPanel/MedievalCard/CardWooden atualizados com bordas duplas, pregos azul-escuro nos cantos e paleta madeira âmbar/vermelha/azul-oceano.
 - Fundos dos componentes de madeira em amber-400 (papel escurecido) com texto stone escuro e bordas pretas quádruplas.
+- Documento `skillseclassses.md` atualizado com 23 skills core, 13 classes base, 26 avançadas e 52 elites, incluindo Herbalist/Gemwright/Scrapper e suas ramificações.
+- Página `/wiki/skills` ajustada para listar Herbalism, Gem Collecting, Herbcrafting, Gemcutting e Scrapcrafting nas categorias.
+- Adicionada seção de protótipo de gamificação na `/wiki/skills` com conquistas, builds sugeridas, compatibilidade e rota de progressão.
+- Novas variantes de botão (red, wooden, redRoyal, blueRoyal) e cards/seções royal aplicadas no protótipo de gamificação da `/wiki/skills` com lista de modelos de botões exibida.
+- Limpeza de variantes duplicadas dos botões (apenas wood/sand/secondary/danger/redRoyal/blueRoyal), ajuste de sombras/rounded-md e cards/skills com ícones + descrições e ícone de categoria em “Coleta”.
+- Corrigido caminho do ícone de Gem Collecting, removida linha de categoria dentro dos cards e mantido ícone de categoria em linha ao título “Coleta”.
 >>>>>>> theirs
 =======
 >>>>>>> theirs
