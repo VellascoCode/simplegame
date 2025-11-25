@@ -1,4 +1,4 @@
-import { Container, Text } from "pixi.js";
+import { type Container, Text } from "pixi.js";
 
 export type FloatingTextOptions = {
   text: string;

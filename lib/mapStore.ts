@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+
 import type { CityMapData, TileMatrix } from "@/lib/mapTypes";
 
 const MAP_FILE = path.join(process.cwd(), "public", "maps", "map_city.json");

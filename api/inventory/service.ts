@@ -1,7 +1,7 @@
 import {
   inventoryAddSchema,
-  inventoryRemoveSchema,
-  type InventoryItem
+  type InventoryItem,
+  inventoryRemoveSchema
 } from "@/lib/models";
 import { getInventory, saveInventory } from "@/lib/repositories";
 

@@ -1,4 +1,5 @@
-import { Container, Graphics, Text, Rectangle } from "pixi.js";
+import { Container, Graphics, Rectangle, Text } from "pixi.js";
+
 import type { Direction } from "@/pixi/runtime/Player";
 
 const KEY_TO_DIR: Record<string, Direction> = {

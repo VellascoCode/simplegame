@@ -1,21 +1,23 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { getJSON, postJSON } from "@/lib/clientApi";
+import { type FormEvent, useState } from "react";
+
 import type { Character } from "@/lib/models";
+
 import {
-  spriteOptions,
-  spriteColorOptions,
+  type CharacterSpiritId,
+  characterSpirits,
+  defaultSpiritId
+} from "@/lib/characterSpirits";
+import {
   defaultSprite,
   defaultSpriteColor,
-  type SpriteOptionValue,
-  type SpriteColorValue
+  spriteColorOptions,
+  type SpriteColorValue,
+  spriteOptions,
+  type SpriteOptionValue
 } from "@/lib/characterSpriteOptions";
-import {
-  characterSpirits,
-  defaultSpiritId,
-  type CharacterSpiritId
-} from "@/lib/characterSpirits";
+import { getJSON, postJSON } from "@/lib/clientApi";
 
 type CharacterListResponse = {
   characters: Character[];

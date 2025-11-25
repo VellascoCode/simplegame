@@ -1,13 +1,23 @@
 "use client";
 
-import Image from "next/image";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
-import { BottomMenu } from "@/components/BottomMenu";
+import type { Character, Skill } from "@/lib/models";
+
+import { FloatingHudMenu, type FloatingMenuButton } from "@/components/FloatingHudMenu";
 import { type EntityListSnapshot, PixiGame } from "@/components/PixiGame";
+import { QuickActionMenu } from "@/components/QuickActionMenu";
+import { SlidingPanelCharacter } from "@/components/SlidingPanelCharacter";
+import { SlidingPanelSkills } from "@/components/SlidingPanelSkills";
+import { getJSON } from "@/lib/clientApi";
 
 export const runtime = "nodejs";
 export const preferredRegion = "home";
+
+type SessionStateResponse = {
+  ownerId: string;
+  characterId: string;
+};
 
 export default function PlayPixiOnlyPage() {
   const [ready, setReady] = useState(false);
@@ -17,11 +27,40 @@ export default function PlayPixiOnlyPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [minimapVisible, setMinimapVisible] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [mapListOpen, setMapListOpen] = useState(false);
+  const [hudMenuOpen, setHudMenuOpen] = useState(true);
+  const [quickMenuOpen, setQuickMenuOpen] = useState(false);
+  const [characterPanelOpen, setCharacterPanelOpen] = useState(false);
+  const [skillsPanelOpen, setSkillsPanelOpen] = useState(false);
   const [entitySnapshot, setEntitySnapshot] = useState<EntityListSnapshot>({ monsters: [], npcs: [] });
+  const [characterProfile, setCharacterProfile] = useState<Character | null>(null);
+  const [skillsProfile, setSkillsProfile] = useState<Skill[]>([]);
 
-  const overlayButtons = useMemo(
+  const fetchCharacterProfile = useCallback(async () => {
+    try {
+      const session = await getJSON<SessionStateResponse>("/api/session/state");
+      if (!session.ownerId) return;
+      let characterData: Character | null = null;
+      if (session.characterId) {
+        characterData = await getJSON<Character>(
+          `/api/character/get?ownerId=${session.ownerId}&characterId=${session.characterId}`
+        );
+      } else {
+        const list = await getJSON<{ characters: Character[] }>(`/api/character/get?ownerId=${session.ownerId}`);
+        characterData = list.characters?.[0] ?? null;
+      }
+      setCharacterProfile(characterData);
+      setSkillsProfile(characterData?.skills ?? []);
+    } catch (err) {
+      console.warn("Falha ao carregar personagem/skills", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchCharacterProfile();
+  }, [fetchCharacterProfile]);
+
+  const overlayButtons: ReadonlyArray<FloatingMenuButton> = useMemo(
     () => [
       {
         id: "inventory",
@@ -66,31 +105,66 @@ export default function PlayPixiOnlyPage() {
         onClick: () => setSettingsOpen(true)
       },
       {
+        id: "classpanel",
+        label: "CLS",
+        icon: "/icons/achievements.png",
+        ariaLabel: "Classe e progresso",
+        onClick: () => {
+          void fetchCharacterProfile();
+          setCharacterPanelOpen(true);
+        }
+      },
+      {
+        id: "skillspanel",
+        label: "SKL",
+        icon: "/icons/achievements.png",
+        ariaLabel: "Skills",
+        onClick: () => {
+          void fetchCharacterProfile();
+          setSkillsPanelOpen(true);
+        }
+      },
+      {
         id: "maplist",
         label: "LIST",
         icon: "/icons/viewmap.png",
         ariaLabel: "Alternar lista do mapa",
         onClick: () => setMapListOpen((previous) => !previous),
         active: mapListOpen
+      },
+      {
+        id: "quickmenu",
+        label: "QK",
+        ariaLabel: "Alternar menu rápido",
+        onClick: () => setQuickMenuOpen((previous) => !previous),
+        active: quickMenuOpen
       }
     ],
-    [minimapVisible, mapListOpen]
+    [fetchCharacterProfile, minimapVisible, mapListOpen, quickMenuOpen]
   );
 
   return (
-    <section className="city-shell min-h-screen bg-[#05070c] pt-6">
-      <div className="map-layout mx-auto h-[calc(100vh-6rem)] max-h-[calc(100vh-6rem)] w-full max-w-[1280px] overflow-hidden px-4">
+    <section className="city-shell min-h-screen bg-[#05070c]">
+      <div className="map-layout mx-auto w-full overflow-hidden px-0">
         <div className="map-stage relative h-full">
           <PixiGame
             onReadyChange={setReady}
             onEntityListChange={setEntitySnapshot}
-            bottomOverlay={<BottomMenu square buttons={overlayButtons} />}
+            bottomOverlay={
+              <QuickActionMenu open={quickMenuOpen} />
+            }
           />
-          <FloatingMenu
-            menuOpen={menuOpen}
-            onToggleMenu={() => setMenuOpen((prev) => !prev)}
+          <FloatingHudMenu
             buttons={overlayButtons}
+            menuOpen={hudMenuOpen}
+            onToggleMenu={() => setHudMenuOpen((previous) => !previous)}
           />
+          <SlidingPanelCharacter
+            open={characterPanelOpen}
+            character={characterProfile}
+            onClose={() => setCharacterPanelOpen(false)}
+          />
+          <SlidingPanelSkills open={skillsPanelOpen} skills={skillsProfile} onClose={() => setSkillsPanelOpen(false)} />
           {mapListOpen && <MapListPanel snapshot={entitySnapshot} onClose={() => setMapListOpen(false)} />}
           {!ready && (
             <div className="absolute inset-0 z-10 flex items-center justify-center rounded-[28px] bg-black/70 text-amber-100">
@@ -143,7 +217,7 @@ type OverlayPanelProps = {
 function OverlayPanel({ title, onClose, children }: OverlayPanelProps) {
   return (
     <div className="pointer-events-auto absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur">
-      <div className="w-full max-w-md rounded-3xl border border-white/15 bg-[#05070c]/95 p-6 shadow-2xl">
+      <div className="w-full rounded-3xl border border-white/15 bg-[#05070c]/95 p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-amber-50">{title}</h3>
           <button type="button" className="rounded-full border border-white/20 px-3 py-1 text-sm text-amber-100 hover:bg-white/10" onClick={onClose}>
@@ -151,43 +225,6 @@ function OverlayPanel({ title, onClose, children }: OverlayPanelProps) {
           </button>
         </div>
         {children}
-      </div>
-    </div>
-  );
-}
-
-function FloatingMenu({ menuOpen, onToggleMenu, buttons }: { menuOpen: boolean; onToggleMenu: () => void; buttons: ReadonlyArray<{ id: string; label: string; icon?: string; onClick?: () => void; active?: boolean; ariaLabel?: string }> }) {
-  return (
-    <div className="pointer-events-none absolute right-6 top-6 z-30 flex flex-col items-end gap-3">
-      <button
-        type="button"
-        className="pointer-events-auto rounded-full border border-white/30 bg-black/70 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-amber-100 shadow-lg shadow-black"
-        onClick={onToggleMenu}
-      >
-          {menuOpen ? "Fechar Menu" : "Menu Rápido"}
-      </button>
-      <div
-        className={`pointer-events-auto transition-all duration-300 ${
-          menuOpen ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0"
-        }`}
-      >
-        <div className="rounded-3xl border border-white/15 bg-[#05070c]/95 p-4 shadow-2xl shadow-black">
-          <div className="grid grid-cols-2 gap-3">
-            {buttons.map((button) => (
-              <button
-                key={button.id}
-                type="button"
-                onClick={() => button.onClick?.()}
-                aria-label={button.ariaLabel ?? button.label}
-                className={`flex h-12 items-center justify-center rounded-xl border border-orange-700 bg-gradient-to-b from-amber-200/80 to-amber-700/70 text-xs font-semibold uppercase tracking-[0.1em] text-stone-900 shadow-black shadow-lg ${
-                  button.active ? "ring-2 ring-amber-300" : ""
-                }`}
-              >
-                {button.icon ? <Image src={button.icon} alt="" className="h-6 w-6" width={24} height={24} /> : button.label}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

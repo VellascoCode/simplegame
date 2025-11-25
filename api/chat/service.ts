@@ -1,6 +1,7 @@
+import { randomUUID } from "crypto";
+
 import { chatSendSchema } from "@/lib/models";
 import { addChatMessage, listChatMessages } from "@/lib/repositories";
-import { randomUUID } from "crypto";
 
 export async function sendMessage(payload: unknown) {
   const data = chatSendSchema.parse(payload);

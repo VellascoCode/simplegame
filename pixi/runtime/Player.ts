@@ -1,6 +1,9 @@
-import { AnimatedSprite, Container, Text } from "pixi.js";
 import type { Texture } from "pixi.js";
+
+import { AnimatedSprite, Container, Text } from "pixi.js";
+
 import type { Tilemap } from "@/pixi/runtime/Tilemap";
+
 import { resolvePaletteColor } from "@/pixi/utils/colorPalette";
 
 export type Direction = "up" | "down" | "left" | "right";
@@ -75,7 +78,8 @@ export class Player {
     this.nameLabel.anchor.set(0.5, 1);
     this.nameLabel.resolution = 2;
     this.nameLabel.roundPixels = true;
-    this.nameLabel.position.set(0, -tilemap.tileSize * 1.05);
+    const nameYOffset = -this.sprite.height * 0.65 + 16;
+    this.nameLabel.position.set(0, nameYOffset);
     this.view.addChild(this.nameLabel);
     this.levelLabel = new Text({
       text: "",
@@ -89,7 +93,7 @@ export class Player {
     this.levelLabel.anchor.set(0.5, 0);
     this.levelLabel.resolution = 2;
     this.levelLabel.roundPixels = true;
-    this.levelLabel.position.set(0, -tilemap.tileSize * 0.8);
+    this.levelLabel.position.set(0, -tilemap.tileSize * 0.3);
     this.view.addChild(this.levelLabel);
     this.statusLabel = new Text({
       text: "",
@@ -104,7 +108,7 @@ export class Player {
     this.statusLabel.resolution = 2;
     this.statusLabel.roundPixels = true;
     this.statusLabel.visible = false;
-    this.statusLabel.position.set(0, -tilemap.tileSize * 1.35);
+    this.statusLabel.position.set(0, -tilemap.tileSize * 0.75);
     this.view.addChild(this.statusLabel);
     const pos = tilemap.tileToWorld(this.tileX, this.tileY);
     this.view.position.set(pos.x, pos.y);

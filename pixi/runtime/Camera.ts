@@ -1,4 +1,4 @@
-import { Container } from "pixi.js";
+import { type Container } from "pixi.js";
 
 export class Camera {
   private readonly container: Container;

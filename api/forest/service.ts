@@ -1,6 +1,7 @@
-import { forestKillSchema } from "@/lib/models";
-import { addItem } from "@/api/inventory/service";
 import { randomUUID } from "crypto";
+
+import { addItem } from "@/api/inventory/service";
+import { forestKillSchema } from "@/lib/models";
 
 export async function killCreature(payload: unknown) {
   const data = forestKillSchema.parse(payload);

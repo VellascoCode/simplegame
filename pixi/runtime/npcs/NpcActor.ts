@@ -1,7 +1,9 @@
-import { AnimatedSprite, Container, Texture, Text } from "pixi.js";
-import type { Tilemap } from "@/pixi/runtime/Tilemap";
-import { Balloon } from "@/pixi/runtime/Balloon";
+import { AnimatedSprite, type Container, Text, Texture } from "pixi.js";
+
 import type { NpcDefinition, WanderArea } from "@/npc/data/types";
+import type { Tilemap } from "@/pixi/runtime/Tilemap";
+
+import { Balloon } from "@/pixi/runtime/Balloon";
 import { normalizeHueCode, resolvePaletteColor } from "@/pixi/utils/colorPalette";
 
 export class NpcActor {
@@ -192,7 +194,8 @@ export class NpcActor {
 
   private updateLabelPosition(): void {
     const { x, y } = this.sprite.getGlobalPosition();
-    this.nameLabel.position.set(x, y - this.sprite.height - 12);
+    const offset = -this.sprite.height * 0.65 + 16;
+    this.nameLabel.position.set(x, y + offset);
   }
 
   private resolveMoveDuration(speedInput?: number): number {

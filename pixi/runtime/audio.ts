@@ -67,3 +67,11 @@ export function playLevelUpSound(): void {
   playTone({ frequency: 640, duration: 0.25, type: "triangle", volume: 0.25 });
   playTone({ frequency: 440, duration: 0.2, type: "sine", volume: 0.18 });
 }
+
+export function playMenuOpenSound(): void {
+  playTone({ frequency: 720, duration: 0.2, type: "square", volume: 0.3 });
+}
+
+export function playMenuCloseSound(): void {
+  playTone({ frequency: 280, duration: 0.18, type: "sawtooth", volume: 0.28 });
+}

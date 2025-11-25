@@ -1,8 +1,10 @@
 import { z } from "zod";
-import type { SpriteOptionValue, SpriteColorValue } from "./characterSpriteOptions";
-import { spriteOptionValues, spriteColorValues } from "./characterSpriteOptions";
+
 import type { CharacterSpiritId } from "./characterSpirits";
+import type { SpriteColorValue, SpriteOptionValue } from "./characterSpriteOptions";
+
 import { characterSpiritIds } from "./characterSpirits";
+import { spriteColorValues, spriteOptionValues } from "./characterSpriteOptions";
 
 export type InventoryItem = {
   id: string;
@@ -10,6 +12,17 @@ export type InventoryItem = {
   quantity: number;
   stackable?: boolean;
   maxStack?: number;
+};
+
+export type Skill = {
+  name: string;
+  level: number;
+  exp: number;
+  expToLevel: number;
+  buffs: {
+    passive?: string[];
+    active?: string[];
+  };
 };
 
 export type User = {
@@ -39,6 +52,11 @@ export type Character = {
   _id?: string;
   ownerId: string;
   name: string;
+  classTier: number;
+  classBase: string;
+  classAdvanced?: string;
+  classElite?: string;
+  classLevel: number;
   sprite: string;
   spriteColor?: SpriteColorValue;
   spiritId?: CharacterSpiritId;
@@ -47,6 +65,7 @@ export type Character = {
   inventory: InventoryItem[];
   stats: CharacterStats;
   gold: number;
+  skills: Skill[];
   createdAt: string;
   updatedAt: string;
 };

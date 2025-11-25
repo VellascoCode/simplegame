@@ -1,6 +1,8 @@
+import type { BestiaryProfile } from "@/models/Bestiary";
+
 import type {
-  ChatMessage,
   Character,
+  ChatMessage,
   FarmState,
   HouseState,
   InventoryItem,
@@ -9,7 +11,6 @@ import type {
   QuickSlotLayout,
   User
 } from "./models";
-import type { BestiaryProfile } from "@/models/Bestiary";
 
 type MemoryDB = {
   users: User[];

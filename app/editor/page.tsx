@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getJSON, postJSON } from "@/lib/clientApi";
+
 import type { CityMapData } from "@/lib/mapTypes";
 import type { TileManifest } from "@/lib/tileManifest";
+
+import { getJSON, postJSON } from "@/lib/clientApi";
 
 const PIN = "8989";
 const DEFAULT_WIDTH = 32;
@@ -507,10 +509,10 @@ export default function EditorPage() {
               <button className="button" type="button" onClick={fillLayer}>
                 Preencher camada
               </button>
-              <button className="button" type="button" onClick={copyToClipboard}>
+              <button className="button" type="button" onClick={() => void copyToClipboard()}>
                 Copiar JSON
               </button>
-              <button className="button" type="button" onClick={saveToServer}>
+              <button className="button" type="button" onClick={() => void saveToServer()}>
                 {status === "saving" ? "Salvando…" : status === "saved" ? "Mapa salvo!" : "Salvar mapa"}
               </button>
             </div>

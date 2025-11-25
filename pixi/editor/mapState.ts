@@ -1,4 +1,4 @@
-import { createMatrix, cloneBlockMatrix, cloneOverlayMatrix, type Matrix } from "@/pixi/editor/sceneUtils";
+import { cloneBlockMatrix, cloneOverlayMatrix, createMatrix, type Matrix } from "@/pixi/editor/sceneUtils";
 import { createOverlayMatrix, type OverlaySlice } from "@/pixi/utils/overlay";
 
 export type EditorMatrices = {

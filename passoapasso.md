@@ -75,24 +75,8 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 - UI de `/wiki/skills` ajustada para seguir apenas classes Tailwind permitidas (cores padrão, rounded-md, p-1..4 e bordas 1/2/4, sem sintaxe com colchetes).
 - Header de `/wiki/skills` reposicionado com botões em linha (três variações), ícone no título e banner de skills ocupando toda a largura do container.
 - Refinado o layout de `/wiki/skills`: títulos ampliados, ícone de skills maior, banner mais baixo e responsivo, espaçamentos externos reduzidos, padding interno ampliado, sombras pesadas removidas e bordas múltiplas usando border-4/border-2.
-<<<<<<< ours
-<<<<<<< ours
 - WoodPanel/MedievalCard/CardWooden atualizados com bordas duplas, pregos azul-escuro nos cantos e paleta madeira âmbar/vermelha/azul-oceano.
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-- Fundos dos componentes de madeira trocados para cores sólidas (âmbar/vermelho/preto) com areia clara para textos, mantendo pregos azul-escuro e bordas quádruplas.
-- Textos internos dos cards/painéis ajustados para tons escuros (stone) sobre fundo claro para melhor contraste.
-<<<<<<< ours
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
+- Fundos dos componentes de madeira em amber-400 (papel escurecido) com texto stone escuro e bordas pretas quádruplas.
 >>>>>>> theirs
 =======
 >>>>>>> theirs

@@ -1,8 +1,10 @@
 "use server";
 
-import { NextResponse, type NextRequest } from "next/server";
-import { saveMap } from "@/lib/maps";
+import { type NextRequest, NextResponse } from "next/server";
+
 import type { RawMapData } from "@/lib/maps";
+
+import { saveMap } from "@/lib/maps";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {

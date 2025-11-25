@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import type { TileManifest, TileInfo } from "@/lib/tileManifest";
+
+import type { TileInfo, TileManifest } from "@/lib/tileManifest";
 
 function sortNaturally(files: string[]) {
   return files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));

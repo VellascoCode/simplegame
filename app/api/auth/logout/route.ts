@@ -1,6 +1,6 @@
 import { ok } from "@/lib/apiResponse";
-import { clearPlayerSession } from "@/lib/repositories";
 import { getOwnerIdFromSession } from "@/lib/authSession";
+import { clearPlayerSession } from "@/lib/repositories";
 
 export async function POST() {
   const ownerId = await getOwnerIdFromSession();

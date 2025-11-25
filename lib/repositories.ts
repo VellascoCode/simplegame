@@ -1,10 +1,13 @@
 import { ObjectId, type OptionalUnlessRequiredId } from "mongodb";
-import { getCollection, hasMongoConnection } from "./db";
-import { getMemoryDB } from "./memoryStore";
+
+import type { BestiaryProfile } from "@/models/Bestiary";
+
+import { resolveBestiaryTier } from "@/models/Bestiary";
+
 import type {
-  ChatMessage,
   Character,
   CharacterStats,
+  ChatMessage,
   FarmState,
   HouseState,
   InventoryItem,
@@ -13,8 +16,9 @@ import type {
   QuickSlotLayout,
   User
 } from "./models";
-import type { BestiaryProfile } from "@/models/Bestiary";
-import { resolveBestiaryTier } from "@/models/Bestiary";
+
+import { getCollection, hasMongoConnection } from "./db";
+import { getMemoryDB } from "./memoryStore";
 
 type CharacterDocument = Omit<Character, "_id"> & { _id: ObjectId };
 type UserDocument = Omit<User, "_id"> & { _id: ObjectId };
@@ -169,6 +173,44 @@ export async function updateCharacterGold(ownerId: string, characterId: string, 
     ...memory.characters[characterIndex],
     gold,
     updatedAt
+  };
+  return { ...memory.characters[characterIndex] };
+}
+
+export async function updateCharacterCore(
+  ownerId: string,
+  characterId: string,
+  patch: Partial<Character>
+) {
+  const updatedAt = new Date().toISOString();
+  const { _id: _ignoredId, ...rest } = patch;
+  const payload = { ...rest, updatedAt };
+  if (hasMongoConnection()) {
+    if (!ObjectId.isValid(characterId)) {
+      throw new Error("Personagem inválido");
+    }
+    const characters = await getCollection<CharacterDocument>("characters");
+    await characters.updateOne(
+      { ownerId, _id: new ObjectId(characterId) },
+      { $set: payload as Partial<CharacterDocument> }
+    );
+    const updated = await characters.findOne({ ownerId, _id: new ObjectId(characterId) });
+    if (!updated) {
+      throw new Error("Personagem não encontrado");
+    }
+    return normalizeCharacter(updated);
+  }
+
+  const memory = getMemoryDB();
+  const characterIndex = memory.characters.findIndex(
+    (c) => c.ownerId === ownerId && c._id === characterId
+  );
+  if (characterIndex < 0) {
+    throw new Error("Personagem não encontrado");
+  }
+  memory.characters[characterIndex] = {
+    ...memory.characters[characterIndex],
+    ...payload
   };
   return { ...memory.characters[characterIndex] };
 }

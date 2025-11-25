@@ -1,4 +1,4 @@
-import { FACTION_IDS, pickFactionTeams, type FactionName, type FactionWarState } from "./factions";
+import { FACTION_IDS, type FactionName, type FactionWarState, pickFactionTeams } from "./factions";
 
 type TimerHandle = ReturnType<typeof setTimeout>;
 

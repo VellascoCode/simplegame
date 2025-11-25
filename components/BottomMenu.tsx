@@ -51,7 +51,7 @@ export function BottomMenu({ variant = "page", buttons, square = false }: Bottom
     <nav className={baseNavClass}>
       {items.map((item) => {
         const baseButtonClass = square
-          ? "flex h-14 w-14 items-center justify-center rounded-md border border-orange-700 bg-gradient-to-b from-amber-200/80 to-amber-700/70 text-xs font-semibold uppercase tracking-[0.08em] text-stone-900 shadow-black shadow-lg"
+          ? "flex h-14 w-14 items-center justify-center rounded-lg border border-amber-400/70 bg-gradient-to-b from-[#2a180b] via-[#1c1007] to-[#0b0704] text-[11px] font-semibold uppercase tracking-[0.08em] text-amber-100 shadow-[0_6px_14px_rgba(0,0,0,0.5)] transition-transform duration-150 hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(0,0,0,0.55)]"
           : "rounded-full border border-orange-700 bg-gradient-to-b from-amber-200/80 to-amber-700/70 px-5 py-2 text-sm font-semibold uppercase tracking-[0.08em] text-stone-900 shadow-black shadow-lg";
         const activeClass = item.active ? "ring-2 ring-amber-300" : "";
         const buttonClass = `${baseButtonClass} ${activeClass}`.trim();

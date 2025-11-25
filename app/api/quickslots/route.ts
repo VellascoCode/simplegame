@@ -1,6 +1,6 @@
 import { error, ok } from "@/lib/apiResponse";
-import { getQuickSlots, saveQuickSlots } from "@/lib/repositories";
 import { getOwnerIdFromSession } from "@/lib/authSession";
+import { getQuickSlots, saveQuickSlots } from "@/lib/repositories";
 
 export async function GET() {
   const ownerId = await getOwnerIdFromSession();

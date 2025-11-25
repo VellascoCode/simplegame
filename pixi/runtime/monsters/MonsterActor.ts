@@ -1,4 +1,5 @@
 import { AnimatedSprite, Container, Graphics, Text, Texture } from "pixi.js";
+
 import type { MonsterDefinition } from "@/monsters/data";
 
 type MonsterOptions = {

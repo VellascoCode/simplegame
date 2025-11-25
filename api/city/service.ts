@@ -1,5 +1,6 @@
-import { readCityMap, saveCityMap } from "@/lib/mapStore";
 import type { CityMapData } from "@/lib/mapTypes";
+
+import { readCityMap, saveCityMap } from "@/lib/mapStore";
 
 export async function loadCityMap() {
   return readCityMap();

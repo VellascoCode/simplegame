@@ -1,6 +1,8 @@
-import { Graphics, Sprite, Texture } from "pixi.js";
 import type { Container } from "pixi.js";
-import { splitTexture, type OverlaySlice } from "@/pixi/utils/overlay";
+
+import { Graphics, Sprite, Texture } from "pixi.js";
+
+import { type OverlaySlice, splitTexture } from "@/pixi/utils/overlay";
 
 export type Matrix<T> = T[][];
 

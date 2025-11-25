@@ -1,10 +1,11 @@
 import type { MonsterDefinition } from "./types";
-import sentinel from "./refugio/sentinel.json";
+
+import ancientOverlord from "./refugio/ancient_overlord.json";
 import emberGuardian from "./refugio/ember_guardian.json";
 import frostGuardian from "./refugio/frost_guardian.json";
-import verdantGuardian from "./refugio/verdant_guardian.json";
+import sentinel from "./refugio/sentinel.json";
 import shadowChampion from "./refugio/shadow_champion.json";
-import ancientOverlord from "./refugio/ancient_overlord.json";
+import verdantGuardian from "./refugio/verdant_guardian.json";
 
 const RAW_MONSTERS = [sentinel, emberGuardian, frostGuardian, verdantGuardian, shadowChampion, ancientOverlord];
 

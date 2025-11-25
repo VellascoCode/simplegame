@@ -1,9 +1,10 @@
+import { loadCharacterById } from "@/api/character/service";
 import { error, ok } from "@/lib/apiResponse";
-import { findCharacterById, getPlayerSession, savePlayerSession } from "@/lib/repositories";
 import { getOwnerIdFromSession } from "@/lib/authSession";
+import { defaultSpiritId } from "@/lib/characterSpirits";
 import { defaultSprite } from "@/lib/characterSpriteOptions";
 import { defaultSpriteColor } from "@/lib/characterSpriteOptions";
-import { defaultSpiritId } from "@/lib/characterSpirits";
+import { getPlayerSession, savePlayerSession } from "@/lib/repositories";
 
 export async function GET() {
   const ownerId = await getOwnerIdFromSession();
@@ -32,7 +33,7 @@ export async function GET() {
   let stats: { hp: number; energy: number; xp: number; level: number } | null = session.stats ?? null;
   if (session.characterId) {
     try {
-      const character = await findCharacterById(ownerId, session.characterId);
+      const character = await loadCharacterById(ownerId, session.characterId);
       if (character) {
         characterName = character.name;
         characterSprite = (character.sprite ?? defaultSprite) as typeof defaultSprite;

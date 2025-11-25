@@ -1,8 +1,9 @@
+import { loadCharacterById } from "@/api/character/service";
+import { getBestiaryProfile, incrementBestiaryKill } from "@/lib/repositories";
 import { bestiaryGetSchema, bestiaryUpdateSchema } from "@/models/Bestiary";
-import { findCharacterById, getBestiaryProfile, incrementBestiaryKill } from "@/lib/repositories";
 
 async function ensureCharacter(ownerId: string, characterId: string) {
-  const character = await findCharacterById(ownerId, characterId);
+  const character = await loadCharacterById(ownerId, characterId);
   if (!character) {
     throw new Error("Personagem não encontrado");
   }

@@ -1,22 +1,24 @@
+import { createDefaultSkills, ensureCharacterProgression } from "@/lib/characterProgression";
+import { defaultSpiritId } from "@/lib/characterSpirits";
+import { defaultSpriteColor } from "@/lib/characterSpriteOptions";
 import {
+  type Character,
+  type CharacterAttributes,
+  characterAttributesSchema,
   characterCreateSchema,
   characterGoldSchema,
-  characterXpSchema,
-  characterAttributesSchema,
-  type Character,
-  type CharacterAttributes
+  characterXpSchema
 } from "@/lib/models";
+import { resolveLevel } from "@/lib/progression";
 import {
   countCharacters,
   findCharacterById,
   insertCharacter,
   listCharacters,
+  updateCharacterCore,
   updateCharacterGold,
   updateCharacterStats
 } from "@/lib/repositories";
-import { resolveLevel } from "@/lib/progression";
-import { defaultSpriteColor } from "@/lib/characterSpriteOptions";
-import { defaultSpiritId } from "@/lib/characterSpirits";
 
 export async function createCharacter(payload: unknown) {
   const data = characterCreateSchema.parse(payload);
@@ -43,6 +45,11 @@ export async function createCharacter(payload: unknown) {
   const character: Character = {
     ownerId: data.ownerId,
     name: data.name,
+    classTier: 1,
+    classBase: "Adventurer",
+    classAdvanced: "",
+    classElite: "",
+    classLevel: 1,
     sprite: data.sprite,
     spriteColor,
     spiritId,
@@ -56,6 +63,7 @@ export async function createCharacter(payload: unknown) {
       energy: 100
     },
     gold: 0,
+    skills: createDefaultSkills(),
     createdAt: now,
     updatedAt: now
   };
@@ -65,7 +73,10 @@ export async function createCharacter(payload: unknown) {
 }
 
 export async function loadCharacters(ownerId: string) {
-  return listCharacters(ownerId);
+  const characters = await listCharacters(ownerId);
+  return Promise.all(
+    characters.map(async (character) => ensureHydratedCharacter(ownerId, character))
+  );
 }
 
 export async function loadCharacterById(ownerId: string, characterId: string) {
@@ -73,7 +84,7 @@ export async function loadCharacterById(ownerId: string, characterId: string) {
   if (!character) {
     throw new Error("Personagem não encontrado");
   }
-  return character;
+  return ensureHydratedCharacter(ownerId, character);
 }
 
 export async function grantCharacterXp(payload: unknown) {
@@ -103,4 +114,13 @@ export async function grantCharacterGold(payload: unknown) {
   const totalGold = Math.max(0, currentGold + data.amount);
   await updateCharacterGold(data.ownerId, data.characterId, totalGold);
   return { gold: totalGold };
+}
+
+async function ensureHydratedCharacter(ownerId: string, character: Character) {
+  const { character: normalized, changed } = ensureCharacterProgression(character);
+  if (changed && normalized._id) {
+    const { _id, ...payload } = normalized;
+    return updateCharacterCore(ownerId, _id, payload);
+  }
+  return normalized;
 }

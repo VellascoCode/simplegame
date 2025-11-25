@@ -179,6 +179,14 @@ type PickupNotice = {
   duration: number;
 };
 
+type ConnectionStatus =
+  | "connecting"
+  | "online"
+  | "offline"
+  | "reconnecting"
+  | "error"
+  | "unreachable";
+
 function createMatrix<T>(rows: number, cols: number, fill: T): Matrix<T> {
   return Array.from({ length: rows }, () => Array.from({ length: cols }, () => fill));
 }
@@ -249,9 +257,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
   const positionTrackerRef = useRef({ steps: 0, pending: false });
   const teleportingRef = useRef(false);
   const [ready, setReady] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<
-    "connecting" | "online" | "offline" | "reconnecting" | "error" | "unreachable"
-  >("connecting");
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("connecting");
   const worldLayerRef = useRef<Container | null>(null);
   const corpseLayerRef = useRef<Container | null>(null);
   const lootLayerRef = useRef<Container | null>(null);
@@ -281,304 +287,68 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
     let floatingTextManager: FloatingTextManager | null = null;
 
     const start = async () => {
-      const persistPositionRequest = async (mapName: string, tileX: number, tileY: number) => {
-        try {
-          await fetch("/api/session/position", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ map: mapName, x: tileX, y: tileY })
-          });
-        } catch (error: unknown) {
-          console.warn("Failed to persist position", error);
-        }
-      };
-
-      const sanitizeMapName = (value: string) => {
-        const normalized = value.replace(/[^a-z0-9_-]/gi, "").toLowerCase();
-        if (normalized === "city") return "cidadecentral";
-        return normalized || "cidadecentral";
-      };
-
-      const loadMapPayload = async (mapName: string): Promise<MapPayload | null> => {
-        try {
-          const response = await fetch(`/api/maps/load?map=${encodeURIComponent(mapName)}`);
-          if (!response.ok) return null;
-          return (await response.json()) as MapPayload;
-        } catch (error: unknown) {
-          console.warn(`Failed to load map ${mapName}`, error);
-          return null;
-        }
-      };
-
-      let sessionState: SessionState = {
-        map: "cidadecentral",
-        position: { ...DEFAULT_POSITION },
-        characterName: "",
-        characterSprite: "warriorblue",
-        spriteColor: 1 as SpriteColorValue,
-        stats: { hp: 100, energy: 100, xp: 0, level: 1 }
-      };
-      try {
-        const sessionResponse = await fetch("/api/session/state");
-        if (sessionResponse.ok) {
-          sessionState = (await sessionResponse.json()) as SessionState;
-        } else {
-          console.warn("Session state request failed", sessionResponse.status);
-        }
-      } catch (error: unknown) {
-        console.warn("Failed to load session state", error);
-        setConnectionStatus("unreachable");
+      let sessionState = await loadSessionState(setConnectionStatus);
+      if (!sessionState) {
         return;
       }
+      const { persistPositionRequest, handleStepPersistence } = createPositionPersistence(mapNameRef, positionTrackerRef);
 
-      const requestedMapName = sanitizeMapName(sessionState.map ?? "cidadecentral");
-      let mapData = await loadMapPayload(requestedMapName);
-      let resolvedMapName = requestedMapName;
-
-      if (!mapData) {
-        resolvedMapName = "cidadecentral";
-        mapData = await loadMapPayload(resolvedMapName);
-      }
-
-      if (!mapData) {
-        throw new Error("Falha ao carregar mapa padrão");
-      }
-
-      const targetMapName = sanitizeMapName(mapData.name ?? resolvedMapName);
-      mapNameRef.current = targetMapName;
-      teleportingRef.current = false;
-      positionTrackerRef.current.steps = 0;
-      positionTrackerRef.current.pending = false;
-      const tileTextures = new Set<string>(["/tilesets/tile1.png", "/tilesets/tile2.png", "/tilesets/tile101.png"]);
-      tileTextures.add(CORPSE_TEXTURE);
-      tileTextures.add(GOLD_NOTICE_ICON);
-      const addTiles = (matrix?: Matrix<string>) => {
-        matrix?.forEach((row) =>
-          row.forEach((path) => {
-            if (path) tileTextures.add(path);
-          })
-        );
-      };
-      addTiles(mapData?.tilesLayer0);
-      addTiles(mapData?.tilesLayer1);
-      addTiles(mapData?.tilesLayer2);
-      const npcDefinitions = getNpcsForMap(mapNameRef.current);
-      const npcSnapshotBase: NpcListItem[] = npcDefinitions.map((definition, index) => ({
-        id: definition.id ?? `${definition.name ?? "NPC"}-${index}`,
-        name: definition.name ?? `NPC ${index + 1}`,
-        rarity: definition.role ?? "NPC",
-        danger: "Neutro",
-        hpText: "—"
-      }));
-      const monsterDefinitions = getMonstersForMap(mapNameRef.current);
-      const hpMax = Math.max(100, sessionState.stats?.hp ?? 100);
-      const manaMax = Math.max(100, sessionState.stats?.energy ?? 100);
-      const xpStats = {
-        hp: clamp(sessionState.stats?.hp ?? 100, 0, hpMax),
-        energy: clamp(sessionState.stats?.energy ?? 100, 0, manaMax),
-        xp: sessionState.stats?.xp ?? 0,
-        level: sessionState.stats?.level ?? 1
-      };
-      npcDefinitions.forEach((definition) => {
-        if (definition.sprite) tileTextures.add(definition.sprite);
-        definition.framePaths?.forEach((path) => tileTextures.add(path));
+      const mapSetup = await initializeMapResources({
+        app,
+        target,
+        sessionState,
+        mapNameRef,
+        teleportingRef,
+        positionTrackerRef,
+        persistPositionRequest
       });
-      monsterDefinitions.forEach((definition) => {
-        if (definition.sprite) tileTextures.add(definition.sprite);
-        definition.lootTable?.forEach((entry) => tileTextures.add(entry.icon));
-      });
-      const playerSpriteKey = sessionState.characterSprite ?? "warriorblue";
-      const playerSpriteConfig = getCharacterSpriteConfig(playerSpriteKey);
-      tileTextures.add(playerSpriteConfig.run.sheet);
-      const textureList = Array.from(tileTextures);
-      await Assets.load([...textureList, teleportEffect.sheet, levelUpEffect.sheet]);
-      const teleportTexture = Assets.get<Texture | undefined>(teleportEffect.sheet);
-      const teleportFrames = teleportTexture
-        ? createFramesFromSheet(
-            teleportTexture,
-            teleportEffect.frames,
-            teleportEffect.frameWidth,
-            teleportEffect.frameHeight,
-            teleportEffect.frameSpacing
-          )
-        : null;
-      const levelUpTexture = Assets.get<Texture | undefined>(levelUpEffect.sheet);
-      const levelUpFrames = levelUpTexture
-        ? createFramesFromSheet(
-            levelUpTexture,
-            levelUpEffect.frames,
-            levelUpEffect.frameWidth,
-            levelUpEffect.frameHeight,
-            levelUpEffect.frameSpacing
-          )
-        : null;
-
-      await app.init({ resizeTo: target, backgroundAlpha: 0, antialias: true });
-      target.appendChild(app.canvas);
-
-      const worldLayer = new Container();
-      worldLayer.sortableChildren = true;
-      const balloonLayer = new Container();
-      const overlayLayer = new Container();
-      const effectLayer = new Container();
-      effectLayer.zIndex = 1000;
-      app.stage.addChild(worldLayer);
-      app.stage.addChild(balloonLayer);
-      app.stage.addChild(overlayLayer);
-      worldLayer.addChild(effectLayer);
+      sessionState = mapSetup.sessionState;
+      const {
+        mapData,
+        tilemap,
+        npcDefinitions,
+        monsterDefinitions,
+        npcSnapshotBase,
+        tilesLayer1,
+        tilesLayer2,
+        overlayMatrix,
+        overlayLayer,
+        effectLayer,
+        balloonLayer,
+        detailsLayer,
+        buildingLayer,
+        worldLayer,
+        corpseLayer,
+        lootLayer,
+        hpMax,
+        manaMax,
+        xpStats,
+        teleportFrames,
+        levelUpFrames,
+        playerSpriteConfig,
+        playerTint
+      } = mapSetup;
       worldLayerRef.current = worldLayer;
-
-      const cols = mapData.cols ?? 80;
-      const rows = mapData.rows ?? 80;
-      const defaultTile = "/tilesets/tile1.png";
-      const tilesLayer0 = mapData.tilesLayer0 ?? createMatrix(rows, cols, defaultTile);
-      const tilesLayer1 = mapData.tilesLayer1 ?? createMatrix(rows, cols, "");
-      const tilesLayer2 = mapData.tilesLayer2 ?? createMatrix(rows, cols, "");
-      const overlayMatrix = mapData.buildingOverlay ?? createOverlayMatrix(rows, cols, "none");
-      const blocksMatrix = mapData.blocks ?? createMatrix(rows, cols, false);
-      let spawn = normalizePosition(sessionState.position ?? mapData.spawn ?? DEFAULT_POSITION, cols, rows);
-      if (sessionState.map !== targetMapName || !sessionState.position || sessionState.position.x !== spawn.x || sessionState.position.y !== spawn.y) {
-        sessionState = { ...sessionState, map: targetMapName, position: spawn };
-        await persistPositionRequest(targetMapName, spawn.x, spawn.y);
-      } else {
-        spawn = sessionState.position;
-      }
-      const tilemap = new Tilemap({ cols, rows, tileSize: TILE_SIZE, tilesLayer0, blocks: blocksMatrix, spawn });
-      worldLayer.addChild(tilemap.container);
-
-      const tryTeleport = (tileX: number, tileY: number): boolean => {
-        if (teleportingRef.current) return false;
-        const entries = TELEPORTERS[mapNameRef.current] ?? [];
-        const teleporter = entries.find((entry) => entry.tile.x === tileX && entry.tile.y === tileY);
-        if (!teleporter) return false;
-        teleportingRef.current = true;
-        const completeTeleport = () => {
-          void persistPositionRequest(teleporter.targetMap, teleporter.targetTile.x, teleporter.targetTile.y).finally(() => {
-            if (typeof window !== "undefined") {
-              window.location.assign("/play");
-            }
-          });
-        };
-        const worldPos = player?.position ?? tilemap.tileToWorld(tileX, tileY);
-        const stopEffect = playTeleportEffect(worldPos.x, worldPos.y);
-        if (player) {
-          player.beginTeleport("Teletransportando...", 2, () => {
-            stopEffect();
-            completeTeleport();
-          });
-        } else {
-          stopEffect();
-          completeTeleport();
-        }
-        return true;
-      };
-
-      const detailsLayer = new Container();
-      worldLayer.addChild(detailsLayer);
-
-      const corpseLayer = new Container();
-      corpseLayer.sortableChildren = true;
-      corpseLayer.zIndex = 50;
-      worldLayer.addChild(corpseLayer);
       corpseLayerRef.current = corpseLayer;
-
-      const lootLayer = new Container();
-      lootLayer.sortableChildren = true;
-      lootLayer.zIndex = 120;
-      worldLayer.addChild(lootLayer);
       lootLayerRef.current = lootLayer;
-
-      const buildingLayer = new Container();
-      worldLayer.addChild(buildingLayer);
-
-      const floatingTextLayer = new Container();
-      floatingTextLayer.zIndex = 800;
-      worldLayer.addChild(floatingTextLayer);
-      floatingTextManager = new FloatingTextManager(floatingTextLayer);
-
-      const hud = new Hud(mapData?.name ?? FALLBACK_MAP_NAME);
-      overlayLayer.addChild(hud.view);
-      hud.resize();
-
-      const levelUpBanner = new Container();
-      const bannerBg = new Graphics().roundRect(-260, -26, 520, 52, 18).fill({ color: 0x050708, alpha: 0.9 }).stroke({ color: 0xfcd34d, alpha: 0.8, width: 2 });
-      levelUpBanner.addChild(bannerBg);
-      const levelUpText = new Text({
-        text: "",
-        style: { fill: 0xfff4cf, fontSize: 20, fontWeight: "700", stroke: { color: 0x000000, width: 5 } }
+      floatingTextManager = mapSetup.floatingTextManager;
+      const hudState = initializeHudComponents({
+        overlayLayer,
+        mapName: mapData?.name ?? FALLBACK_MAP_NAME,
+        xpStats,
+        hpMax,
+        manaMax,
+        app,
+        characterName: sessionState.characterName
       });
-      levelUpText.anchor.set(0.5);
-      levelUpBanner.addChild(levelUpText);
-      levelUpBanner.visible = false;
-      overlayLayer.addChild(levelUpBanner);
-
-      let levelUpBannerTimer = 0;
-      const updateBannerLayout = (width: number) => {
-        levelUpBanner.position.set(width / 2, 32);
-      };
-      updateBannerLayout(app.renderer.width);
-
-      const playTeleportEffect = (worldX: number, worldY: number) => {
-        if (!teleportFrames || teleportFrames.length === 0) {
-          return () => undefined;
-        }
-        const sprite = new AnimatedSprite(teleportFrames);
-        sprite.anchor.set(0.5);
-        sprite.position.set(worldX, worldY);
-        sprite.animationSpeed = teleportEffect.animationSpeed ?? 0.3;
-        sprite.loop = true;
-        sprite.play();
-        effectLayer.addChild(sprite);
-        return () => {
-          sprite.stop();
-          effectLayer.removeChild(sprite);
-          sprite.destroy();
-        };
-      };
-
-      const playLevelUpEffect = (worldX: number, worldY: number) => {
-        if (!levelUpFrames || levelUpFrames.length === 0) {
-          return () => undefined;
-        }
-        const sprite = new AnimatedSprite(levelUpFrames);
-        sprite.anchor.set(0.5, 1);
-        sprite.position.set(worldX, worldY - TILE_SIZE * 0.4);
-        sprite.animationSpeed = levelUpEffect.animationSpeed ?? 0.25;
-        sprite.loop = false;
-        const cleanup = () => {
-          sprite.stop();
-          effectLayer.removeChild(sprite);
-          sprite.destroy();
-        };
-        sprite.onComplete = cleanup;
-        sprite.play();
-        effectLayer.addChild(sprite);
-        return cleanup;
-      };
-
-      const showLevelUpBanner = (previous: number, current: number) => {
-        const charName = sessionState.characterName?.trim().length ? sessionState.characterName?.trim() : "Personagem";
-        levelUpText.text = `[${charName}] passou de nível: ${previous} → ${current}`;
-        levelUpBanner.visible = true;
-        levelUpBanner.alpha = 1;
-        levelUpBannerTimer = 2;
-      };
-
-      const resolveXpBar = () => {
-        const base = xpForLevel(xpStats.level);
-        const needed = Math.max(1, xpNeededForNextLevel(xpStats.level));
-        const value = clamp(xpStats.xp - base, 0, needed);
-        return { value, needed };
-      };
-
-      const syncVitals = () => {
-        const xpBar = resolveXpBar();
-        hud.updateVitals({
-          hp: { label: "Vida", color: 0xe74c3c, value: xpStats.hp, max: hpMax },
-          mana: { label: "Mana", color: 0x3fa7d6, value: xpStats.energy, max: manaMax },
-          xp: { label: "XP", color: 0xfacb5a, value: xpBar.value, max: xpBar.needed }
-        });
-      };
+      const effectHandlers = initializeEffectHandlers({ effectLayer, teleportFrames, levelUpFrames });
+      const tryTeleport = createTeleportHandler({
+        mapNameRef,
+        teleportingRef,
+        tilemap,
+        persistPositionRequest,
+        playTeleportEffect: effectHandlers.playTeleportEffect
+      });
 
       const showPlayerFloatingText = (text: string, color: number, duration = 1.2) => {
         if (!player) return;
@@ -594,52 +364,45 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         });
       };
 
-      const applyPlayerDamage = (amount: number) => {
-        xpStats.hp = clamp(xpStats.hp - amount, 0, hpMax);
-        syncVitals();
-        showPlayerFloatingText(`-${amount} HP`, 0xf87171);
-      };
-
-      const handleStepPersistence = (tileX: number, tileY: number) => {
-        const tracker = positionTrackerRef.current;
-        tracker.steps += 1;
-        if (tracker.steps < 2 || tracker.pending) return;
-        tracker.steps = 0;
-        tracker.pending = true;
-        void persistPositionRequest(mapNameRef.current, tileX, tileY).finally(() => {
-          tracker.pending = false;
-        });
-      };
-
       const handlePlayerMove = (tileX: number, tileY: number) => {
-        hud.updatePosition({ x: tileX, y: tileY });
-        if (tryTeleport(tileX, tileY)) return;
+        hudState.hud.updatePosition({ x: tileX, y: tileY });
+        if (tryTeleport(tileX, tileY, player)) return;
         handleStepPersistence(tileX, tileY);
       };
 
-      const playerRunTexture = Assets.get<Texture | undefined>(playerSpriteConfig.run.sheet);
-      if (!playerRunTexture) {
-        throw new Error(`Player sprite not loaded: ${playerSpriteConfig.run.sheet}`);
-      }
-      const playerFrames = createFramesFromSheet(
-        playerRunTexture,
-        playerSpriteConfig.run.frames,
-        playerSpriteConfig.run.frameWidth,
-        playerSpriteConfig.run.frameHeight
-      );
-      const playerTint = getSpriteColorTint(sessionState.spriteColor);
-      player = new Player(tilemap, playerFrames, handlePlayerMove, sessionState.characterName, playerTint);
-      player.setLevelInfo(xpStats.level, PLAYER_CLASS);
+      player = initializePlayerActor({
+        tilemap,
+        playerSpriteConfig,
+        playerTint,
+        characterName: sessionState.characterName,
+        level: xpStats.level,
+        onMove: handlePlayerMove
+      });
       worldLayer.addChild(player.view);
       player.view.zIndex = 200;
-      hud.setMapName(mapData?.name ?? FALLBACK_MAP_NAME);
-      syncVitals();
-      hud.updatePosition(player.tilePosition);
+      hudState.hud.setMapName(mapData?.name ?? FALLBACK_MAP_NAME);
+      hudState.syncVitals();
+      hudState.hud.updatePosition(player.tilePosition);
+
+      const applyPlayerDamage = (amount: number) => {
+        xpStats.hp = clamp(xpStats.hp - amount, 0, hpMax);
+        hudState.syncVitals();
+        showPlayerFloatingText(`-${amount} HP`, 0xf87171);
+      };
 
       const buildingTopLayer = new Container();
       worldLayer.addChild(buildingTopLayer);
 
-      renderDecorLayers(detailsLayer, buildingLayer, buildingTopLayer, tilesLayer1, tilesLayer2, overlayMatrix);
+      renderDecorLayers(
+        detailsLayer,
+        buildingLayer,
+        buildingTopLayer,
+        tilesLayer1,
+        tilesLayer2,
+        overlayMatrix,
+        tilemap.cols,
+        tilemap.rows
+      );
 
       const spriteFrameCache = new Map<string, Texture[]>();
       const sequenceFrameCache = new Map<string, Texture[]>();
@@ -953,12 +716,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         xpStats.xp += amount;
         const resolved = resolveLevel(xpStats.xp);
         xpStats.level = resolved.level;
-        const xpBar = resolveXpBar();
-        hud.updateVitals({
-          hp: { label: "Vida", color: 0xe74c3c, value: xpStats.hp, max: hpMax },
-          mana: { label: "Mana", color: 0x3fa7d6, value: xpStats.energy, max: manaMax },
-          xp: { label: "XP", color: 0xfacb5a, value: xpBar.value, max: xpBar.needed }
-        });
+        hudState.syncVitals();
         if (player) {
           floatingTextManager?.spawn({
             text: `+${amount} XP`,
@@ -981,8 +739,8 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
             rise: 40,
             fontSize: 18
           });
-          playLevelUpEffect(player.position.x, player.position.y);
-          showLevelUpBanner(previousLevel, xpStats.level);
+          effectHandlers.playLevelUpEffect(player.position.x, player.position.y);
+          hudState.showLevelUpBanner(previousLevel, xpStats.level);
           playLevelUpSound();
         }
         playXpSound();
@@ -1102,7 +860,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
       }
       const activePlayer = player;
 
-      hud.updatePosition(activePlayer.tilePosition);
+      hudState.hud.updatePosition(activePlayer.tilePosition);
 
       input = new InputController(
         overlayLayer,
@@ -1127,9 +885,9 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         const width = app.renderer?.width ?? target.clientWidth ?? 0;
         const height = app.renderer?.height ?? target.clientHeight ?? 0;
         camera.resize(width, height);
-        hud.resize();
+        hudState.hud.resize();
         input?.updateLayout(width, height);
-        updateBannerLayout(width);
+        hudState.updateBannerLayout(width);
       });
       resizeObserver.observe(target);
 
@@ -1258,19 +1016,13 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
           void persistArtifacts();
         }
         camera.update(activePlayer.position);
-        hud.updatePosition(activePlayer.tilePosition);
+        hudState.hud.updatePosition(activePlayer.tilePosition);
         floatingTextManager?.update(delta);
-        if (levelUpBannerTimer > 0) {
-          levelUpBannerTimer = Math.max(0, levelUpBannerTimer - delta);
-          levelUpBanner.alpha = 0.7 + 0.3 * Math.abs(Math.sin(levelUpBannerTimer * 6));
-          if (levelUpBannerTimer <= 0) {
-            levelUpBanner.visible = false;
-          }
-        }
+        hudState.updateBannerTimer(delta);
       });
 
       if (disposed) {
-        destroyApplication(app);
+        safeDestroyPixiInstance(app);
         appRef.current = null;
         return;
       }
@@ -1283,7 +1035,9 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         buildingsTop: Container,
         detailsMatrix: Matrix<string>,
         buildingsMatrix: Matrix<string>,
-        overlay: Matrix<OverlaySlice>
+        overlay: Matrix<OverlaySlice>,
+        cols: number,
+        rows: number
       ) {
         details.removeChildren();
         buildingsBottom.removeChildren();
@@ -1368,7 +1122,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         instance.stage.off("pointerdown", pointerHandler);
       }
       pointerHandler = null;
-      destroyApplication(instance);
+      safeDestroyPixiInstance(instance);
       appRef.current = null;
       player = null;
       worldLayerRef.current = null;
@@ -1387,7 +1141,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
       setReady(false);
       const instance = appRef.current;
       if (instance) {
-        destroyApplication(instance);
+        safeDestroyPixiInstance(instance);
         appRef.current = null;
       }
     };
@@ -1420,7 +1174,7 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
 
   return (
     <div className="w-full">
-      <div className="mx-auto w-full h-screen md:h-[75vh] max-w-[1280px] px-4">
+      <div className="mx-auto w-full h-screen md:h-[75vh]">
         <div className="relative h-full w-full" data-ready={ready}>
           <div ref={containerRef} className="h-full w-full overflow-hidden rounded-[32px] bg-[#05070c] shadow-2xl" />
           {bottomOverlay ? (
@@ -1444,13 +1198,512 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
     </div>
   );
 }
-function destroyApplication(instance: Application | null) {
-  if (!instance) return;
-  const internal = instance as Application & { _cancelResize?: () => void };
+function safeDestroyPixiInstance(instance: Application | null) {
+  const appInstance = instance as (Application & { destroyed?: boolean; _cancelResize?: () => void }) | null;
+  if (!appInstance) return;
+  if (appInstance.destroyed) return;
+  if (typeof appInstance.destroy !== "function") return;
+  if (typeof appInstance._cancelResize === "undefined") return;
   try {
-    internal._cancelResize?.();
+    appInstance.destroy(true);
   } catch (error) {
-    console.warn("Failed to cancel PIXI resize observer", error);
+    console.warn("PIXI destroy error:", error);
   }
-  instance.destroy(true);
+}
+
+async function loadSessionState(setConnectionStatus: (status: ConnectionStatus) => void): Promise<SessionState | null> {
+  let sessionState: SessionState = {
+    map: "cidadecentral",
+    position: { ...DEFAULT_POSITION },
+    characterName: "",
+    characterSprite: "warriorblue",
+    spriteColor: 1 as SpriteColorValue,
+    stats: { hp: 100, energy: 100, xp: 0, level: 1 }
+  };
+  try {
+    const sessionResponse = await fetch("/api/session/state");
+    if (sessionResponse.ok) {
+      sessionState = (await sessionResponse.json()) as SessionState;
+    } else {
+      console.warn("Session state request failed", sessionResponse.status);
+    }
+    return sessionState;
+  } catch (error: unknown) {
+    console.warn("Failed to load session state", error);
+    setConnectionStatus("unreachable");
+    return null;
+  }
+}
+
+function createPositionPersistence(
+  mapNameRef: React.MutableRefObject<string>,
+  positionTrackerRef: React.MutableRefObject<{ steps: number; pending: boolean }>
+) {
+  const persistPositionRequest = async (mapName: string, tileX: number, tileY: number) => {
+    try {
+      await fetch("/api/session/position", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ map: mapName, x: tileX, y: tileY })
+      });
+    } catch (error: unknown) {
+      console.warn("Failed to persist position", error);
+    }
+  };
+
+  const handleStepPersistence = (tileX: number, tileY: number) => {
+    const tracker = positionTrackerRef.current;
+    tracker.steps += 1;
+    if (tracker.steps < 2 || tracker.pending) return;
+    tracker.steps = 0;
+    tracker.pending = true;
+    void persistPositionRequest(mapNameRef.current, tileX, tileY).finally(() => {
+      tracker.pending = false;
+    });
+  };
+
+  return { persistPositionRequest, handleStepPersistence };
+}
+
+type MapInitializationParams = {
+  app: Application;
+  target: HTMLDivElement;
+  sessionState: SessionState;
+  mapNameRef: React.MutableRefObject<string>;
+  teleportingRef: React.MutableRefObject<boolean>;
+  positionTrackerRef: React.MutableRefObject<{ steps: number; pending: boolean }>;
+  persistPositionRequest: (mapName: string, tileX: number, tileY: number) => Promise<void>;
+};
+
+type MapInitializationResult = {
+  sessionState: SessionState;
+  mapData: MapPayload;
+  tilemap: Tilemap;
+  tilesLayer1: Matrix<string>;
+  tilesLayer2: Matrix<string>;
+  overlayMatrix: Matrix<OverlaySlice>;
+  worldLayer: Container;
+  overlayLayer: Container;
+  effectLayer: Container;
+  balloonLayer: Container;
+  detailsLayer: Container;
+  buildingLayer: Container;
+  corpseLayer: Container;
+  lootLayer: Container;
+  floatingTextLayer: Container;
+  floatingTextManager: FloatingTextManager;
+  npcDefinitions: NpcDefinition[];
+  monsterDefinitions: MonsterDefinition[];
+  npcSnapshotBase: NpcListItem[];
+  teleportFrames: Texture[] | null;
+  levelUpFrames: Texture[] | null;
+  playerSpriteConfig: ReturnType<typeof getCharacterSpriteConfig>;
+  playerTint: number;
+  hpMax: number;
+  manaMax: number;
+  xpStats: { hp: number; energy: number; xp: number; level: number };
+};
+
+async function initializeMapResources({
+  app,
+  target,
+  sessionState,
+  mapNameRef,
+  teleportingRef,
+  positionTrackerRef,
+  persistPositionRequest
+}: MapInitializationParams): Promise<MapInitializationResult> {
+  const sanitizeMapName = (value: string) => {
+    const normalized = value.replace(/[^a-z0-9_-]/gi, "").toLowerCase();
+    if (normalized === "city") return "cidadecentral";
+    return normalized || "cidadecentral";
+  };
+
+  const loadMapPayload = async (mapName: string): Promise<MapPayload | null> => {
+    try {
+      const response = await fetch(`/api/maps/load?map=${encodeURIComponent(mapName)}`);
+      if (!response.ok) return null;
+      return (await response.json()) as MapPayload;
+    } catch (error: unknown) {
+      console.warn(`Failed to load map ${mapName}`, error);
+      return null;
+    }
+  };
+
+  const requestedMapName = sanitizeMapName(sessionState.map ?? "cidadecentral");
+  let mapData = await loadMapPayload(requestedMapName);
+  let resolvedMapName = requestedMapName;
+
+  if (!mapData) {
+    resolvedMapName = "cidadecentral";
+    mapData = await loadMapPayload(resolvedMapName);
+  }
+
+  if (!mapData) {
+    throw new Error("Falha ao carregar mapa padrão");
+  }
+
+  const targetMapName = sanitizeMapName(mapData.name ?? resolvedMapName);
+  mapNameRef.current = targetMapName;
+  teleportingRef.current = false;
+  positionTrackerRef.current.steps = 0;
+  positionTrackerRef.current.pending = false;
+  const tileTextures = new Set<string>(["/tilesets/tile1.png", "/tilesets/tile2.png", "/tilesets/tile101.png"]);
+  tileTextures.add(CORPSE_TEXTURE);
+  tileTextures.add(GOLD_NOTICE_ICON);
+  const addTiles = (matrix?: Matrix<string>) => {
+    matrix?.forEach((row) =>
+      row.forEach((path) => {
+        if (path) tileTextures.add(path);
+      })
+    );
+  };
+  addTiles(mapData?.tilesLayer0);
+  addTiles(mapData?.tilesLayer1);
+  addTiles(mapData?.tilesLayer2);
+  const npcDefinitions = getNpcsForMap(mapNameRef.current);
+  const npcSnapshotBase: NpcListItem[] = npcDefinitions.map((definition, index) => ({
+    id: definition.id ?? `${definition.name ?? "NPC"}-${index}`,
+    name: definition.name ?? `NPC ${index + 1}`,
+    rarity: definition.role ?? "NPC",
+    danger: "Neutro",
+    hpText: "—"
+  }));
+  const monsterDefinitions = getMonstersForMap(mapNameRef.current);
+  const hpMax = Math.max(100, sessionState.stats?.hp ?? 100);
+  const manaMax = Math.max(100, sessionState.stats?.energy ?? 100);
+  const xpStats = {
+    hp: clamp(sessionState.stats?.hp ?? 100, 0, hpMax),
+    energy: clamp(sessionState.stats?.energy ?? 100, 0, manaMax),
+    xp: sessionState.stats?.xp ?? 0,
+    level: sessionState.stats?.level ?? 1
+  };
+  npcDefinitions.forEach((definition) => {
+    if (definition.sprite) tileTextures.add(definition.sprite);
+    definition.framePaths?.forEach((path) => tileTextures.add(path));
+  });
+  monsterDefinitions.forEach((definition) => {
+    if (definition.sprite) tileTextures.add(definition.sprite);
+    definition.lootTable?.forEach((entry) => tileTextures.add(entry.icon));
+  });
+  const playerSpriteKey = sessionState.characterSprite ?? "warriorblue";
+  const playerSpriteConfig = getCharacterSpriteConfig(playerSpriteKey);
+  tileTextures.add(playerSpriteConfig.run.sheet);
+  const textureList = Array.from(tileTextures);
+  await Assets.load([...textureList, teleportEffect.sheet, levelUpEffect.sheet]);
+  const teleportTexture = Assets.get<Texture | undefined>(teleportEffect.sheet);
+  const teleportFrames = teleportTexture
+    ? createFramesFromSheet(
+        teleportTexture,
+        teleportEffect.frames,
+        teleportEffect.frameWidth,
+        teleportEffect.frameHeight,
+        teleportEffect.frameSpacing
+      )
+    : null;
+  const levelUpTexture = Assets.get<Texture | undefined>(levelUpEffect.sheet);
+  const levelUpFrames = levelUpTexture
+    ? createFramesFromSheet(
+        levelUpTexture,
+        levelUpEffect.frames,
+        levelUpEffect.frameWidth,
+        levelUpEffect.frameHeight,
+        levelUpEffect.frameSpacing
+      )
+    : null;
+
+  await app.init({ resizeTo: target, backgroundAlpha: 0, antialias: true });
+  target.appendChild(app.canvas);
+
+  const worldLayer = new Container();
+  worldLayer.sortableChildren = true;
+  const balloonLayer = new Container();
+  const overlayLayer = new Container();
+  const effectLayer = new Container();
+  effectLayer.zIndex = 1000;
+  app.stage.addChild(worldLayer);
+  app.stage.addChild(balloonLayer);
+  app.stage.addChild(overlayLayer);
+  worldLayer.addChild(effectLayer);
+
+  const cols = mapData.cols ?? 80;
+  const rows = mapData.rows ?? 80;
+  const defaultTile = "/tilesets/tile1.png";
+  const tilesLayer0 = mapData.tilesLayer0 ?? createMatrix(rows, cols, defaultTile);
+  const tilesLayer1 = mapData.tilesLayer1 ?? createMatrix(rows, cols, "");
+  const tilesLayer2 = mapData.tilesLayer2 ?? createMatrix(rows, cols, "");
+  const overlayMatrix = mapData.buildingOverlay ?? createOverlayMatrix(rows, cols, "none");
+  const blocksMatrix = mapData.blocks ?? createMatrix(rows, cols, false);
+  let spawn = normalizePosition(sessionState.position ?? mapData.spawn ?? DEFAULT_POSITION, cols, rows);
+  if (sessionState.map !== targetMapName || !sessionState.position || sessionState.position.x !== spawn.x || sessionState.position.y !== spawn.y) {
+    sessionState = { ...sessionState, map: targetMapName, position: spawn };
+    await persistPositionRequest(targetMapName, spawn.x, spawn.y);
+  } else {
+    spawn = sessionState.position;
+  }
+  const tilemap = new Tilemap({ cols, rows, tileSize: TILE_SIZE, tilesLayer0, blocks: blocksMatrix, spawn });
+  worldLayer.addChild(tilemap.container);
+
+  const detailsLayer = new Container();
+  worldLayer.addChild(detailsLayer);
+
+  const corpseLayer = new Container();
+  corpseLayer.sortableChildren = true;
+  corpseLayer.zIndex = 50;
+  worldLayer.addChild(corpseLayer);
+
+  const lootLayer = new Container();
+  lootLayer.sortableChildren = true;
+  lootLayer.zIndex = 120;
+  worldLayer.addChild(lootLayer);
+
+  const buildingLayer = new Container();
+  worldLayer.addChild(buildingLayer);
+
+  const floatingTextLayer = new Container();
+  floatingTextLayer.zIndex = 800;
+  worldLayer.addChild(floatingTextLayer);
+  const floatingTextManager = new FloatingTextManager(floatingTextLayer);
+
+  return {
+    sessionState,
+    mapData,
+    tilemap,
+    tilesLayer1,
+    tilesLayer2,
+    overlayMatrix,
+    worldLayer,
+    overlayLayer,
+    effectLayer,
+    balloonLayer,
+    detailsLayer,
+    buildingLayer,
+    corpseLayer,
+    lootLayer,
+    floatingTextLayer,
+    floatingTextManager,
+    npcDefinitions,
+    monsterDefinitions,
+    npcSnapshotBase,
+    teleportFrames,
+    levelUpFrames,
+    playerSpriteConfig,
+    playerTint: getSpriteColorTint(sessionState.spriteColor),
+    hpMax,
+    manaMax,
+    xpStats
+  };
+}
+
+type HudInitializationParams = {
+  overlayLayer: Container;
+  mapName: string;
+  xpStats: { hp: number; energy: number; xp: number; level: number };
+  hpMax: number;
+  manaMax: number;
+  app: Application;
+  characterName?: string;
+};
+
+type HudInitializationResult = {
+  hud: Hud;
+  syncVitals: () => void;
+  updateBannerLayout: (width: number) => void;
+  showLevelUpBanner: (previous: number, current: number) => void;
+  updateBannerTimer: (delta: number) => void;
+};
+
+function initializeHudComponents({
+  overlayLayer,
+  mapName,
+  xpStats,
+  hpMax,
+  manaMax,
+  app,
+  characterName
+}: HudInitializationParams): HudInitializationResult {
+  const hud = new Hud(mapName);
+  overlayLayer.addChild(hud.view);
+  hud.resize();
+
+  const levelUpBanner = new Container();
+  const bannerBg = new Graphics().roundRect(-260, -26, 520, 52, 18).fill({ color: 0x050708, alpha: 0.9 }).stroke({ color: 0xfcd34d, alpha: 0.8, width: 2 });
+  levelUpBanner.addChild(bannerBg);
+  const levelUpText = new Text({
+    text: "",
+    style: { fill: 0xfff4cf, fontSize: 20, fontWeight: "700", stroke: { color: 0x000000, width: 5 } }
+  });
+  levelUpText.anchor.set(0.5);
+  levelUpBanner.addChild(levelUpText);
+  levelUpBanner.visible = false;
+  overlayLayer.addChild(levelUpBanner);
+
+  let levelUpBannerTimer = 0;
+  const updateBannerLayout = (width: number) => {
+    levelUpBanner.position.set(width / 2, 32);
+  };
+  updateBannerLayout(app.renderer.width);
+
+  const resolveXpBar = () => {
+    const base = xpForLevel(xpStats.level);
+    const needed = Math.max(1, xpNeededForNextLevel(xpStats.level));
+    const value = clamp(xpStats.xp - base, 0, needed);
+    return { value, needed };
+  };
+
+  const syncVitals = () => {
+    const xpBar = resolveXpBar();
+    hud.updateVitals({
+      hp: { label: "Vida", color: 0xe74c3c, value: xpStats.hp, max: hpMax },
+      mana: { label: "Mana", color: 0x3fa7d6, value: xpStats.energy, max: manaMax },
+      xp: { label: "XP", color: 0xfacb5a, value: xpBar.value, max: xpBar.needed }
+    });
+  };
+
+  const showLevelUpBanner = (previous: number, current: number) => {
+    const charName = characterName?.trim().length ? characterName.trim() : "Personagem";
+    levelUpText.text = `[${charName}] passou de nível: ${previous} → ${current}`;
+    levelUpBanner.visible = true;
+    levelUpBanner.alpha = 1;
+    levelUpBannerTimer = 2;
+  };
+
+  const updateBannerTimer = (delta: number) => {
+    if (levelUpBannerTimer <= 0) return;
+    levelUpBannerTimer = Math.max(0, levelUpBannerTimer - delta);
+    levelUpBanner.alpha = 0.7 + 0.3 * Math.abs(Math.sin(levelUpBannerTimer * 6));
+    if (levelUpBannerTimer <= 0) {
+      levelUpBanner.visible = false;
+    }
+  };
+
+  return { hud, syncVitals, updateBannerLayout, showLevelUpBanner, updateBannerTimer };
+}
+
+type EffectHandlerParams = {
+  effectLayer: Container;
+  teleportFrames: Texture[] | null;
+  levelUpFrames: Texture[] | null;
+};
+
+type EffectHandlers = {
+  playTeleportEffect: (worldX: number, worldY: number) => () => void;
+  playLevelUpEffect: (worldX: number, worldY: number) => () => void;
+};
+
+function initializeEffectHandlers({ effectLayer, teleportFrames, levelUpFrames }: EffectHandlerParams): EffectHandlers {
+  const playTeleportEffect = (worldX: number, worldY: number) => {
+    if (!teleportFrames || teleportFrames.length === 0) {
+      return () => undefined;
+    }
+    const sprite = new AnimatedSprite(teleportFrames);
+    sprite.anchor.set(0.5);
+    sprite.position.set(worldX, worldY);
+    sprite.animationSpeed = teleportEffect.animationSpeed ?? 0.3;
+    sprite.loop = true;
+    sprite.play();
+    effectLayer.addChild(sprite);
+    return () => {
+      sprite.stop();
+      effectLayer.removeChild(sprite);
+      sprite.destroy();
+    };
+  };
+
+  const playLevelUpEffect = (worldX: number, worldY: number) => {
+    if (!levelUpFrames || levelUpFrames.length === 0) {
+      return () => undefined;
+    }
+    const sprite = new AnimatedSprite(levelUpFrames);
+    sprite.anchor.set(0.5, 1);
+    sprite.position.set(worldX, worldY - TILE_SIZE * 0.4);
+    sprite.animationSpeed = levelUpEffect.animationSpeed ?? 0.25;
+    sprite.loop = false;
+    const cleanup = () => {
+      sprite.stop();
+      effectLayer.removeChild(sprite);
+      sprite.destroy();
+    };
+    sprite.onComplete = cleanup;
+    sprite.play();
+    effectLayer.addChild(sprite);
+    return cleanup;
+  };
+
+  return { playTeleportEffect, playLevelUpEffect };
+}
+
+type TeleportHandlerParams = {
+  mapNameRef: React.MutableRefObject<string>;
+  teleportingRef: React.MutableRefObject<boolean>;
+  tilemap: Tilemap;
+  persistPositionRequest: (mapName: string, tileX: number, tileY: number) => Promise<void>;
+  playTeleportEffect: (x: number, y: number) => () => void;
+};
+
+function createTeleportHandler({
+  mapNameRef,
+  teleportingRef,
+  tilemap,
+  persistPositionRequest,
+  playTeleportEffect
+}: TeleportHandlerParams) {
+  return (tileX: number, tileY: number, player: Player | null): boolean => {
+    if (teleportingRef.current) return false;
+    const entries = TELEPORTERS[mapNameRef.current] ?? [];
+    const teleporter = entries.find((entry) => entry.tile.x === tileX && entry.tile.y === tileY);
+    if (!teleporter) return false;
+    teleportingRef.current = true;
+    const completeTeleport = () => {
+      void persistPositionRequest(teleporter.targetMap, teleporter.targetTile.x, teleporter.targetTile.y).finally(() => {
+        if (typeof window !== "undefined") {
+          window.location.assign("/play");
+        }
+      });
+    };
+    const worldPos = player?.position ?? tilemap.tileToWorld(tileX, tileY);
+    const stopEffect = playTeleportEffect(worldPos.x, worldPos.y);
+    if (player) {
+      player.beginTeleport("Teletransportando...", 2, () => {
+        stopEffect();
+        completeTeleport();
+      });
+    } else {
+      stopEffect();
+      completeTeleport();
+    }
+    return true;
+  };
+}
+
+type PlayerInitializationParams = {
+  tilemap: Tilemap;
+  playerSpriteConfig: ReturnType<typeof getCharacterSpriteConfig>;
+  playerTint: number;
+  characterName?: string;
+  level: number;
+  onMove: (tileX: number, tileY: number) => void;
+};
+
+function initializePlayerActor({
+  tilemap,
+  playerSpriteConfig,
+  playerTint,
+  characterName,
+  level,
+  onMove
+}: PlayerInitializationParams): Player {
+  const playerRunTexture = Assets.get<Texture | undefined>(playerSpriteConfig.run.sheet);
+  if (!playerRunTexture) {
+    throw new Error(`Player sprite not loaded: ${playerSpriteConfig.run.sheet}`);
+  }
+  const playerFrames = createFramesFromSheet(
+    playerRunTexture,
+    playerSpriteConfig.run.frames,
+    playerSpriteConfig.run.frameWidth,
+    playerSpriteConfig.run.frameHeight
+  );
+  const player = new Player(tilemap, playerFrames, onMove, characterName, playerTint);
+  player.setLevelInfo(level, PLAYER_CLASS);
+  return player;
 }

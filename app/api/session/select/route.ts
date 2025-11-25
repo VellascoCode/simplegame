@@ -1,7 +1,9 @@
-import { findCharacterById, getPlayerSession, savePlayerSession } from "@/lib/repositories";
+import type { SpriteOptionValue } from "@/lib/characterSpriteOptions";
+
+import { loadCharacterById } from "@/api/character/service";
 import { error, ok } from "@/lib/apiResponse";
 import { getOwnerIdFromSession } from "@/lib/authSession";
-import type { SpriteOptionValue } from "@/lib/characterSpriteOptions";
+import { getPlayerSession, savePlayerSession } from "@/lib/repositories";
 
 export async function POST(request: Request) {
   const ownerId = await getOwnerIdFromSession();
@@ -18,7 +20,7 @@ export async function POST(request: Request) {
   if (!characterId) {
     return error("characterId obrigatório", 400);
   }
-  const character = await findCharacterById(ownerId, characterId);
+  const character = await loadCharacterById(ownerId, characterId);
   if (!character) {
     return error("Personagem não encontrado", 404);
   }

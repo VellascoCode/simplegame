@@ -1,7 +1,8 @@
-import { getFactionWarState, registerFactionDeath } from "@/lib/factionWar";
-import { ok, error } from "@/lib/apiResponse";
 import { z } from "zod";
+
+import { error, ok } from "@/lib/apiResponse";
 import { FactionId } from "@/lib/factions";
+import { getFactionWarState, registerFactionDeath } from "@/lib/factionWar";
 
 const killSchema = z.object({
   faction: z.nativeEnum(FactionId)
