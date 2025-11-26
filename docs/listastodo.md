@@ -1,0 +1,263 @@
+# LISTA COMPLETA DO PROJETO (CLASSIFICADA)
+
+## A) CORE (válido)
+- core/runtime/Player.ts — classe do jogador no runtime PIXI
+- core/runtime/Tilemap.ts — gerenciamento do mapa no runtime PIXI
+- core/runtime/Camera.ts — controle da câmera no runtime PIXI
+- core/runtime/InputController.ts — controle de entrada no runtime PIXI
+- core/runtime/Hud.ts — HUD do jogo no runtime PIXI
+- core/runtime/Balloon.ts — balões de fala no runtime PIXI
+- core/runtime/audio.ts — áudio do runtime PIXI
+- core/runtime/monsters/MonsterActor.ts — atores de monstros no runtime PIXI
+- core/runtime/npcs/NpcActor.ts — atores de NPCs no runtime PIXI
+- core/runtime/effects/FloatingText.ts — efeitos de texto flutuante no runtime PIXI
+- core/editor/TileSelect.tsx — seletor de tiles no editor PIXI
+- core/editor/LayerControls.tsx — controles de camadas no editor PIXI
+- core/editor/OverlayControls.tsx — controles de overlay no editor PIXI
+- core/editor/BlockControls.tsx — controles de blocos no editor PIXI
+- core/editor/mapState.ts — estado do mapa no editor PIXI
+- core/editor/sceneUtils.ts — utilitários de cena no editor PIXI
+- core/utils/colorPalette.ts — paleta de cores para PIXI
+- core/utils/overlay.ts — utilitários de overlay para PIXI
+- components/PixiGame.tsx — componente React host do jogo PIXI
+- components/PixiEditor.tsx — componente React do editor PIXI
+- app/pixieditor/page.tsx — página do editor PIXI
+
+## B) LEGACY / PHASER (congelado)
+- legacy/phaser/CityPhaser.tsx — componente principal do Phaser legado
+- legacy/phaser/core/App.ts — aplicação core do Phaser
+- legacy/phaser/core/Loader.ts — loader do Phaser
+- legacy/phaser/entities/Enemy.ts — entidade inimigo no Phaser
+- legacy/phaser/entities/NPC.ts — entidade NPC no Phaser
+- legacy/phaser/entities/Player.ts — entidade jogador no Phaser
+- legacy/phaser/game/game/combat.ts — sistema de combate do Phaser
+- legacy/phaser/game/game/constants.ts — constantes do jogo Phaser
+- legacy/phaser/game/game/dialog.ts — sistema de diálogo do Phaser
+- legacy/phaser/game/game/drops.ts — sistema de drops do Phaser
+- legacy/phaser/game/game/factions.ts — sistema de facções do Phaser
+- legacy/phaser/game/game/lancers.ts — sistema de lancers do Phaser
+- legacy/phaser/game/game/layers.ts — camadas do mapa no Phaser
+- legacy/phaser/game/game/movement.ts — movimento do jogador no Phaser
+- legacy/phaser/game/game/npcAI.ts — IA dos NPCs no Phaser
+- legacy/phaser/game/game/phaserInstance.ts — instância do Phaser
+- legacy/phaser/game/game/playerActions.ts — ações do jogador no Phaser
+- legacy/phaser/game/game/types.ts — tipos do jogo Phaser
+- legacy/phaser/game/game/utils.ts — utilitários do jogo Phaser
+- legacy/phaser/hooks/useSessionPosition.ts — hook para posição da sessão no legado
+- legacy/phaser/scenes/WorldScene.ts — cena do mundo no Phaser
+- legacy/phaser/scenes/BootScene.ts — cena de boot no Phaser
+- legacy/phaser/systems/combatSystem.ts — sistema de combate do Phaser
+- legacy/phaser/systems/dropSystem.ts — sistema de drops do Phaser
+- legacy/phaser/systems/npcSystem.ts — sistema de NPCs do Phaser
+- legacy/phaser/systems/movementSystem.ts — sistema de movimento do Phaser
+- legacy/phaser/ui/InventoryUI.ts — UI de inventário do Phaser
+- legacy/phaser/ui/MapUI.ts — UI do mapa do Phaser
+- legacy/phaser/ui/BestiaryUI.ts — UI do bestiário do Phaser
+- legacy/phaser/core/Hud.ts — HUD do Phaser (nota: apesar do nome, é parte do legado Phaser)
+- legacy/phaser/core/InputController.ts — controle de entrada do Phaser
+- legacy/phaser/core/Player.ts — jogador do Phaser
+- legacy/phaser/core/Camera.ts — câmera do Phaser
+- legacy/phaser/core/MapRenderer.ts — renderizador de mapa do Phaser
+- legacy/phaser/core/sprites/NpcOrb.ts — sprite NPC do Phaser
+- legacy/phaser/core/sprites/PlayerOrb.ts — sprite jogador do Phaser
+- app/play-legacy/page.tsx — página do jogo legado com Phaser
+
+## C) FRONTEND / UI ATUAL
+- components/BottomMenu.tsx — menu inferior da UI
+- components/ChatModal.tsx — modal de chat
+- components/ChatPanel.tsx — painel de chat
+- components/FloatingHudMenu.tsx — menu HUD flutuante
+- components/InventoryPanel.tsx — painel de inventário
+- components/InventorySummary.tsx — resumo do inventário
+- components/OnlineBadge.tsx — badge de online
+- components/OnlinePanel.tsx — painel de online
+- components/Providers.tsx — provedores React
+- components/QuickActionMenu.tsx — menu de ações rápidas
+- components/SlidingPanelCharacter.tsx — painel deslizante do personagem
+- components/SlidingPanelSkills.tsx — painel deslizante de skills
+- components/ui/NavHeader.tsx — header de navegação
+- components/ui/SideMenu.tsx — menu lateral
+- components/home/AuthModal.tsx — modal de autenticação
+- components/home/CharacterPanel.tsx — painel do personagem
+- components/home/LandingSections.tsx — seções da landing page
+- components/home/SiteNavigation.tsx — navegação do site
+- components/home/constants.ts — constantes da home
+- components/wiki/WoodenUi.tsx — UI de madeira da wiki
+- components/editor/TileGrid.tsx — grade de tiles do editor
+- components/editor/LayerControls.tsx — controles de camadas do editor
+- components/editor/MapMeta.tsx — metadados do mapa do editor
+- components/editor/BlockControls.tsx — controles de blocos do editor
+- components/editor/LoadControls.tsx — controles de carregamento do editor
+- components/editor/OverlayControls.tsx — controles de overlay do editor
+- components/editor/TileSelect.tsx — seletor de tiles do editor
+- components/editor/DimensionControls.tsx — controles de dimensão do editor
+- app/layout.tsx — layout principal da app
+- app/page.tsx — página inicial
+- app/login/page.tsx — página de login
+- app/character/page.tsx — página do personagem
+- app/chat/page.tsx — página de chat
+- app/farm/page.tsx — página da fazenda
+- app/forest/page.tsx — página da floresta
+- app/house/page.tsx — página da casa
+- app/shops/page.tsx — página das lojas
+- app/play/layout.tsx — layout da página play
+- app/play/page.tsx — página play
+- app/editor/page.tsx — página do editor
+- app/wiki/classes/page.tsx — página de classes da wiki
+- app/wiki/skills/page.tsx — página de skills da wiki
+- hooks/useXp.ts — hook para XP
+
+## D) APIs (ativas)
+- api/auth/service.ts — serviço de autenticação
+- app/api/auth/login/route.ts — rota de login
+- app/api/auth/register/route.ts — rota de registro
+- app/api/auth/logout/route.ts — rota de logout
+- app/api/auth/[...nextauth]/route.ts — rota NextAuth
+- api/character/service.ts — serviço de personagem
+- app/api/character/get/route.ts — rota para obter personagens
+- app/api/character/create/route.ts — rota para criar personagem
+- app/api/character/xp/route.ts — rota para adicionar XP
+- app/api/character/gold/route.ts — rota para adicionar ouro
+- api/chat/service.ts — serviço de chat
+- app/api/chat/get/route.ts — rota para obter mensagens de chat
+- app/api/chat/send/route.ts — rota para enviar mensagem de chat
+- api/city/service.ts — serviço da cidade
+- app/api/city/map/route.ts — rota para obter mapa da cidade
+- api/house/service.ts — serviço da casa
+- app/api/house/get/route.ts — rota para obter estado da casa
+- app/api/house/update/route.ts — rota para atualizar casa
+- api/inventory/service.ts — serviço de inventário
+- app/api/inventory/get/route.ts — rota para obter inventário
+- app/api/inventory/add/route.ts — rota para adicionar item
+- app/api/inventory/remove/route.ts — rota para remover item
+- api/map/service.ts — serviço de mapa
+- app/api/map/artifacts/route.ts — rota para artefatos do mapa
+- api/maps/service.ts — serviço de mapas
+- app/api/maps/load/route.ts — rota para carregar mapa
+- app/api/maps/list/route.ts — rota para listar mapas
+- app/api/maps/save/route.ts — rota para salvar mapa
+- api/online/service.ts — serviço de online
+- app/api/online/list/route.ts — rota para listar presenças online
+- app/api/online/ping/route.ts — rota para ping online
+- api/session/service.ts — serviço de sessão
+- app/api/session/state/route.ts — rota para estado da sessão
+- app/api/session/select/route.ts — rota para selecionar personagem
+- app/api/session/position/route.ts — rota para posição da sessão
+- api/tiles/service.ts — serviço de tiles
+- app/api/tiles/route.ts — rota para manifest de tiles
+- api/quickslots/service.ts — serviço de quickslots
+- app/api/quickslots/route.ts — rota para quickslots
+- api/bestiary/service.ts — serviço de bestiário
+- app/api/bestiary/get/route.ts — rota para obter bestiário
+- app/api/bestiary/update/route.ts — rota para atualizar bestiário
+- api/farm/service.ts — serviço de fazenda
+- app/api/farm/get/route.ts — rota para obter fazenda
+- app/api/farm/plant/route.ts — rota para plantar
+- app/api/farm/harvest/route.ts — rota para colher
+- api/forest/service.ts — serviço de floresta
+- app/api/forest/kill/route.ts — rota para matar criatura
+
+## E) APIs ÓRFÃS
+- api/check/auth.ts — verificação de auth (não chamada)
+- app/api/check/auth/route.ts — rota de verificação de auth
+- api/check/character.ts — verificação de personagem (não chamada)
+- app/api/check/character/route.ts — rota de verificação de personagem
+- api/check/chat.ts — verificação de chat (não chamada)
+- app/api/check/chat/route.ts — rota de verificação de chat
+- api/check/farm.ts — verificação de fazenda (não chamada)
+- app/api/check/farm/route.ts — rota de verificação de fazenda
+- api/check/forest.ts — verificação de floresta (não chamada)
+- app/api/check/forest/route.ts — rota de verificação de floresta
+- api/check/house.ts — verificação de casa (não chamada)
+- app/api/check/house/route.ts — rota de verificação de casa
+- api/check/inventory.ts — verificação de inventário (não chamada)
+- app/api/check/inventory/route.ts — rota de verificação de inventário
+- api/check/online.ts — verificação de online (não chamada)
+- app/api/check/online/route.ts — rota de verificação de online
+- api/check/shops.ts — verificação de lojas (não chamada)
+- app/api/check/shops/route.ts — rota de verificação de lojas
+- api/factions/service.ts — serviço de facções (não chamado)
+- app/api/factions/war/route.ts — rota de guerra de facções
+
+## F) CONFIG
+- tsconfig.json — configuração TypeScript
+- tailwind.config.ts — configuração Tailwind CSS
+- postcss.config.js — configuração PostCSS
+- eslint.config.mjs — configuração ESLint
+- next.config.js — configuração Next.js
+- package.json — manifesto do projeto
+- package-lock.json — lockfile do projeto
+- .env — variáveis de ambiente
+- .env.example — exemplo de variáveis de ambiente
+- .gitignore — arquivo de ignore do Git
+- .prettierrc — configuração Prettier
+- types/next-auth-stubs.d.ts — stubs NextAuth
+- types/next-auth.d.ts — tipos NextAuth
+- global.d.ts — declarações globais TypeScript
+- next-env.d.ts — tipos Next.js
+- README.md — documentação do projeto
+- TRACKER.md — rastreamento de progresso
+- docs/assets.md — documentação de assets
+- docs/passoapasso.md — guia operacional e testes
+- docs/estruturacao.md — documentação de estruturação
+- docs/ideiaskill.md — ideias conceituais de skills
+- docs/pixi-itens.md — itens PIXI
+- docs/pixi-migration.md — migração para PIXI
+- docs/skillseclassses.md — skills e classes
+- docs/funcional.md — documentação funcional
+- docs/testslib.md — testes da lib
+- lib/apiResponse.ts — resposta de API
+- lib/authOptions.ts — opções de auth
+- lib/authSession.ts — sessão de auth
+- lib/characterProgression.ts — progressão de personagem
+- lib/characterSpirits.ts — espíritos de personagem
+- lib/characterSpriteOptions.ts — opções de sprite de personagem
+- lib/characterSprites.ts — sprites de personagem
+- lib/clientApi.ts — API cliente
+- lib/db.ts — conexão com banco
+- lib/effects.ts — efeitos
+- lib/factions.ts — facções
+- lib/factionWar.ts — guerra de facções
+- lib/hash.ts — hashing
+- lib/mapArtifactsStore.ts — store de artefatos do mapa
+- lib/maps.ts — mapas
+- lib/mapStore.ts — store de mapas
+- lib/mapTypes.ts — tipos de mapa
+- lib/memoryStore.ts — store em memória
+- lib/models.ts — modelos
+- lib/progression.ts — progressão
+- lib/repositories.ts — repositórios
+- lib/skillsRegistry.ts — registro de skills
+- lib/tileManifest.ts — manifesto de tiles
+- models/Bestiary.ts — modelo Bestiário
+
+## G) ASSETS ÚTEIS
+- public/effect/teleport.png — efeito de teleporte
+- public/effect/lvlup.png — efeito de level up
+- public/gui/ — elementos da interface gráfica
+- public/icons/ — ícones
+- public/itens/ — itens
+- maps-data/map_city.json — mapa da cidade
+- public/spirit/ — espíritos
+- public/sprites/ — sprites de personagens e NPCs
+- public/tilesets/ — tilesets
+- public/weapons/ — armas
+- maps-data/cidadecentral.json — dados do mapa central
+- maps-data/refugio.json — dados do mapa refúgio
+- monsters/data/ — dados de monstros
+- npc/data/ — dados de NPCs
+- lib/data/spirits.json — dados de espíritos
+- lib/data/leveling.json — dados de leveling
+
+## H) ASSETS LIXO (REMOVIDOS)
+- public/tester/ — arquivos de teste obsoletos (removido)
+- .DS_Store — arquivos do sistema macOS (removidos)
+- all-files.txt — lista gerada, não parte do projeto (removido)
+- all-files-clean.txt — lista limpa gerada, não parte do projeto (removido)
+- maps/ — pasta de mapas legada (removida, substituída por maps-data/)
+- api/factions/ — API não utilizada (removida)
+- app/api/factions/ — rota não utilizada (removida)
+- tsconfig.tsbuildinfo — cache de build (removido)
+- order.md — arquivo temporário (removido)
+- listas.md — checklist antigo (removido)
+- prosseguimento.md — guia temporário (removido)

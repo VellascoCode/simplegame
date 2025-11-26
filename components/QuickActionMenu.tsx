@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { playMenuCloseSound, playMenuOpenSound } from "@/pixi/runtime/audio";
+import { playMenuCloseSound, playMenuOpenSound } from "@/core/runtime/audio";
 
 type QuickActionMenuProps = {
   open: boolean;

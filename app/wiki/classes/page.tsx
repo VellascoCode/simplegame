@@ -1,7 +1,8 @@
-import { MedievalCard, MedievalSection } from "@/components/wiki/WoodenUi";
+"use client";
 
-export const runtime = "nodejs";
-export const preferredRegion = "home";
+import { useTheme } from "@/components/ThemeProvider";
+import { wikiPageStyles } from "@/components/themeConfig";
+import { MedievalCard, MedievalSection } from "@/components/UniversalUi";
 
 type BaseClass = {
   name: string;
@@ -100,8 +101,10 @@ const ELITE_CLASSES: EliteClass[] = [
 ];
 
 export default function ClassesWikiPage() {
+  const { theme } = useTheme();
+
   return (
-    <section className="min-h-screen bg-gradient-to-b from-[#1a0e0a] via-[#120805] to-[#050308] py-16 text-[#E4D6BA]">
+    <section className={`min-h-screen py-16 text-[#E4D6BA] ${wikiPageStyles.section[theme]}`}>
       <div className="mx-auto flex max-w-6xl flex-col gap-12 px-4">
         <header className="space-y-4">
           <p className="text-xs uppercase tracking-[0.4em] text-[#E8C06D] drop-shadow-[0_1px_0_rgba(0,0,0,0.6)]">

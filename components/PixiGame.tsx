@@ -2,27 +2,30 @@
 
 import type { FederatedPointerEvent } from "pixi.js";
 
-import { AnimatedSprite, Application, Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
+import { Application, Assets, Container, Graphics, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import type { SpriteColorValue, SpriteOptionValue } from "@/lib/characterSpriteOptions";
 
+import { playAttackSound, playDamageSound, playDeathSound, playLevelUpSound, playXpSound } from "@/core/runtime/audio";
+import { Camera } from "@/core/runtime/Camera";
+import { FloatingTextManager } from "@/core/runtime/effects/FloatingText";
+import { Hud } from "@/core/runtime/Hud";
+import { InputController } from "@/core/runtime/InputController";
+import { MonsterActor } from "@/core/runtime/monsters/MonsterActor";
+import { NpcActor } from "@/core/runtime/npcs/NpcActor";
+import { Player } from "@/core/runtime/Player";
+import { Tilemap } from "@/core/runtime/Tilemap";
+import { createOverlayMatrix, type OverlaySlice, splitTexture } from "@/core/utils/overlay";
 import { getSpriteColorTint } from "@/lib/characterSpriteOptions";
 import { getCharacterSpriteConfig } from "@/lib/characterSprites";
 import { levelUpEffect, teleportEffect } from "@/lib/effects";
 import { resolveLevel, xpForLevel, xpNeededForNextLevel } from "@/lib/progression";
 import { getMonstersForMap, type MonsterDefinition } from "@/monsters/data";
 import { getNpcsForMap, type NpcDefinition } from "@/npc/data";
-import { playAttackSound, playDamageSound, playDeathSound, playLevelUpSound, playXpSound } from "@/pixi/runtime/audio";
-import { Camera } from "@/pixi/runtime/Camera";
-import { FloatingTextManager } from "@/pixi/runtime/effects/FloatingText";
-import { Hud } from "@/pixi/runtime/Hud";
-import { InputController } from "@/pixi/runtime/InputController";
-import { MonsterActor } from "@/pixi/runtime/monsters/MonsterActor";
-import { NpcActor } from "@/pixi/runtime/npcs/NpcActor";
-import { Player } from "@/pixi/runtime/Player";
-import { Tilemap } from "@/pixi/runtime/Tilemap";
-import { createOverlayMatrix, type OverlaySlice, splitTexture } from "@/pixi/utils/overlay";
+import type { ConnectionStatus, SessionState, CharacterStatsSnapshot } from "@/components/pixiSession";
+import { createPositionPersistence, loadSessionState } from "@/components/pixiSession";
+import { createTeleportHandler, initializeEffectHandlers, initializePlayerActor } from "@/components/pixiRuntimeHelpers";
 
 const TILE_SIZE = 64;
 const FALLBACK_MAP_NAME = "Cidade Central";
@@ -33,29 +36,7 @@ const GOLD_NOTICE_ICON = "/icons/achievements.png";
 
 type Matrix<T> = T[][];
 
-type CharacterStatsSnapshot = {
-  hp: number;
-  energy: number;
-  xp: number;
-  level: number;
-};
-
-type SessionState = {
-  ownerId?: string;
-  characterId?: string;
-  map?: string;
-  position?: { x: number; y: number };
-  characterName?: string;
-  characterSprite?: SpriteOptionValue;
-  spriteColor?: SpriteColorValue;
-  stats?: CharacterStatsSnapshot;
-};
-
-type Teleporter = {
-  tile: { x: number; y: number };
-  targetMap: string;
-  targetTile: { x: number; y: number };
-};
+type LocalSessionState = SessionState;
 
 type MonsterListItem = {
   id: string;
@@ -101,23 +82,6 @@ type LootArtifactPayload = {
 type ArtifactPayload = {
   corpses: CorpseArtifactPayload[];
   loot: LootArtifactPayload[];
-};
-
-const TELEPORTERS: Record<string, Teleporter[]> = {
-  cidadecentral: [
-    {
-      tile: { x: 6, y: 6 },
-      targetMap: "refugio",
-      targetTile: { x: 3, y: 3 }
-    }
-  ],
-  refugio: [
-    {
-      tile: { x: 3, y: 3 },
-      targetMap: "cidadecentral",
-      targetTile: { x: 6, y: 6 }
-    }
-  ]
 };
 
 const MONSTER_SLOT_OFFSETS = [
@@ -178,14 +142,6 @@ type PickupNotice = {
   timer: number;
   duration: number;
 };
-
-type ConnectionStatus =
-  | "connecting"
-  | "online"
-  | "offline"
-  | "reconnecting"
-  | "error"
-  | "unreachable";
 
 function createMatrix<T>(rows: number, cols: number, fill: T): Matrix<T> {
   return Array.from({ length: rows }, () => Array.from({ length: cols }, () => fill));
@@ -277,31 +233,31 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
       setConnectionStatus("offline");
       return;
     }
-    const app = new Application();
-    appRef.current = app;
-    let disposed = false;
-    let input: InputController | null = null;
-    let resizeObserver: ResizeObserver | null = null;
-    let pointerHandler: ((event: FederatedPointerEvent) => void) | null = null;
-    let player: Player | null = null;
-    let floatingTextManager: FloatingTextManager | null = null;
-
-    const start = async () => {
-      let sessionState = await loadSessionState(setConnectionStatus);
-      if (!sessionState) {
-        return;
-      }
-      const { persistPositionRequest, handleStepPersistence } = createPositionPersistence(mapNameRef, positionTrackerRef);
-
-      const mapSetup = await initializeMapResources({
-        app,
-        target,
-        sessionState,
-        mapNameRef,
-        teleportingRef,
-        positionTrackerRef,
-        persistPositionRequest
-      });
+	    const app = new Application();
+	    appRef.current = app;
+	    let disposed = false;
+	    let input: InputController | null = null;
+	    let resizeObserver: ResizeObserver | null = null;
+	    let pointerHandler: ((event: FederatedPointerEvent) => void) | null = null;
+	    let player: Player | null = null;
+	    let floatingTextManager: FloatingTextManager | null = null;
+	
+	    const start = async () => {
+	      let sessionState = await loadSessionState(setConnectionStatus);
+	      if (!sessionState) {
+	        return;
+	      }
+	      const { persistPositionRequest, handleStepPersistence } = createPositionPersistence(mapNameRef, positionTrackerRef);
+	
+	      const mapSetup = await initializeMapResources({
+	        app,
+	        target,
+	        sessionState: sessionState as LocalSessionState,
+	        mapNameRef,
+	        teleportingRef,
+	        positionTrackerRef,
+	        persistPositionRequest
+	      });
       sessionState = mapSetup.sessionState;
       const {
         mapData,
@@ -341,7 +297,14 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         app,
         characterName: sessionState.characterName
       });
-      const effectHandlers = initializeEffectHandlers({ effectLayer, teleportFrames, levelUpFrames });
+      const effectHandlers = initializeEffectHandlers({
+        effectLayer,
+        teleportFrames,
+        levelUpFrames,
+        tileSize: TILE_SIZE,
+        teleportAnimationSpeed: teleportEffect.animationSpeed ?? 0.3,
+        levelUpAnimationSpeed: levelUpEffect.animationSpeed ?? 0.25
+      });
       const tryTeleport = createTeleportHandler({
         mapNameRef,
         teleportingRef,
@@ -364,20 +327,21 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
         });
       };
 
-      const handlePlayerMove = (tileX: number, tileY: number) => {
-        hudState.hud.updatePosition({ x: tileX, y: tileY });
-        if (tryTeleport(tileX, tileY, player)) return;
-        handleStepPersistence(tileX, tileY);
-      };
+	      const handlePlayerMove = (tileX: number, tileY: number) => {
+	        hudState.hud.updatePosition({ x: tileX, y: tileY });
+	        if (tryTeleport(tileX, tileY, player)) return;
+	        handleStepPersistence(tileX, tileY);
+	      };
 
-      player = initializePlayerActor({
-        tilemap,
-        playerSpriteConfig,
-        playerTint,
-        characterName: sessionState.characterName,
-        level: xpStats.level,
-        onMove: handlePlayerMove
-      });
+	      player = initializePlayerActor({
+	        tilemap,
+	        playerSpriteKey: sessionState.characterSprite ?? "warriorblue",
+	        playerTint,
+	        characterName: sessionState.characterName,
+	        level: xpStats.level,
+	        playerClass: PLAYER_CLASS,
+	        onMove: handlePlayerMove
+	      });
       worldLayer.addChild(player.view);
       player.view.zIndex = 200;
       hudState.hud.setMapName(mapData?.name ?? FALLBACK_MAP_NAME);
@@ -847,13 +811,13 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
 
       const rendererWidth = app.renderer?.width ?? target.clientWidth ?? 0;
       const rendererHeight = app.renderer?.height ?? target.clientHeight ?? 0;
-      const camera = new Camera({
-        container: worldLayer,
-        viewportWidth: rendererWidth,
-        viewportHeight: rendererHeight,
-        worldWidth: tilemap.worldWidth,
-        worldHeight: tilemap.worldHeight
-      });
+	      const camera = new Camera({
+	        container: worldLayer,
+	        viewportWidth: rendererWidth,
+	        viewportHeight: rendererHeight,
+	        worldWidth: tilemap.worldWidth,
+	        worldHeight: tilemap.worldHeight
+	      });
 
       if (!player) {
         throw new Error("Player not initialized");
@@ -1173,27 +1137,25 @@ export function PixiGame({ onReadyChange, bottomOverlay, onEntityListChange }: P
               : null;
 
   return (
-    <div className="w-full">
-      <div className="mx-auto w-full h-screen md:h-[75vh]">
-        <div className="relative h-full w-full" data-ready={ready}>
-          <div ref={containerRef} className="h-full w-full overflow-hidden rounded-[32px] bg-[#05070c] shadow-2xl" />
-          {bottomOverlay ? (
-            <div className="pointer-events-none absolute inset-0">
-              <div className="pointer-events-auto absolute bottom-5 left-1/2 -translate-x-1/2">
-                {bottomOverlay}
-              </div>
+    <div className="w-full h-full">
+      <div className="relative h-full w-full" data-ready={ready}>
+        <div ref={containerRef} className="h-full w-full overflow-hidden rounded-[32px] bg-[#05070c] shadow-2xl" />
+        {bottomOverlay ? (
+          <div className="pointer-events-none absolute inset-0">
+            <div className="pointer-events-auto absolute bottom-5 left-1/2 -translate-x-1/2">
+              {bottomOverlay}
             </div>
-          ) : null}
-          {connectionMessage && (
-            <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center rounded-[32px] bg-black/70">
-              <div className="pointer-events-auto flex flex-col items-center gap-2 rounded-2xl border border-white/20 bg-[#1b0f06]/90 px-10 py-6 text-amber-50 shadow-2xl">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-200 border-t-transparent" />
-                <p className="text-xl font-semibold">{connectionMessage.title}</p>
-                <p className="text-sm text-amber-100/80">{connectionMessage.detail}</p>
-              </div>
+          </div>
+        ) : null}
+        {connectionMessage && (
+          <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center rounded-[32px] bg-black/70">
+            <div className="pointer-events-auto flex flex-col items-center gap-2 rounded-2xl border border-white/20 bg-[#1b0f06]/90 px-10 py-6 text-amber-50 shadow-2xl">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-200 border-t-transparent" />
+              <p className="text-xl font-semibold">{connectionMessage.title}</p>
+              <p className="text-sm text-amber-100/80">{connectionMessage.detail}</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1211,64 +1173,10 @@ function safeDestroyPixiInstance(instance: Application | null) {
   }
 }
 
-async function loadSessionState(setConnectionStatus: (status: ConnectionStatus) => void): Promise<SessionState | null> {
-  let sessionState: SessionState = {
-    map: "cidadecentral",
-    position: { ...DEFAULT_POSITION },
-    characterName: "",
-    characterSprite: "warriorblue",
-    spriteColor: 1 as SpriteColorValue,
-    stats: { hp: 100, energy: 100, xp: 0, level: 1 }
-  };
-  try {
-    const sessionResponse = await fetch("/api/session/state");
-    if (sessionResponse.ok) {
-      sessionState = (await sessionResponse.json()) as SessionState;
-    } else {
-      console.warn("Session state request failed", sessionResponse.status);
-    }
-    return sessionState;
-  } catch (error: unknown) {
-    console.warn("Failed to load session state", error);
-    setConnectionStatus("unreachable");
-    return null;
-  }
-}
-
-function createPositionPersistence(
-  mapNameRef: React.MutableRefObject<string>,
-  positionTrackerRef: React.MutableRefObject<{ steps: number; pending: boolean }>
-) {
-  const persistPositionRequest = async (mapName: string, tileX: number, tileY: number) => {
-    try {
-      await fetch("/api/session/position", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ map: mapName, x: tileX, y: tileY })
-      });
-    } catch (error: unknown) {
-      console.warn("Failed to persist position", error);
-    }
-  };
-
-  const handleStepPersistence = (tileX: number, tileY: number) => {
-    const tracker = positionTrackerRef.current;
-    tracker.steps += 1;
-    if (tracker.steps < 2 || tracker.pending) return;
-    tracker.steps = 0;
-    tracker.pending = true;
-    void persistPositionRequest(mapNameRef.current, tileX, tileY).finally(() => {
-      tracker.pending = false;
-    });
-  };
-
-  return { persistPositionRequest, handleStepPersistence };
-}
-
 type MapInitializationParams = {
   app: Application;
   target: HTMLDivElement;
-  sessionState: SessionState;
+  sessionState: LocalSessionState;
   mapNameRef: React.MutableRefObject<string>;
   teleportingRef: React.MutableRefObject<boolean>;
   positionTrackerRef: React.MutableRefObject<{ steps: number; pending: boolean }>;
@@ -1578,132 +1486,4 @@ function initializeHudComponents({
   };
 
   return { hud, syncVitals, updateBannerLayout, showLevelUpBanner, updateBannerTimer };
-}
-
-type EffectHandlerParams = {
-  effectLayer: Container;
-  teleportFrames: Texture[] | null;
-  levelUpFrames: Texture[] | null;
-};
-
-type EffectHandlers = {
-  playTeleportEffect: (worldX: number, worldY: number) => () => void;
-  playLevelUpEffect: (worldX: number, worldY: number) => () => void;
-};
-
-function initializeEffectHandlers({ effectLayer, teleportFrames, levelUpFrames }: EffectHandlerParams): EffectHandlers {
-  const playTeleportEffect = (worldX: number, worldY: number) => {
-    if (!teleportFrames || teleportFrames.length === 0) {
-      return () => undefined;
-    }
-    const sprite = new AnimatedSprite(teleportFrames);
-    sprite.anchor.set(0.5);
-    sprite.position.set(worldX, worldY);
-    sprite.animationSpeed = teleportEffect.animationSpeed ?? 0.3;
-    sprite.loop = true;
-    sprite.play();
-    effectLayer.addChild(sprite);
-    return () => {
-      sprite.stop();
-      effectLayer.removeChild(sprite);
-      sprite.destroy();
-    };
-  };
-
-  const playLevelUpEffect = (worldX: number, worldY: number) => {
-    if (!levelUpFrames || levelUpFrames.length === 0) {
-      return () => undefined;
-    }
-    const sprite = new AnimatedSprite(levelUpFrames);
-    sprite.anchor.set(0.5, 1);
-    sprite.position.set(worldX, worldY - TILE_SIZE * 0.4);
-    sprite.animationSpeed = levelUpEffect.animationSpeed ?? 0.25;
-    sprite.loop = false;
-    const cleanup = () => {
-      sprite.stop();
-      effectLayer.removeChild(sprite);
-      sprite.destroy();
-    };
-    sprite.onComplete = cleanup;
-    sprite.play();
-    effectLayer.addChild(sprite);
-    return cleanup;
-  };
-
-  return { playTeleportEffect, playLevelUpEffect };
-}
-
-type TeleportHandlerParams = {
-  mapNameRef: React.MutableRefObject<string>;
-  teleportingRef: React.MutableRefObject<boolean>;
-  tilemap: Tilemap;
-  persistPositionRequest: (mapName: string, tileX: number, tileY: number) => Promise<void>;
-  playTeleportEffect: (x: number, y: number) => () => void;
-};
-
-function createTeleportHandler({
-  mapNameRef,
-  teleportingRef,
-  tilemap,
-  persistPositionRequest,
-  playTeleportEffect
-}: TeleportHandlerParams) {
-  return (tileX: number, tileY: number, player: Player | null): boolean => {
-    if (teleportingRef.current) return false;
-    const entries = TELEPORTERS[mapNameRef.current] ?? [];
-    const teleporter = entries.find((entry) => entry.tile.x === tileX && entry.tile.y === tileY);
-    if (!teleporter) return false;
-    teleportingRef.current = true;
-    const completeTeleport = () => {
-      void persistPositionRequest(teleporter.targetMap, teleporter.targetTile.x, teleporter.targetTile.y).finally(() => {
-        if (typeof window !== "undefined") {
-          window.location.assign("/play");
-        }
-      });
-    };
-    const worldPos = player?.position ?? tilemap.tileToWorld(tileX, tileY);
-    const stopEffect = playTeleportEffect(worldPos.x, worldPos.y);
-    if (player) {
-      player.beginTeleport("Teletransportando...", 2, () => {
-        stopEffect();
-        completeTeleport();
-      });
-    } else {
-      stopEffect();
-      completeTeleport();
-    }
-    return true;
-  };
-}
-
-type PlayerInitializationParams = {
-  tilemap: Tilemap;
-  playerSpriteConfig: ReturnType<typeof getCharacterSpriteConfig>;
-  playerTint: number;
-  characterName?: string;
-  level: number;
-  onMove: (tileX: number, tileY: number) => void;
-};
-
-function initializePlayerActor({
-  tilemap,
-  playerSpriteConfig,
-  playerTint,
-  characterName,
-  level,
-  onMove
-}: PlayerInitializationParams): Player {
-  const playerRunTexture = Assets.get<Texture | undefined>(playerSpriteConfig.run.sheet);
-  if (!playerRunTexture) {
-    throw new Error(`Player sprite not loaded: ${playerSpriteConfig.run.sheet}`);
-  }
-  const playerFrames = createFramesFromSheet(
-    playerRunTexture,
-    playerSpriteConfig.run.frames,
-    playerSpriteConfig.run.frameWidth,
-    playerSpriteConfig.run.frameHeight
-  );
-  const player = new Player(tilemap, playerFrames, onMove, characterName, playerTint);
-  player.setLevelInfo(level, PLAYER_CLASS);
-  return player;
 }

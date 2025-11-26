@@ -3,9 +3,9 @@
 import { AnimatedSprite, Application, Assets, Container, type FederatedPointerEvent, Graphics, Texture } from "pixi.js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import type { OverlaySlice } from "@/pixi/utils/overlay";
+import type { OverlaySlice } from "@/core/utils/overlay";
 
-import { createDefaultEditorState, type EditorMatrices, hydrateEditorState, resizeEditorState } from "@/pixi/editor/mapState";
+import { createDefaultEditorState, type EditorMatrices, hydrateEditorState, resizeEditorState } from "@/core/editor/mapState";
 import {
   applyBlockBrush as applyBlockMatrix,
   clamp,
@@ -15,7 +15,7 @@ import {
   paintTile as paintTileMatrices,
   rebuildScene as rebuildStage,
   type SceneContainers
-} from "@/pixi/editor/sceneUtils";
+} from "@/core/editor/sceneUtils";
 
 import { BlockControls } from "./editor/BlockControls";
 import { DimensionControls } from "./editor/DimensionControls";

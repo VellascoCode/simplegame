@@ -1,36 +1,40 @@
-import { WoodPanel, WoodenButton, MedievalSection, MedievalCard, RoyalCard, RoyalSection } from "@/components/wiki/WoodenUi";
+"use client";
+
 import Image from "next/image";
 
-export const runtime = "nodejs";
-export const preferredRegion = "home";
+import { useTheme } from "@/components/ThemeProvider";
+import { wikiPageStyles } from "@/components/themeConfig";
+import { MedievalCard, MedievalSection, RoyalCard, RoyalSection, WoodenButton } from "@/components/UniversalUi";
 
 export default function SkillsWikiPage() {
+  const { theme } = useTheme();
+
   return (
-    <section className="min-h-screen bg-amber-950 p-2">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-2 md:px-4">
-        <header className="space-y-4">
-          <p className="text-5xl font-semibold uppercase tracking-widest text-amber-300 pt-4">
-            Wiki
+    <section className={`min-h-screen p-4 ${wikiPageStyles.section[theme]}`}>
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-2 md:px-4">
+        <header className="space-y-6">
+          <p className="text-6xl font-bold uppercase tracking-widest text-amber-900 drop-shadow-lg text-center">
+            ✨ Wiki ✨
           </p>
-        <hr className="my-4 h-1 w-full border-0 bg-gradient-to-r from-red-700 via-amber-400 to-amber-700" />
-          <div className="">
-            <div className="flex items-center gap-2">
-              <Image src="/icons/skills.png" alt="Ícone de skills" width={56} height={56} className="h-20 w-20" />
-              <h1 className="text-3xl font-bold text-amber-300 drop-shadow-md">
+        <hr className="my-6 h-2 w-full border-0 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 rounded-full shadow-lg" />
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-4">
+              <Image src="/icons/skills.png" alt="Ícone de skills" width={64} height={64} className="h-24 w-24 rounded-2xl border-4 border-amber-800 bg-gradient-to-br from-amber-200 to-orange-300 shadow-xl" />
+              <h1 className="text-4xl font-bold text-amber-900 drop-shadow-lg">
                 Guia de Skills
               </h1>
             </div>
-            <p className="max-w-2xl text-sm text-amber-400/80">
+            <p className="max-w-2xl mx-auto text-lg text-amber-800/90 font-medium mt-4">
               Todas as habilidades do jogo e como evoluí-las. Use esta página como referência rápida enquanto joga.
             </p>
           </div>
-          <div className="mt-3 w-full overflow-hidden rounded-sm border-4 border-sky-950 bg-stone-900 shadow-2xl shadow-black">
+          <div className="mt-6 w-full overflow-hidden rounded-3xl border-4 border-amber-800 bg-gradient-to-br from-amber-100 to-orange-200 shadow-2xl shadow-amber-900/30">
             <Image
               src="/tilesets/wiki/skills/1.webp"
               alt="Banner GUI de Skills"
               width={2556}
               height={594}
-              className="h-48 w-full object-cover"
+              className="h-56 w-full object-cover rounded-2xl"
               priority
             />
           </div>
@@ -305,7 +309,7 @@ const skillMeta: Record<string, { icon: string; desc: string }> = {
   Agility: { icon: "/icons/skills/agility.png", desc: "Mobilidade, esquiva e velocidade." }
 };
 
-function SkillsGrid({ items, category }: { items: string[]; category: string }) {
+function SkillsGrid({ items, category: _category }: { items: string[]; category: string }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => (

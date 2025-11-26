@@ -2,6 +2,8 @@
 - Estrutura Next.js/TypeScript ativa com rotas server-side, telas de todas as etapas do MVP, Phaser na cidade, inventário/online/chat integrados e rotas `/api/check` respondendo conforme exigido.
 
 # TAREFAS REALIZADAS
+# TAREFAS REALIZADAS
+- **PADRONIZAÇÃO DE ASSETS (2025-01-25)**: Movido `public/maps/map_city.json` para `maps-data/` para centralizar todos os mapas. Removida pasta `public/maps/` vazia. Assets agora seguem estrutura consistente com dados em `maps-data/`, sprites em `public/sprites/`, etc.
 - Leitura integral do README e documentação viva em `TRACKER.md`.
 - Runtime PIXI recebeu estabilização do HUD/combate (refs fixas para artefatos, carregamento de XP/hp sem `xpStats` fora da ordem, cleanup seguro da aplicação e dependências corretas no `useEffect`), acabando com os erros `Cannot access 'xpStats' before initialization` e `instance.destroy is not a function`.
 - Todo o código Phaser que ainda residia em `components/game/**`, `components/CityPhaser.tsx` e `hooks/useSessionPosition.ts` foi movido para `legacy/phaser/**`, cumprindo a regra de separar o legado e eliminando centenas de lint errors de `Phaser`/`AbortSignal`.
@@ -12,20 +14,21 @@
 - Telas `/login`, `/character`, `/play`, `/house`, `/farm`, `/forest`, `/shops`, `/chat` desenvolvidas conforme etapas 1 a 7.
 - Phaser inicializado em `/app/play` com movimentação básica, inventário e lista de online com polling.
 - Inventário, chat global e lista de online integrados com polling (10s / 3s) e manipulação direta das rotas.
-- Documento `passoapasso.md` criado para guiar execução/tarefas utilizando o conteúdo de `assets.md`.
+- Documento `docs/passoapasso.md` criado para guiar execução/tarefas utilizando o conteúdo de `docs/assets.md`.
 - Landing `/` redesenhada com Tailwind (tema madeira), hero explicativo, destaques do README e modais exclusivos para registro/login.
 - Painel “Minha Conta” (após login) mostra dados do jogador, criação/seleção de personagens e botão “Jogar”; menu inferior estilo HUD dá acesso às rotas Admin/Casa/Fazenda/etc.
 - Última rota visitada é armazenada no `localStorage` e pode ser retomada pela landing; o menu inferior atualiza esse estado automaticamente.
 - Backend ajustado para múltiplos personagens por usuário, limite de 4, rotas `/api/character/get` com lista/detalhe e normalização dos dados Mongo/memória.
 - Script `npm run dev` fixado na porta 3001 e `next.config.js` compatível com Next 16.
 - Piso da cidade utiliza `tile1.png` até `tile6.png` (100×100 → 64×64) e é carregado a partir de `/api/city/map`.
-- `/api/city/map` criado (GET/POST) persistindo `public/maps/map_city.json`; o editor `/editor` importa o mapa atual, ajusta largura/altura (até 64×40) e salva direto no jogo.
+- `/api/city/map` criado (GET/POST) persistindo `maps-data/map_city.json`; o editor `/editor` importa o mapa atual, ajusta largura/altura (até 64×40) e salva direto no jogo.
 - Cidade ganhou NPCs soldados azuis com falas aleatórias, player maior, câmera seguindo e controle virtual para mobile.
 - Inventário agora é um grid 5x4 com slots e itens predefinidos (poções de mana/vida) que empilham até 100 unidades.
 - Chat agora aceita nome do personagem, mostra o nome real nas mensagens e abre em um modal flutuante com som ao abrir.
 - Sprites dos personagens passaram a ter metadados (run/idle) em `lib/characterSprites.ts`, usados tanto no preview da landing quanto no Phaser.
 - Criação de personagem recebeu seleção de espírito (fundo `/public/spirit/{1..4}.png`), escolha visual de corpo (warrior/pingu) e 4 filtros de cor com persistência (`spriteColor`/`spiritId`).
 - Pingu teve spritesheet normalizado (5 frames 112×128) e a UI agora mostra os cards animados com a cor aplicada.
+- NavHeader e SideMenu refinados para consumir o ThemeProvider e aplicar o tema “kawaii” com paleta pastel consistente no header e na sidebar.
 - Personagens agora armazenam atributos base (FOR/DEX/INT/CON/SORTE = 10) e pontos livres iniciais (5) diretamente no documento (`attributes` + `attributePoints`) para uso futuro.
 - Runtime PIXI agora carrega o sprite/cor reais do personagem da sessão e remove o erro transitório de `destroy()` ao inicializar o mapa.
 - Teleportes dos mapas foram destacados com `tile104.png` e ganharam animação: ao pisar, o jogador pisca 1s com mensagem “Teletransportando…” antes de trocar de mapa.
@@ -41,8 +44,8 @@
 - Layout global sem sidebar fixa — hub `/` centraliza toda navegação.
 - Estilização geral ajustada para tons de madeira (cards, botões, modais) em vez dos assets anteriores.
 - Estrutura do mapa passou a contar com as camadas `ground/detail/buildings/tints/collision/cover`, manifest dinâmico (`/api/tiles`) e Phaser com colisões configuráveis, NPCs visíveis e profundidade por Y.
-- Todo o runtime legado (Phaser) foi movido para `legacy/phaser/**`, deixando `pixi/runtime/**` como única fonte ativa para o jogo.
-- Editor `/editor` ganhou PIN 8989, paletas automáticas, borracha/preencher camada, preview ("lupa"), seleção de tints/bloqueio/sobreposição e salva direto em `public/maps/map_city.json`.
+- Todo o runtime legado (Phaser) foi movido para `legacy/phaser/**`, deixando `core/runtime/**` como única fonte ativa para o jogo.
+- Editor `/editor` ganhou PIN 8989, paletas automáticas, borracha/preencher camada, preview ("lupa"), seleção de tints/bloqueio/sobreposição e salva direto em `maps-data/map_city.json`.
 - Menu inferior agora flutua diretamente sobre o mapa da cidade e o jogador exibe nome + nível acima da cabeça (escala ajustada), melhorando o HUD solicitado.
 - HUD básico (HP/Energia/XP + nível) reposicionado como overlay no canto superior esquerdo do mapa, com barras estilo GUI medieval.
 - Execução do lint deixou de ficar oculta: polyfills para `structuredClone`/`AbortSignal.throwIfAborted` garantem que `npm run lint` e o VS Code reportem todas as pendências reais.
@@ -72,7 +75,7 @@
 - Gerar arquivos `map_city.json`, `map_farm.json`, `map_forest.json`, `map_house.json` usando tilesets 32×32.
 - Criar rotina de seleção de personagem também dentro de `/play` para validar estado carregado e sprites quando assets estiverem prontos.
 - Refinar o HUD da cidade (inventário rápido com slots verticais, botão de inventário sobre o mapa e chat modal animado com identificação do personagem) conforme o layout solicitado.
-- Documentar e monitorar a adição de novos tiles (`/public/tilesets/**`) garantindo que o manifest continue atualizado e registrado no `assets.md`/`passoapasso.md`.
+- Documentar e monitorar a adição de novos tiles (`/public/tilesets/**`) garantindo que o manifest continue atualizado e registrado no `docs/assets.md`/`docs/passoapasso.md`.
 - Integrar `spriteColor` e `spiritId` na renderização in-game (Pixi/Phaser) para refletir as escolhas feitas na landing.
 - Planejar UI de distribuição dos atributos (consumindo `attributePoints`) e refletir os valores dentro do combate/HUD.
 

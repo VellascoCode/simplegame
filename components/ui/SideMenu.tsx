@@ -1,8 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+
+import { useTheme } from "@/components/ThemeProvider";
+import { WoodenButton } from "@/components/UniversalUi";
+import { sideMenuStyles } from "@/components/themeConfig";
 
 type MenuItem = {
   label: string;
@@ -59,6 +62,7 @@ type SideMenuProps = {
 
 export default function SideMenu({ user }: SideMenuProps) {
   const pathname = usePathname();
+  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -89,49 +93,35 @@ export default function SideMenu({ user }: SideMenuProps) {
 
   useEffect(() => {
     const init: Record<string, boolean> = {};
-    MENU_GROUPS.forEach((group) => (init[group.title] = true));
+    MENU_GROUPS.forEach((group) => (init[group.title] = false)); // Começar fechado
     setExpanded(init);
   }, []);
 
   const sidebarClasses = useMemo(
     () =>
-      `fixed left-0 top-16 z-40 flex h-[calc(100vh-64px)] w-[260px] flex-col bg-stone-950/95 border-r-4 border-amber-950 shadow-2xl shadow-black/70 transition-transform duration-200 ${
+      `fixed left-0 top-16 z-40 flex h-[calc(100vh-64px)] w-[260px] flex-col shadow-2xl transition-transform duration-300 backdrop-blur-sm ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } ${drawerOpen ? "translate-x-0" : ""}`,
-    [isOpen, drawerOpen]
+      } ${drawerOpen ? "translate-x-0" : ""} ${sideMenuStyles.sidebar[theme]}`,
+    [isOpen, drawerOpen, theme]
   );
 
   const isActive = (href: string) => pathname === href;
 
   const renderItem = (item: MenuItem, depth = 0) => {
     const active = isActive(item.href);
-    const base =
-      "group flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm font-semibold transition-colors";
-    const stateClasses = active
-      ? "border-amber-500 text-amber-50 bg-amber-900/60 shadow-md shadow-black/50"
-      : "border-transparent text-amber-200 hover:text-amber-50 hover:border-amber-600";
-
+    
     return (
-      <div key={item.href} className="space-y-1">
-        <Link href={item.href} className={`${base} ${stateClasses} ${depth > 0 ? "ml-4" : ""}`}>
-          <span className="h-2 w-2 rounded-sm bg-amber-600 shadow-sm shadow-black/40" />
-          <span className="truncate">{item.label}</span>
-        </Link>
-        {item.children && expanded[item.href] && (
-          <div className="space-y-1">
-            {item.children.map((child) => renderItem(child, depth + 1))}
-          </div>
-        )}
-        {item.children && (
-          <button
-            type="button"
-            onClick={() => setExpanded((prev) => ({ ...prev, [item.href]: !prev[item.href] }))}
-            className="ml-4 text-[11px] uppercase tracking-[0.2em] text-amber-300 hover:text-amber-100"
-          >
-            {expanded[item.href] ? "Recolher" : "Expandir"}
-          </button>
-        )}
-      </div>
+      <WoodenButton
+        key={item.href}
+        label={item.label}
+        variant={active ? "redRoyal" : "wood"}
+        size="sm"
+        onClick={() => {
+          // Navigate to the href
+          window.location.href = item.href;
+        }}
+        className={`w-full justify-start text-left ${depth > 0 ? "ml-4" : ""}`}
+      />
     );
   };
 
@@ -143,41 +133,39 @@ export default function SideMenu({ user }: SideMenuProps) {
             <button
               type="button"
               onClick={() => setExpanded((prev) => ({ ...prev, [group.title]: !prev[group.title] }))}
-              className="flex w-full items-center gap-2 rounded-md border-2 border-amber-900 bg-amber-950 px-3 py-1 text-left text-[11px] font-bold uppercase tracking-[0.24em] text-amber-100 shadow-md shadow-black/60"
+              className={`flex w-full items-center gap-2 rounded-xl border-2 px-3 py-2 text-left text-xs font-bold uppercase tracking-[0.2em] shadow-lg transform hover:scale-102 transition-all duration-200 ${sideMenuStyles.groupButton[theme]}`}
             >
-              <span className="h-2 w-2 rounded-sm bg-amber-500" />
-              <span className="flex-1 truncate">{group.title}</span>
-              <span>{expanded[group.title] ? "−" : "+"}</span>
+              <span
+                className={`h-3 w-3 rounded-full shadow-md ${sideMenuStyles.groupDot[theme]} animate-pulse`}
+              />
+              <span className="flex-1 truncate drop-shadow-sm text-xs">{group.title}</span>
+              <span className="text-sm transition-transform duration-200">{expanded[group.title] ? "−" : "+"}</span>
             </button>
             {expanded[group.title] && (
-              <nav className="space-y-1">
+              <div className="ml-3 space-y-1">
                 {group.items.map((item) => renderItem(item))}
-              </nav>
+              </div>
             )}
           </div>
         ))}
 
         {user?.isAdmin && (
-          <Link
-            href="/admin"
-            className={`group flex items-center gap-2 rounded-md border-2 px-3 py-2 text-sm font-semibold ${
-              isActive("/admin")
-                ? "border-amber-500 text-amber-50 bg-amber-900/60 shadow-md shadow-black/50"
-                : "border-transparent text-amber-200 hover:text-amber-50 hover:border-amber-600"
-            }`}
-          >
-            <span className="h-2 w-2 rounded-sm bg-red-600 shadow-sm shadow-black/40" />
-            <span className="truncate">Admin</span>
-          </Link>
+          <WoodenButton
+            label="Admin"
+            variant={isActive("/admin") ? "danger" : "wood"}
+            size="sm"
+            onClick={() => window.location.href = "/admin"}
+            className="w-full mt-auto"
+          />
         )}
 
-        <Link
-          href="/logout"
-          className="group mt-auto flex items-center gap-2 rounded-md border-2 border-amber-900 bg-amber-900/40 px-3 py-2 text-sm font-semibold text-amber-100 shadow-md shadow-black/50 hover:bg-amber-800/60"
-        >
-          <span className="h-2 w-2 rounded-sm bg-amber-500 shadow-sm shadow-black/40" />
-          <span className="truncate">Logout</span>
-        </Link>
+        <WoodenButton
+          label="Logout"
+          variant="secondary"
+          size="sm"
+          onClick={() => window.location.href = "/logout"}
+          className="w-full mt-auto"
+        />
       </div>
     </aside>
   );

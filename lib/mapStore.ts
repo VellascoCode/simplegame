@@ -3,7 +3,7 @@ import path from "node:path";
 
 import type { CityMapData, TileMatrix } from "@/lib/mapTypes";
 
-const MAP_FILE = path.join(process.cwd(), "public", "maps", "map_city.json");
+const MAP_FILE = path.join(process.cwd(), "maps-data", "map_city.json");
 const TILE_RANGE = { min: 0, max: 1024 };
 
 const FALLBACK_LAYER: TileMatrix = [

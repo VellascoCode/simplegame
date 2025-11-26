@@ -144,9 +144,9 @@ export default function PlayPixiOnlyPage() {
   );
 
   return (
-    <section className="city-shell min-h-screen bg-[#05070c]">
-      <div className="map-layout mx-auto w-full overflow-hidden px-0">
-        <div className="map-stage relative h-full">
+    <section className="city-shell  bg-[#05070c]">
+      <div className="map-layout mx-auto px-2 md:px-6">
+        <div className="map-stage relative mx-auto w-full">
           <PixiGame
             onReadyChange={setReady}
             onEntityListChange={setEntitySnapshot}
@@ -261,7 +261,7 @@ function MapListPanel({ snapshot, onClose }: { snapshot: EntityListSnapshot; onC
           Fechar
         </button>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-1">
         {merged.map((entry) => {
           const borderColor = toHex(entry.dangerColor ?? 0xffffff);
           const classLabel = entry.type === "Monstro" ? entry.rarity ?? "M" : entry.type;
