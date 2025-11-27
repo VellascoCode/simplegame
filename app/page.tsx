@@ -15,6 +15,7 @@ import { SiteNavigation } from "@/components/home/SiteNavigation";
 import { defaultSpiritId } from "@/lib/characterSpirits";
 import { defaultSprite, defaultSpriteColor } from "@/lib/characterSpriteOptions";
 import { getJSON, postJSON } from "@/lib/clientApi";
+import { useTheme } from "@/components/ThemeProvider";
 
 type AuthResult = { id: string; email: string };
 
@@ -32,6 +33,7 @@ type SessionStateResponse = {
 type ModalView = "register" | "login" | null;
 
 export default function HomePage() {
+  const { theme } = useTheme(); // ← única adição
   const router = useRouter();
   const { data: session } = useSession();
   const [registerData, setRegisterData] = useState({ email: "", password: "" });
@@ -50,6 +52,7 @@ export default function HomePage() {
   const [refreshingCharacters, setRefreshingCharacters] = useState(false);
   const [modalView, setModalView] = useState<ModalView>(null);
   const [lastRoute, setLastRoute] = useState<string | null>(null);
+
   type SessionUser = {
     id?: string | null;
     email?: string | null;
@@ -245,8 +248,15 @@ export default function HomePage() {
     if (route) router.push(route);
   };
 
+  // Definir classe de fundo por tema
+  const backgroundClass = theme === "kawaii"
+    ? "bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50"
+    : theme === "royal-medieval"
+      ? "bg-gradient-to-br from-red-900 via-amber-900 to-orange-900"
+      : "bg-gradient-to-br from-stone-950 via-stone-900 to-black";
+
   return (
-    <div className="flex flex-col gap-10">
+    <div className={`flex flex-col gap-10 min-h-screen ${backgroundClass}`}>
       <SiteNavigation links={siteNavLinks} />
       {!isAuthenticated && (
         <LandingSections

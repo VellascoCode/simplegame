@@ -81,11 +81,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         <div className="fixed inset-0 z-50 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-blue-500/20 animate-pulse" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-6xl animate-bounce">✨</div>
+            <div className="h-16 w-16 rounded-full border-4 border-white/60 border-t-transparent animate-spin" />
           </div>
-          <div className="absolute top-1/4 left-1/4 text-4xl animate-ping">🌟</div>
-          <div className="absolute bottom-1/4 right-1/4 text-4xl animate-ping" style={{animationDelay: '0.5s'}}>⭐</div>
-          <div className="absolute top-1/2 right-1/4 text-4xl animate-ping" style={{animationDelay: '1s'}}>💫</div>
         </div>
       )}
     </ThemeContext.Provider>

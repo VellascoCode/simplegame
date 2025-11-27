@@ -92,6 +92,7 @@ Documento vivo alinhado ao README e ao `TRACKER.md`. Sempre atualizar este arqui
 - Iniciada refatoração do PixiGame: extraído módulo `components/pixiSession.ts` com tipos de sessão (SessionState/ConnectionStatus) e funções loadSessionState/createPositionPersistence, deixando o componente principal menor e mais focado na cena.
 - Refatoração de efeitos/teleporte/jogador finalizada com uso de `components/pixiRuntimeHelpers.ts` e ajuste do container de `/play` (aspect ratios responsivos 4:5/16:9/21:9) para exibir mais mapa centralizado sem aplicar escala manual na câmera.
 - UI de madeira da wiki unificada no `components/UniversalUi.tsx`, removendo `components/wiki/WoodenUi.tsx` e garantindo que `/wiki/skills` e `/wiki/classes` usem apenas o conjunto universal de componentes tematizados.
+- UniversalUi e páginas `/wiki/skills`/`/wiki/classes` ajustados para usar temas bem distintos entre “dark-fantasy”, “royal-medieval” e “kawaii” (sem emojis em código), centralizando variações de cor em helpers do próprio UniversalUi + `themeConfig.ts` e deixando o seletor de tema/textos da wiki dependentes das cores globais do tema.
 
 ## 7. Admin / Editor de Mapas
 - Rota `/editor` (client component) exige PIN `8989` para liberar a UI.

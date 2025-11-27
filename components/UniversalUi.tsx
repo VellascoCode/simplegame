@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-
 import { useTheme } from "@/components/ThemeProvider";
 
 type CardWoodenProps = {
@@ -9,94 +8,10 @@ type CardWoodenProps = {
   subtitle?: string;
 };
 
-export function CardWooden({ title, subtitle, children, className }: CardWoodenProps) {
-  const { theme } = useTheme();
-
-  const themeClasses = {
-    "dark-fantasy": "bg-gradient-to-br from-stone-900 via-stone-950 to-black border-4 border-stone-950",
-    "royal-medieval": "bg-gradient-to-br from-amber-900 via-orange-900 to-red-900 border-4 border-amber-800",
-    kawaii: "bg-gradient-to-br from-pastel-pink via-pastel-lilac to-pastel-blue border-6 border-pastel-pinkDark shadow-bubble"
-  };
-
-  const innerThemeClasses = {
-    "dark-fantasy": "border-4 border-amber-900/40 bg-gradient-to-br from-stone-900 to-slate-800",
-    "royal-medieval": "border-4 border-amber-600/50 bg-gradient-to-br from-amber-800 to-orange-900",
-    kawaii: "border-6 border-pastel-lilacDark/40 bg-gradient-to-br from-pastel-cream to-pastel-mint"
-  };
-
-  const contentThemeClasses = {
-    "dark-fantasy": "border-2 border-amber-800/30 bg-stone-950",
-    "royal-medieval": "border-2 border-amber-500/40 bg-amber-900/80",
-    kawaii: "border-4 border-pastel-blueDark/30 bg-pastel-cream"
-  };
-
-  return (
-    <article className={`relative rounded-sm ${themeClasses[theme]} p-3 shadow-2xl ${className ?? ""}`}>
-      <Nails />
-      <WoodGrain />
-      <div className={`relative rounded-sm ${innerThemeClasses[theme]} p-2`}>
-        <div className={`rounded-sm ${contentThemeClasses[theme]} p-2`}>
-          {(title || subtitle) && (
-            <header className="flex items-center justify-between gap-2 rounded-sm border-2 border-amber-900/50 bg-gradient-to-r from-stone-900 to-stone-950 p-3 mb-2 transition-all duration-200">
-              <div className="space-y-1">
-                {subtitle && <p className="text-xs uppercase tracking-widest text-amber-700/80">{subtitle}</p>}
-                {title && <h3 className="text-base font-semibold text-amber-300">{title}</h3>}
-              </div>
-              <div className="flex gap-1">
-                <span className="h-3 w-3 rounded-sm bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-950 animate-pulse" style={{animationDuration: '3s'}} />
-                <span className="h-3 w-3 rounded-sm bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-950 animate-pulse" style={{animationDuration: '3s', animationDelay: '1.5s'}} />
-              </div>
-            </header>
-          )}
-          <div className="rounded-sm border-2 border-amber-900/30 bg-gradient-to-br from-stone-800 to-stone-900 p-3 text-stone-300 shadow-inner">
-            {children}
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
 type WoodPanelProps = {
   children: ReactNode;
   className?: string;
 };
-
-export function WoodPanel({ children, className }: WoodPanelProps) {
-  const { theme } = useTheme();
-
-  const themeClasses = {
-    "dark-fantasy": "bg-gradient-to-br from-stone-900 via-stone-950 to-slate-900 border-4 border-stone-950",
-    "royal-medieval": "bg-gradient-to-br from-amber-800 via-orange-800 to-red-800 border-4 border-amber-700",
-    kawaii: "bg-gradient-to-br from-pastel-pink via-pastel-lilac to-pastel-blue border-4 border-pastel-pinkDark"
-  };
-
-  const innerThemeClasses = {
-    "dark-fantasy": "border-4 border-orange-900/60 bg-gradient-to-br from-stone-800 to-stone-950",
-    "royal-medieval": "border-4 border-amber-600/70 bg-gradient-to-br from-amber-700 to-orange-800",
-    kawaii: "border-4 border-pastel-lilacDark/60 bg-gradient-to-br from-pastel-mint to-pastel-cream"
-  };
-
-  const contentThemeClasses = {
-    "dark-fantasy": "border-2 border-amber-800/30 bg-slate-950/50",
-    "royal-medieval": "border-2 border-amber-500/40 bg-amber-800/60",
-    kawaii: "border-2 border-pastel-blueDark/30 bg-pastel-cream/90"
-  };
-
-  return (
-    <div className={`relative rounded-md ${themeClasses[theme]} p-3 shadow-2xl ${className ?? ""}`}>
-      <Nails />
-      <WoodGrain />
-      <div className={`relative rounded-md ${innerThemeClasses[theme]} p-2`}>
-        <div className={`rounded-md ${contentThemeClasses[theme]} p-2`}>
-          <div className="rounded-md border-2 border-amber-900/30 bg-gradient-to-br from-stone-800 to-stone-900 p-3 text-stone-300 shadow-inner">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 type MedievalSectionProps = {
   title: ReactNode;
@@ -104,66 +19,12 @@ type MedievalSectionProps = {
   className?: string;
 };
 
-export function MedievalSection({ title, children, className }: MedievalSectionProps) {
-  const { theme } = useTheme();
-
-  const borderThemeClasses = {
-    "dark-fantasy": "border-amber-900/40",
-    "royal-medieval": "border-amber-600/50",
-    kawaii: "border-amber-700/60"
-  };
-
-  const bgThemeClasses = {
-    "dark-fantasy": "from-amber-800/50 via-amber-600/30 to-transparent",
-    "royal-medieval": "from-amber-700/60 via-amber-500/40 to-transparent",
-    kawaii: "from-pastel-pink/30 via-pastel-lilac/30 to-pastel-blue/30"
-  };
-
-  return (
-    <WoodPanel className={`p-3 ${className ?? ""}`}>
-      <div className={`flex items-center gap-3 border-b-2 ${borderThemeClasses[theme]} pb-3 mb-3`}>
-        <MedievalTitle>{title}</MedievalTitle>
-        <div className={`h-px flex-1 bg-gradient-to-r ${bgThemeClasses[theme]}`} />
-      </div>
-      <div className="text-stone-300">{children}</div>
-    </WoodPanel>
-  );
-}
-
 type RoyalSectionProps = {
   title: ReactNode;
   children: ReactNode;
   variant?: "redRoyal" | "blueRoyal";
   className?: string;
 };
-
-export function RoyalSection({ title, children, variant = "redRoyal", className }: RoyalSectionProps) {
-  const palettes = {
-    redRoyal: {
-      border: "border-4 border-amber-900",
-      bg: "bg-red-900",
-      text: "text-amber-100",
-      accent: "border-amber-800"
-    },
-    blueRoyal: {
-      border: "border-4 border-blue-950",
-      bg: "bg-blue-900",
-      text: "text-blue-100",
-      accent: "border-cyan-900"
-    }
-  };
-  const theme = palettes[variant];
-  return (
-    <div className={`rounded-md ${theme.border} ${theme.bg} p-3 shadow-xl ${className ?? ""}`}>
-      <div className={`rounded-md border-2 ${theme.accent} bg-black/30 p-3`}>
-        <div className="flex items-center gap-3 border-b border-amber-800 pb-3">
-          <MedievalTitle>{title}</MedievalTitle>
-        </div>
-        <div className="pt-3 text-sm">{children}</div>
-      </div>
-    </div>
-  );
-}
 
 type MedievalCardProps = {
   title?: ReactNode;
@@ -173,74 +34,6 @@ type MedievalCardProps = {
   size?: "sm" | "md" | "lg";
 };
 
-export function MedievalCard({ title, subtitle, children, className, size = "md" }: MedievalCardProps) {
-  const { theme } = useTheme();
-
-  const sizeClasses = {
-    sm: "p-1.5",
-    md: "p-2",
-    lg: "p-3"
-  };
-
-  const themeClasses = {
-    "dark-fantasy": "bg-gradient-to-br from-stone-900 to-black border-4 border-stone-950",
-    "royal-medieval": "bg-gradient-to-br from-amber-800 to-orange-900 border-4 border-amber-700",
-    kawaii: "bg-gradient-to-br from-pastel-pink via-pastel-lilac to-pastel-blue border-2 border-pastel-pinkDark shadow-soft"
-  };
-
-  const innerThemeClasses = {
-    "dark-fantasy": "border-4 border-amber-900/40 bg-stone-950",
-    "royal-medieval": "border-4 border-amber-600/50 bg-amber-800/80",
-    kawaii: "border-2 border-pastel-lilacDark/40 bg-pastel-cream"
-  };
-
-  const contentThemeClasses = {
-    "dark-fantasy": "border-2 border-amber-800/30 bg-stone-900",
-    "royal-medieval": "border-2 border-amber-500/40 bg-amber-700/70",
-    kawaii: "border-2 border-pastel-blueDark/30 bg-pastel-mint"
-  };
-
-  const headerThemeClasses = {
-    "dark-fantasy": "border-2 border-amber-900/50 bg-gradient-to-r from-stone-900 to-stone-950",
-    "royal-medieval": "border-2 border-amber-700/60 bg-gradient-to-r from-amber-800 to-orange-800",
-    kawaii: "border-2 border-pastel-pinkDark/50 bg-gradient-to-r from-pastel-mint to-pastel-cream"
-  };
-
-  const textThemeClasses = {
-    "dark-fantasy": "text-amber-300",
-    "royal-medieval": "text-amber-200",
-    kawaii: "text-pastel-pinkDark drop-shadow-sm"
-  };
-
-  return (
-    <div className={`relative rounded-xl ${themeClasses[theme]} ${sizeClasses[size]} shadow-kawaii hover:shadow-kawaii-hover transition-all duration-500 transform hover:scale-105 hover:-rotate-1 ${className ?? ""}`}>
-      {theme !== "kawaii" && <Nails small />}
-      {theme !== "kawaii" && <WoodGrain opacity={0.3} />}
-      <div className={`relative rounded-xl ${innerThemeClasses[theme]} p-2`}>
-        <div className={`rounded-xl ${contentThemeClasses[theme]} p-2`}>
-          {(title || subtitle) && (
-            <div className={`flex items-center justify-between gap-2 rounded-lg ${headerThemeClasses[theme]} p-3 mb-2`}>
-              <div>
-                {subtitle && <p className="text-xs uppercase tracking-widest text-amber-700/80">{subtitle}</p>}
-                {title && <p className={`text-sm font-semibold ${textThemeClasses[theme]}`}>{title}</p>}
-              </div>
-              <span className="h-3 w-3 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-950 shadow-md animate-pulse" />
-            </div>
-          )}
-          <div className={`rounded-lg border-2 ${theme === "kawaii" ? "border-pastel-blueDark/30 bg-gradient-to-br from-pastel-cream to-pastel-mint" : "border-amber-900/30 bg-gradient-to-br from-stone-800 to-stone-900"} p-3 ${theme === "kawaii" ? "text-pastel-pinkDark" : "text-stone-300"} shadow-inner`}>
-            {children}
-          </div>
-        </div>
-      </div>
-      {theme === "kawaii" && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-        </>
-      )}
-    </div>
-  );
-}
-
 type RoyalCardProps = {
   title?: string;
   subtitle?: string;
@@ -249,92 +42,15 @@ type RoyalCardProps = {
   className?: string;
 };
 
-export function RoyalCard({ title, subtitle, children, variant = "redRoyal", className }: RoyalCardProps) {
-  const palettes = {
-    redRoyal: {
-      border: "border-4 border-amber-900",
-      bg: "bg-red-900",
-      text: "text-amber-100",
-      accent: "border-amber-800"
-    },
-    blueRoyal: {
-      border: "border-4 border-blue-950",
-      bg: "bg-blue-900",
-      text: "text-blue-100",
-      accent: "border-cyan-900"
-    }
-  };
-  const theme = palettes[variant];
-
-  return (
-    <div className={`rounded-md ${theme.border} ${theme.bg} p-3 shadow-xl ${className ?? ""}`}>
-      <div className={`rounded-md border-2 ${theme.accent} bg-black/30 p-3`}>
-        {(title || subtitle) && (
-          <div className="flex items-center justify-between gap-2 border-b border-amber-800 pb-2">
-            <div>
-              {subtitle && <p className="text-[11px] uppercase tracking-widest text-amber-300">{subtitle}</p>}
-              {title && <p className="text-sm font-semibold text-amber-50">{title}</p>}
-            </div>
-          </div>
-        )}
-        <div className="pt-2 text-sm">{children}</div>
-      </div>
-    </div>
-  );
-}
-
 type MedievalTitleProps = {
   children: ReactNode;
 };
-
-export function MedievalTitle({ children }: MedievalTitleProps) {
-  const { theme } = useTheme();
-
-  const themeClasses = {
-    "dark-fantasy": "border-amber-900/50 bg-gradient-to-r from-stone-900 to-stone-950 text-amber-300",
-    "royal-medieval": "border-amber-700/60 bg-gradient-to-r from-amber-800 to-orange-800 text-amber-200",
-    kawaii: "border-pastel-pinkDark/50 bg-gradient-to-r from-pastel-mint to-pastel-cream text-pastel-pinkDark"
-  };
-
-  const dotThemeClasses = {
-    "dark-fantasy": "from-cyan-600 to-cyan-800 border-cyan-950",
-    "royal-medieval": "from-amber-500 to-orange-600 border-amber-800",
-    kawaii: "from-pink-400 to-purple-500 border-pink-700"
-  };
-
-  return (
-    <div className={`inline-flex items-center gap-2 rounded-sm border-2 ${themeClasses[theme]} px-3 py-2 text-sm font-semibold tracking-widest shadow-lg`}>
-      <span className={`h-2 w-2 rounded-sm bg-gradient-to-br ${dotThemeClasses[theme]} shadow-inner`} />
-      <span>{children}</span>
-      <span className={`h-2 w-2 rounded-sm bg-gradient-to-br ${dotThemeClasses[theme]} shadow-inner`} />
-    </div>
-  );
-}
 
 type MedievalIconFrameProps = {
   className?: string;
   children?: ReactNode;
   size?: "sm" | "md" | "lg";
 };
-
-export function MedievalIconFrame({ className, children, size = "md" }: MedievalIconFrameProps) {
-  const sizeClasses = {
-    sm: "h-16 w-16",
-    md: "h-20 w-20",
-    lg: "h-24 w-24"
-  };
-  
-  return (
-    <div
-      className={`flex ${sizeClasses[size]} items-center justify-center rounded-xl border bg-gradient-to-br from-pastel-pink via-pastel-lilac to-pastel-mint shadow-kawaii hover:shadow-kawaii-hover transition-all duration-300 transform hover:scale-110 ${className ?? ""}`}
-    >
-      <div className="absolute inset-1 rounded-lg bg-gradient-to-br from-white/40 via-pastel-cream/30 to-transparent" />
-      <div className="relative z-10">
-        {children}
-      </div>
-    </div>
-  );
-}
 
 type ProgressWoodenBarProps = {
   value: number;
@@ -344,70 +60,6 @@ type ProgressWoodenBarProps = {
   size?: "sm" | "md" | "lg";
   showPercentage?: boolean;
 };
-
-export function ProgressWoodenBar({ value, max, colorClass, label, size = "md", showPercentage = false }: ProgressWoodenBarProps) {
-  const { theme } = useTheme();
-  const safeMax = max > 0 ? max : 1;
-  const ratio = Math.max(0, Math.min(1, value / safeMax));
-  const width = `${(ratio * 100).toFixed(1)}%`;
-  const percentage = `${(ratio * 100).toFixed(0)}%`;
-  const innerColor = colorClass ?? "from-pink-400 via-purple-400 to-blue-400";
-  
-  const sizeClasses = {
-    sm: "h-3",
-    md: "h-4",
-    lg: "h-5"
-  };
-
-  const themeClasses = {
-    "dark-fantasy": {
-      label: "text-amber-800",
-      value: "text-amber-900",
-      border: "border-amber-800",
-      bg: "bg-gradient-to-br from-amber-200 to-orange-300",
-      text: "text-amber-900"
-    },
-    "royal-medieval": {
-      label: "text-amber-700",
-      value: "text-amber-800",
-      border: "border-amber-700",
-      bg: "bg-gradient-to-br from-amber-100 to-orange-200",
-      text: "text-amber-800"
-    },
-    kawaii: {
-      label: "text-pastel-pinkDark",
-      value: "text-pastel-blueDark",
-      border: "border-pastel-pinkDark",
-      bg: "bg-gradient-to-br from-pastel-cream to-pastel-mint",
-      text: "text-pastel-pinkDark"
-    }
-  };
-
-  const currentTheme = themeClasses[theme as keyof typeof themeClasses];
-
-  return (
-    <div className="space-y-2">
-      {label && (
-        <div className="flex justify-between text-sm font-bold">
-          <span className={`flex items-center gap-2 ${currentTheme.label}`}>
-            <span className="animate-pulse">💫</span>
-            {label}
-          </span>
-          <span className={`${currentTheme.value} drop-shadow-sm`}>{showPercentage ? percentage : `${value}/${max}`}</span>
-        </div>
-      )}
-      <div className={`${sizeClasses[size]} w-full rounded-xl border-2 ${currentTheme.border} ${currentTheme.bg} shadow-soft overflow-hidden relative transform hover:scale-102 transition-all duration-300`}>
-        <div className={`h-full bg-gradient-to-r ${innerColor} transition-all duration-700 ease-out relative rounded-xl shadow-inner`} style={{ width }}>
-          <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-transparent to-transparent rounded-xl" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-xl animate-pulse" />
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`text-xs font-bold ${currentTheme.text} drop-shadow-lg`}>{percentage}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 type WoodenButtonProps = {
   label: string;
@@ -419,6 +71,570 @@ type WoodenButtonProps = {
   fullWidth?: boolean;
 };
 
+type InventorySlotProps = {
+  item?: string;
+  count?: number;
+  onClick?: () => void;
+  active?: boolean;
+  disabled?: boolean;
+  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";
+};
+
+type WoodenInputProps = {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
+};
+
+type WoodenBadgeProps = {
+  children: ReactNode;
+  variant?: "info" | "success" | "warning" | "danger";
+  size?: "sm" | "md";
+};
+
+type FofoCardProps = {
+  children: ReactNode;
+  variant?: "cloud" | "wave";
+  className?: string;
+};
+
+// ========== SISTEMA DE TEMAS REFINADO COM ÍCONES SVG E EFEITO 3D CARTOON ==========
+
+const getThemeStyles = (theme: string) => {
+  if (theme === "kawaii") {
+    return {
+      // Tipografia
+      font: "font-sans",
+      titleFont: "font-sans font-bold tracking-widest uppercase",
+      
+      // Formas
+      borderRadius: "rounded-2xl",
+      cardRadius: "rounded-2xl",
+      
+      // Sombras 3D
+      shadow: "shadow-[0_4px_8px_rgba(0,0,0,0.1)]",
+      hoverShadow: "hover:shadow-[0_6px_12px_rgba(0,0,0,0.15)]",
+      innerShadow: "before:content-[''] before:absolute before:inset-0 before:rounded-2xl before:shadow-inset-[0_2px_4px_rgba(255,255,255,0.3)]",
+      
+      // Cores principais
+      primary: "text-pink-700",
+      background: "bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100",
+      
+      // Estilos de card/panel
+      card: {
+        container: "bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 border border-white/60 rounded-2xl relative overflow-hidden",
+        inner: "border border-white/40 bg-gradient-to-br from-white to-pink-50 rounded-xl",
+        content: "border border-white/30 bg-white/90 rounded-lg",
+        header: "border border-white/50 bg-gradient-to-r from-pink-200 to-purple-200 text-pink-800 rounded-xl"
+      },
+      
+      // Botões
+      button: {
+        wood: "border border-white/60 bg-gradient-to-br from-pink-400 to-purple-400 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_12px_rgba(0,0,0,0.15)] active:translate-y-1 active:shadow-[0_2px_4px_rgba(0,0,0,0.1)]",
+        sand: "border border-white/60 bg-gradient-to-br from-yellow-300 to-amber-300 text-yellow-900 shadow-[0_4px_8px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_12px_rgba(0,0,0,0.15)] active:translate-y-1 active:shadow-[0_2px_4px_rgba(0,0,0,0.1)]",
+        danger: "border border-white/60 bg-gradient-to-br from-red-300 to-pink-400 text-white shadow-[0_4px_8px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_12px_rgba(0,0,0,0.15)] active:translate-y-1 active:shadow-[0_2px_4px_rgba(0,0,0,0.1)]",
+        secondary: "border border-white/60 bg-gradient-to-br from-gray-200 to-gray-300 text-gray-800 shadow-[0_4px_8px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_12px_rgba(0,0,0,0.15)] active:translate-y-1 active:shadow-[0_2px_4px_rgba(0,0,0,0.1)]"
+      },
+      
+      // Progresso
+      progress: {
+        track: "border border-pink-300 bg-gradient-to-br from-pink-50 to-purple-50 rounded-full",
+        fill: "from-pink-400 via-purple-400 to-blue-400",
+        text: "text-pink-800"
+      },
+      
+      // Badge
+      badge: {
+        info: "border border-blue-300 bg-gradient-to-br from-blue-300 to-purple-400 text-blue-900",
+        success: "border border-green-300 bg-gradient-to-br from-green-300 to-emerald-400 text-green-900",
+        warning: "border border-amber-300 bg-gradient-to-br from-amber-300 to-orange-400 text-amber-900",
+        danger: "border border-red-300 bg-gradient-to-br from-red-300 to-pink-400 text-red-900"
+      },
+      
+      // Elementos decorativos
+      accent: "pastel",
+      grain: "kawaii",
+      ornament: "flower"
+    };
+  }
+
+  if (theme === "dark-fantasy") {
+    return {
+      font: "font-serif",
+      titleFont: "font-serif font-bold tracking-wider uppercase",
+      borderRadius: "rounded-xl",
+      cardRadius: "rounded-xl",
+      shadow: "shadow-[0_6px_16px_rgba(0,0,0,0.5)]",
+      hoverShadow: "hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)]",
+      innerShadow: "before:content-[''] before:absolute before:inset-0 before:rounded-xl before:shadow-inset-[0_3px_6px_rgba(0,0,0,0.4)]",
+      primary: "text-amber-300",
+      background: "bg-gradient-to-br from-stone-900 via-stone-800 to-black",
+      
+      card: {
+        container: "bg-gradient-to-br from-stone-900 via-stone-800 to-stone-950 border border-amber-900/30 rounded-xl relative overflow-hidden",
+        inner: "border border-amber-900/40 bg-gradient-to-br from-stone-800 to-stone-900 rounded-lg",
+        content: "border border-amber-800/30 bg-stone-950/90 rounded-md",
+        header: "border border-amber-900/50 bg-gradient-to-r from-amber-900/10 to-amber-900/5 text-amber-300 rounded-lg"
+      },
+      
+      panel: {
+        container: "bg-gradient-to-br from-stone-900 via-stone-950 to-slate-900 border border-stone-950 rounded-xl relative overflow-hidden",
+        inner: "border border-orange-900/60 bg-gradient-to-br from-stone-800 to-stone-950 rounded-lg", 
+        content: "border border-amber-800/30 bg-slate-950/50 rounded-md",
+        text: "text-stone-300"
+      },
+      
+      button: {
+        wood: "border border-amber-900/40 bg-gradient-to-br from-amber-900 to-amber-800 text-amber-100 shadow-[0_6px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)] active:translate-y-1 active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]",
+        sand: "border border-yellow-900/40 bg-gradient-to-br from-yellow-800 to-yellow-700 text-yellow-50 shadow-[0_6px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)] active:translate-y-1 active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]",
+        redRoyal: "border border-amber-900 bg-gradient-to-br from-red-900 to-red-800 text-amber-100 shadow-[0_6px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)] active:translate-y-1 active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]",
+        blueRoyal: "border border-blue-950 bg-gradient-to-br from-blue-900 to-blue-800 text-blue-100 shadow-[0_6px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)] active:translate-y-1 active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]",
+        danger: "border border-red-950 bg-gradient-to-br from-red-900 to-red-800 text-red-100 shadow-[0_6px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)] active:translate-y-1 active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]",
+        secondary: "border border-stone-900 bg-gradient-to-br from-stone-800 to-stone-700 text-stone-200 shadow-[0_6px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)] active:translate-y-1 active:shadow-[0_3px_8px_rgba(0,0,0,0.4)]"
+      },
+      
+      progress: {
+        track: "border border-amber-800 bg-gradient-to-br from-amber-900/20 to-amber-800/10 rounded-full",
+        fill: "from-amber-600 to-orange-700",
+        text: "text-amber-400"
+      },
+      
+      badge: {
+        info: "border border-blue-900 bg-gradient-to-br from-blue-800 to-blue-900 text-blue-100",
+        success: "border border-emerald-900 bg-gradient-to-br from-emerald-800 to-emerald-900 text-emerald-100",
+        warning: "border border-amber-900 bg-gradient-to-br from-amber-800 to-amber-900 text-amber-100",
+        danger: "border border-red-900 bg-gradient-to-br from-red-800 to-red-900 text-red-100"
+      },
+      
+      accent: "amber",
+      grain: "dark-fantasy",
+      ornament: "spike"
+    };
+  }
+
+  // ROYAL MEDIEVAL
+  return {
+    font: "font-serif",
+    titleFont: "font-serif font-bold tracking-widest uppercase",
+    borderRadius: "rounded-xl",
+    cardRadius: "rounded-xl",
+    shadow: "shadow-[0_8px_24px_rgba(0,0,0,0.6)]",
+    hoverShadow: "hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)]",
+    innerShadow: "before:content-[''] before:absolute before:inset-0 before:rounded-xl before:shadow-inset-[0_4px_8px_rgba(255,215,0,0.3)]",
+    primary: "text-amber-100",
+    background: "bg-gradient-to-br from-red-900 via-amber-900 to-orange-900",
+    
+    card: {
+      container: "bg-gradient-to-br from-amber-800 via-orange-800 to-red-800 border border-amber-800 rounded-xl relative overflow-hidden",
+      inner: "border border-amber-600/60 bg-gradient-to-br from-amber-700 to-orange-800 rounded-lg",
+      content: "border border-amber-500/40 bg-amber-900/80 rounded-md",
+      header: "border border-amber-600/60 bg-gradient-to-r from-amber-700/30 to-amber-600/20 text-amber-200 rounded-lg"
+    },
+    
+    panel: {
+      container: "bg-gradient-to-br from-amber-800 via-orange-800 to-red-800 border border-amber-700 rounded-xl relative overflow-hidden",
+      inner: "border border-amber-600/70 bg-gradient-to-br from-amber-700 to-orange-800 rounded-lg",
+      content: "border border-amber-500/40 bg-amber-800/60 rounded-md",
+      text: "text-amber-200"
+    },
+    
+    button: {
+      wood: "border border-amber-800 bg-gradient-to-br from-amber-700 to-orange-800 text-amber-50 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] active:translate-y-1 active:shadow-[0_4px_12px_rgba(0,0,0,0.5)]",
+      sand: "border border-yellow-800 bg-gradient-to-br from-yellow-600 to-amber-700 text-yellow-50 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] active:translate-y-1 active:shadow-[0_4px_12px_rgba(0,0,0,0.5)]",
+      redRoyal: "border border-red-800 bg-gradient-to-br from-red-600 to-red-800 text-red-50 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] active:translate-y-1 active:shadow-[0_4px_12px_rgba(0,0,0,0.5)]",
+      blueRoyal: "border border-blue-800 bg-gradient-to-br from-blue-600 to-blue-800 text-blue-50 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] active:translate-y-1 active:shadow-[0_4px_12px_rgba(0,0,0,0.5)]",
+      danger: "border border-red-950 bg-gradient-to-br from-red-700 to-red-900 text-red-50 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] active:translate-y-1 active:shadow-[0_4px_12px_rgba(0,0,0,0.5)]",
+      secondary: "border border-stone-900 bg-gradient-to-br from-stone-600 to-stone-800 text-stone-100 shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.7)] active:translate-y-1 active:shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+    },
+    
+    progress: {
+      track: "border border-amber-700 bg-gradient-to-br from-amber-800/20 to-amber-700/10 rounded-full",
+      fill: "from-amber-400 to-orange-500",
+      text: "text-amber-200"
+    },
+    
+    badge: {
+      info: "border border-blue-800 bg-gradient-to-br from-blue-700 to-blue-800 text-blue-100",
+      success: "border border-emerald-800 bg-gradient-to-br from-emerald-700 to-emerald-800 text-emerald-100",
+      warning: "border border-amber-800 bg-gradient-to-br from-amber-700 to-amber-800 text-amber-100", 
+      danger: "border border-red-800 bg-gradient-to-br from-red-700 to-red-800 text-red-100"
+    },
+    
+    accent: "gold",
+    grain: "royal-medieval",
+    ornament: "crest"
+  };
+};
+
+// ========== ÍCONES SVG INTEGRADOS ==========
+
+const FlowerIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+    <path d="M12 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+  </svg>
+);
+
+const SpikeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L2 7l10 5 10-5zM2 17l10-5v10L2 17zm20 0l-10-5v10l10-5z"/>
+  </svg>
+);
+
+const CrestIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L2 7l10 5 10-5zM2 17l10-5v10L2 17zm20 0l-10-5v10l10-5z"/>
+    <path d="M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+  </svg>
+);
+
+// ========== COMPONENTES AUXILIARES COM DETALHES TEMÁTICOS ==========
+
+function ThemeOrnament({ type, theme }: { type: string; theme: string }) {
+  if (theme === "kawaii") {
+    return (
+      <div className="absolute top-2 right-2 text-pink-400 text-lg animate-bounce">
+        <FlowerIcon />
+      </div>
+    );
+  }
+
+  if (theme === "dark-fantasy") {
+    return (
+      <div className="absolute top-2 right-2 text-amber-700 text-sm opacity-60">
+        <SpikeIcon />
+      </div>
+    );
+  }
+
+  // royal-medieval
+  return (
+    <div className="absolute top-2 right-2 text-amber-300 text-sm animate-pulse">
+      <CrestIcon />
+    </div>
+  );
+}
+
+function ThemeGrain({ type }: { type: string }) {
+  const grainStyles: Record<string, string> = {
+    "kawaii": `
+      radial-gradient(circle at 30% 30%, rgba(249, 168, 212, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(196, 181, 253, 0.12) 0%, transparent 50%),
+      repeating-linear-gradient(60deg, transparent, transparent 5px, rgba(255, 255, 255, 0.3) 5px, rgba(255, 255, 255, 0.3) 6px)
+    `,
+    "dark-fantasy": `
+      radial-gradient(circle at 20% 20%, rgba(120, 53, 15, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(180, 83, 9, 0.1) 0%, transparent 50%),
+      repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0, 0, 0, 0.08) 3px, rgba(0, 0, 0, 0.08) 4px)
+    `,
+    "royal-medieval": `
+      radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.15) 0%, transparent 60%),
+      radial-gradient(circle at 85% 85%, rgba(217, 119, 6, 0.12) 0%, transparent 60%),
+      repeating-linear-gradient(30deg, transparent, transparent 2px, rgba(245, 158, 11, 0.05) 2px, rgba(245, 158, 11, 0.05) 3px)
+    `
+  };
+
+  return (
+    <div 
+      className="absolute inset-0 pointer-events-none rounded-3xl opacity-30"
+      style={{
+        backgroundImage: grainStyles[type] || grainStyles["dark-fantasy"]
+      }}
+    />
+  );
+}
+
+function ThemeStatusLights({ theme }: { theme: string }) {
+  if (theme === "kawaii") {
+    return (
+      <div className="flex gap-1">
+        <span className="h-2 w-2 rounded-full bg-pink-400 animate-ping" style={{ animationDuration: '2s' }} />
+        <span className="h-2 w-2 rounded-full bg-purple-400 animate-ping" style={{ animationDuration: '2s', animationDelay: '1s' }} />
+      </div>
+    );
+  }
+
+  const color = theme === "royal-medieval" ? "bg-amber-400" : "bg-amber-600";
+  return (
+    <div className="flex gap-1">
+      <span className={`h-3 w-3 rounded-sm ${color} animate-pulse`} style={{ animationDuration: '3s' }} />
+      <span className={`h-3 w-3 rounded-sm ${color} animate-pulse`} style={{ animationDuration: '3s', animationDelay: '1.5s' }} />
+    </div>
+  );
+}
+
+// ========== COMPONENTES PRINCIPAIS COM EFEITO 3D CARTOON E ÍCONES SVG ==========
+
+export function CardWooden({ title, subtitle, children, className }: CardWoodenProps) {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
+  return (
+    <article className={`relative ${styles.cardRadius} ${styles.card.container} p-4 ${styles.shadow} ${styles.innerShadow} ${className ?? ""}`}>
+      <ThemeOrnament type={styles.ornament} theme={theme} />
+      <ThemeGrain type={styles.grain} />
+      
+      <div className={`relative ${styles.cardRadius} ${styles.card.inner} p-3`}>
+        <div className={`rounded-xl ${styles.card.content} p-3`}>
+          {(title || subtitle) && (
+            <header className={`flex items-center justify-between gap-2 rounded-xl ${styles.card.header} p-3 mb-3 ${styles.titleFont}`}>
+              <div className="space-y-1">
+                {subtitle && <p className="text-xs opacity-80">{subtitle}</p>}
+                {title && <h3 className="text-base font-bold">{title}</h3>}
+              </div>
+              <ThemeStatusLights theme={theme} />
+            </header>
+          )}
+          <div className={`rounded-xl p-3 ${styles.primary} ${styles.font} shadow-inner`}>
+            {children}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function WoodPanel({ children, className }: WoodPanelProps) {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
+  const panelStyles = styles.panel ?? {
+    container: "",
+    inner: "",
+    content: "",
+    text: ""
+  };
+
+  return (
+    <div className={`relative ${styles.cardRadius} ${panelStyles.container} p-4 ${styles.shadow} ${styles.innerShadow} ${className ?? ""}`}>
+      <ThemeOrnament type={styles.ornament} theme={theme} />
+      <ThemeGrain type={styles.grain} />
+      
+      <div className={`relative ${styles.cardRadius} ${panelStyles.inner} p-3`}>
+        <div className={`rounded-xl ${panelStyles.content} p-3`}>
+          <div className={`rounded-xl p-3 ${panelStyles.text} ${styles.font} shadow-inner`}>
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function MedievalSection({ title, children, className }: MedievalSectionProps) {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
+  const borderThemeClasses = {
+    "dark-fantasy": "border-amber-900/40",
+    "royal-medieval": "border-amber-600/50", 
+    "kawaii": "border-pink-300/50"
+  };
+
+  const bgThemeClasses = {
+    "dark-fantasy": "from-amber-800/50 via-amber-600/30 to-transparent",
+    "royal-medieval": "from-amber-700/60 via-amber-500/40 to-transparent",
+    "kawaii": "from-pink-300/30 via-purple-300/30 to-blue-300/30"
+  };
+
+  return (
+    <WoodPanel className={`p-3 ${className ?? ""}`}>
+      <div className={`flex items-center gap-3 border-b-2 ${borderThemeClasses[theme]} pb-3 mb-3`}>
+        <MedievalTitle>{title}</MedievalTitle>
+        <div className={`h-px flex-1 bg-gradient-to-r ${bgThemeClasses[theme]}`} />
+      </div>
+      <div className={`${styles.primary} ${styles.font}`}>{children}</div>
+    </WoodPanel>
+  );
+}
+
+export function RoyalSection({ title, children, variant = "redRoyal", className }: RoyalSectionProps) {
+  const palettes = {
+    redRoyal: {
+      border: "border-4 border-amber-900",
+      bg: "bg-red-900", 
+      text: "text-amber-100",
+      accent: "border-amber-800"
+    },
+    blueRoyal: {
+      border: "border-4 border-blue-950",
+      bg: "bg-blue-900",
+      text: "text-blue-100", 
+      accent: "border-cyan-900"
+    }
+  };
+  
+  const theme = palettes[variant];
+  
+  return (
+    <div className={`rounded-xl ${theme.border} ${theme.bg} p-4 shadow-xl ${className ?? ""}`}>
+      <div className={`rounded-xl border-2 ${theme.accent} bg-black/30 p-4`}>
+        <div className="flex items-center gap-3 border-b border-amber-800 pb-3">
+          <MedievalTitle>{title}</MedievalTitle>
+        </div>
+        <div className="pt-3 text-sm">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+export function MedievalCard({ title, subtitle, children, className, size = "md" }: MedievalCardProps) {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
+  const sizeClasses = {
+    sm: "p-2",
+    md: "p-3",
+    lg: "p-4"
+  };
+
+  return (
+    <div className={`relative ${styles.cardRadius} ${styles.card.container} ${sizeClasses[size]} ${styles.shadow} ${styles.hoverShadow} transition-all duration-300 ${className ?? ""}`}>
+      <ThemeOrnament type={styles.ornament} theme={theme} />
+      <ThemeGrain type={styles.grain} />
+      
+      <div className={`relative ${styles.cardRadius} ${styles.card.inner} p-3`}>
+        <div className={`rounded-xl ${styles.card.content} p-3`}>
+          {(title || subtitle) && (
+            <div className={`flex items-center justify-between gap-2 rounded-xl ${styles.card.header} p-3 mb-3 ${styles.titleFont}`}>
+              <div>
+                {subtitle && <p className="text-xs opacity-80">{subtitle}</p>}
+                {title && <p className={`text-sm font-semibold ${styles.primary}`}>{title}</p>}
+              </div>
+              <ThemeStatusLights theme={theme} />
+            </div>
+          )}
+          <div className={`rounded-xl p-3 ${styles.primary} ${styles.font} shadow-inner`}>
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function RoyalCard({ title, subtitle, children, variant = "redRoyal", className }: RoyalCardProps) {
+  const palettes = {
+    redRoyal: {
+      border: "border-4 border-amber-900",
+      bg: "bg-red-900",
+      text: "text-amber-100",
+      accent: "border-amber-800"
+    },
+    blueRoyal: {
+      border: "border-4 border-blue-950", 
+      bg: "bg-blue-900",
+      text: "text-blue-100",
+      accent: "border-cyan-900"
+    }
+  };
+  
+  const theme = palettes[variant];
+
+  return (
+    <div className={`rounded-xl ${theme.border} ${theme.bg} p-4 shadow-xl ${className ?? ""}`}>
+      <div className={`rounded-xl border-2 ${theme.accent} bg-black/30 p-4`}>
+        {(title || subtitle) && (
+          <div className="flex items-center justify-between gap-2 border-b border-amber-800 pb-3">
+            <div>
+              {subtitle && <p className="text-[11px] uppercase tracking-widest text-amber-300">{subtitle}</p>}
+              {title && <p className="text-sm font-semibold text-amber-50">{title}</p>}
+            </div>
+          </div>
+        )}
+        <div className="pt-3 text-sm">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+export function MedievalTitle({ children }: MedievalTitleProps) {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
+  const dotColor = theme === "kawaii" 
+    ? "bg-pink-400" 
+    : theme === "royal-medieval" 
+      ? "bg-amber-500" 
+      : "bg-amber-600";
+
+  return (
+    <div className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold ${styles.titleFont} ${styles.shadow}`}>
+      <span className={`h-2 w-2 rounded-full ${dotColor}`} />
+      <span>{children}</span>
+      <span className={`h-2 w-2 rounded-full ${dotColor}`} />
+    </div>
+  );
+}
+
+export function MedievalIconFrame({ className, children, size = "md" }: MedievalIconFrameProps) {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
+  const sizeClasses = {
+    sm: "h-16 w-16",
+    md: "h-20 w-20", 
+    lg: "h-24 w-24"
+  };
+
+  if (theme === "kawaii") {
+    return (
+      <div className={`flex ${sizeClasses[size]} items-center justify-center rounded-2xl border border-pink-300 bg-gradient-to-br from-pink-100 to-purple-100 shadow-[0_4px_8px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_12px_rgba(0,0,0,0.15)] transition-all duration-300 transform hover:scale-110 ${className ?? ""}`}>
+        <ThemeGrain type="kawaii" />
+        <div className="relative z-10">{children}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`flex ${sizeClasses[size]} items-center justify-center rounded-xl border border-amber-800 bg-gradient-to-br from-amber-200 to-orange-300 shadow-[0_6px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.6)] transition-all duration-300 transform hover:scale-110 ${className ?? ""}`}>
+      <ThemeGrain type={styles.grain} />
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
+}
+
+export function ProgressWoodenBar({ value, max, colorClass, label, size = "md", showPercentage = false }: ProgressWoodenBarProps) {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+  
+  const safeMax = max > 0 ? max : 1;
+  const ratio = Math.max(0, Math.min(1, value / safeMax));
+  const width = `${(ratio * 100).toFixed(1)}%`;
+  const percentage = `${(ratio * 100).toFixed(0)}%`;
+  const innerColor = colorClass ?? styles.progress.fill;
+  
+  const sizeClasses = {
+    sm: "h-3",
+    md: "h-4", 
+    lg: "h-5"
+  };
+
+  return (
+    <div className="space-y-2">
+      {label && (
+        <div className="flex justify-between text-sm font-bold">
+          <span className={styles.progress.text}>{label}</span>
+          <span className={styles.progress.text}>{showPercentage ? percentage : `${value}/${max}`}</span>
+        </div>
+      )}
+      <div className={`${sizeClasses[size]} w-full rounded-full ${styles.progress.track} ${styles.shadow} overflow-hidden relative`}>
+        <div className={`h-full bg-gradient-to-r ${innerColor} transition-all duration-700 ease-out relative rounded-full`} style={{ width }}>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-transparent to-transparent rounded-full" />
+          {theme === "kawaii" && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full animate-pulse" />
+          )}
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className={`text-xs font-bold ${styles.progress.text} drop-shadow-sm`}>{percentage}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function WoodenButton({ 
   label, 
   className, 
@@ -429,444 +645,140 @@ export function WoodenButton({
   fullWidth = false
 }: WoodenButtonProps) {
   const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
 
-  const base = "relative inline-flex items-center justify-center font-semibold uppercase tracking-wider transition-all duration-300 overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105";
+  const base = "relative inline-flex items-center justify-center font-semibold uppercase tracking-wider transition-all duration-300 overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed";
   
   const sizeClasses = {
-    sm: "h-8 px-2 text-xs rounded",
-    md: "h-10 px-4 text-sm rounded-md",
-    lg: "h-12 px-6 text-base rounded-md"
+    sm: "h-9 px-3 text-xs rounded-lg",
+    md: "h-11 px-4 text-sm rounded-xl",
+    lg: "h-13 px-6 text-base rounded-2xl"
   };
 
-  const getVariantClasses = (variant: string) => {
-    const variants = {
-      "dark-fantasy": {
-        wood: {
-          bg: "bg-amber-900",
-          border: "border-4 border-amber-950",
-          text: "text-amber-50",
-          shadow: "shadow-md shadow-black/50 hover:shadow-lg active:shadow-inner",
-          hover: "hover:bg-amber-800",
-          nails: "from-yellow-600 to-yellow-800 border-yellow-950"
-        },
-        sand: {
-          bg: "bg-yellow-800",
-          border: "border-4 border-yellow-950",
-          text: "text-yellow-50",
-          shadow: "shadow-md shadow-black/50 hover:shadow-lg active:shadow-inner",
-          hover: "hover:bg-yellow-700",
-          nails: "from-amber-500 to-amber-700 border-amber-900"
-        },
-        redRoyal: {
-          bg: "bg-red-900",
-          border: "border-4 border-amber-900",
-          text: "text-amber-100",
-          shadow: "shadow-lg shadow-black/60 hover:shadow-xl active:shadow-inner",
-          hover: "hover:bg-red-800",
-          nails: "from-amber-500 to-amber-700 border-amber-900"
-        },
-        blueRoyal: {
-          bg: "bg-blue-900",
-          border: "border-4 border-blue-950",
-          text: "text-blue-100",
-          shadow: "shadow-lg shadow-black/60 hover:shadow-xl active:shadow-inner",
-          hover: "hover:bg-blue-800",
-          nails: "from-cyan-500 to-cyan-700 border-cyan-900"
-        },
-        danger: {
-          bg: "bg-red-900",
-          border: "border-4 border-red-950",
-          text: "text-red-50",
-          shadow: "shadow-md shadow-black/50 hover:shadow-lg active:shadow-inner",
-          hover: "hover:bg-red-800",
-          nails: "from-red-600 to-red-800 border-red-950"
-        },
-        secondary: {
-          bg: "bg-stone-800",
-          border: "border-4 border-stone-950",
-          text: "text-stone-200",
-          shadow: "shadow-md shadow-black/50 hover:shadow-lg active:shadow-inner",
-          hover: "hover:bg-stone-700",
-          nails: "from-slate-500 to-slate-700 border-slate-900"
-        }
-      },
-      "royal-medieval": {
-        wood: {
-          bg: "bg-gradient-to-br from-amber-600 to-orange-700",
-          border: "border-4 border-amber-800",
-          text: "text-amber-50",
-          shadow: "shadow-lg shadow-amber-900/50 hover:shadow-xl active:shadow-inner",
-          hover: "hover:from-amber-700 hover:to-orange-800",
-          nails: "from-yellow-500 to-orange-600 border-amber-900"
-        },
-        sand: {
-          bg: "bg-gradient-to-br from-yellow-600 to-amber-700",
-          border: "border-4 border-yellow-800",
-          text: "text-yellow-50",
-          shadow: "shadow-lg shadow-yellow-900/50 hover:shadow-xl active:shadow-inner",
-          hover: "hover:from-yellow-700 hover:to-amber-800",
-          nails: "from-amber-500 to-yellow-600 border-yellow-900"
-        },
-        redRoyal: {
-          bg: "bg-gradient-to-br from-red-600 to-red-800",
-          border: "border-4 border-red-800",
-          text: "text-red-50",
-          shadow: "shadow-xl shadow-red-900/60 hover:shadow-2xl active:shadow-inner",
-          hover: "hover:from-red-700 hover:to-red-900",
-          nails: "from-red-500 to-red-700 border-red-900"
-        },
-        blueRoyal: {
-          bg: "bg-gradient-to-br from-blue-600 to-blue-800",
-          border: "border-4 border-blue-800",
-          text: "text-blue-50",
-          shadow: "shadow-xl shadow-blue-900/60 hover:shadow-2xl active:shadow-inner",
-          hover: "hover:from-blue-700 hover:to-blue-900",
-          nails: "from-cyan-500 to-blue-600 border-blue-900"
-        },
-        danger: {
-          bg: "bg-gradient-to-br from-red-700 to-red-900",
-          border: "border-4 border-red-950",
-          text: "text-red-50",
-          shadow: "shadow-lg shadow-red-900/50 hover:shadow-xl active:shadow-inner",
-          hover: "hover:from-red-800 hover:to-red-950",
-          nails: "from-red-600 to-red-800 border-red-950"
-        },
-        secondary: {
-          bg: "bg-gradient-to-br from-stone-600 to-stone-800",
-          border: "border-4 border-stone-900",
-          text: "text-stone-100",
-          shadow: "shadow-lg shadow-stone-900/50 hover:shadow-xl active:shadow-inner",
-          hover: "hover:from-stone-700 hover:to-stone-900",
-          nails: "from-slate-500 to-stone-600 border-stone-900"
-        }
-      },
-      kawaii: {
-        wood: {
-          bg: "bg-gradient-to-br from-pastel-pink via-pastel-lilac via-pastel-blue to-pastel-mint",
-          border: "border",
-          text: "text-pastel-pinkDark",
-          shadow: "shadow-md",
-          hover: "hover:shadow-lg hover:scale-105",
-          nails: "from-pastel-mint to-pastel-cream border-pastel-blueDark"
-        },
-        sand: {
-          bg: "bg-gradient-to-br from-pastel-cream via-pastel-mint via-pastel-blue to-pastel-pink",
-          border: "border",
-          text: "text-pastel-blueDark",
-          shadow: "shadow-md",
-          hover: "hover:shadow-lg hover:scale-105",
-          nails: "from-pastel-pink to-pastel-lilac border-pastel-pinkDark"
-        },
-        redRoyal: {
-          bg: "bg-gradient-to-br from-pastel-pink via-pastel-lilac to-pastel-pink",
-          border: "border",
-          text: "text-pastel-pinkDark",
-          shadow: "shadow-md",
-          hover: "hover:shadow-lg hover:scale-105",
-          nails: "from-pastel-lilac to-pastel-blue border-pastel-lilacDark"
-        },
-        blueRoyal: {
-          bg: "bg-gradient-to-br from-pastel-blue via-pastel-lilac to-pastel-blue",
-          border: "border",
-          text: "text-pastel-blueDark",
-          shadow: "shadow-md",
-          hover: "hover:shadow-lg hover:scale-105",
-          nails: "from-pastel-mint to-pastel-cream border-pastel-mintDark"
-        },
-        danger: {
-          bg: "bg-gradient-to-br from-pastel-pink via-red-200 to-pastel-pink",
-          border: "border",
-          text: "text-pastel-pinkDark",
-          shadow: "shadow-md",
-          hover: "hover:shadow-lg hover:scale-105",
-          nails: "from-red-200 to-pastel-pink border-red-300"
-        },
-        secondary: {
-          bg: "bg-gradient-to-br from-pastel-cream via-pastel-mint to-pastel-cream",
-          border: "border",
-          text: "text-pastel-mintDark",
-          shadow: "shadow-md",
-          hover: "hover:shadow-lg hover:scale-105",
-          nails: "from-pastel-blue to-pastel-lilac border-pastel-blueDark"
-        }
-      }
-    };
-
-    const themeVariants = variants[theme as keyof typeof variants];
-    const variantStyles = themeVariants?.[variant as keyof typeof themeVariants];
-    return variantStyles || variants["dark-fantasy"][variant as keyof typeof variants["dark-fantasy"]];
-  };
-
-  const currentVariant = getVariantClasses(variant);
+  const buttonStyle = styles.button[variant as keyof typeof styles.button] || styles.button.wood;
 
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`${base} ${sizeClasses[size]} ${currentVariant.bg} ${currentVariant.border} ${currentVariant.text} ${currentVariant.shadow} ${currentVariant.hover} ${fullWidth ? "w-full" : ""} ${className ?? ""}`}
+      className={`${base} ${sizeClasses[size]} ${buttonStyle} ${fullWidth ? "w-full" : ""} ${className ?? ""}`}
     >
-      {theme !== "kawaii" && <WoodGrain opacity={0.15} />}
-      <span className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <ThemeGrain type={styles.grain} />
       <span className="relative z-10 flex items-center gap-2">{label}</span>
-      {theme === "kawaii" ? (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </>
-      ) : (
-        <>
-          <span className={`absolute top-1 left-1 h-1.5 w-1.5 rounded-md bg-gradient-to-br ${currentVariant.nails} shadow-md`} />
-          <span className={`absolute top-1 right-1 h-1.5 w-1.5 rounded-md bg-gradient-to-br ${currentVariant.nails} shadow-md`} />
-          <span className={`absolute bottom-1 left-1 h-1.5 w-1.5 rounded-md bg-gradient-to-br ${currentVariant.nails} shadow-md`} />
-          <span className={`absolute bottom-1 right-1 h-1.5 w-1.5 rounded-md bg-gradient-to-br ${currentVariant.nails} shadow-md`} />
-        </>
-      )}
     </button>
   );
 }
 
-type InventorySlotProps = {
-  item?: string;
-  count?: number;
-  onClick?: () => void;
-  active?: boolean;
-  disabled?: boolean;
-  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";
-};
-
 export function InventorySlot({ item, count, onClick, active, disabled, rarity = "common" }: InventorySlotProps) {
   const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
 
-  const rarityColors = {
-    common: {
-      "dark-fantasy": "border-amber-700/60 hover:border-amber-600/80",
-      "royal-medieval": "border-amber-600/70 hover:border-amber-500/80",
-      kawaii: "border-amber-700/60 hover:border-amber-600/80"
-    },
-    uncommon: {
-      "dark-fantasy": "border-green-600/70 hover:border-green-500/80",
-      "royal-medieval": "border-green-600/70 hover:border-green-500/80",
-      kawaii: "border-green-600/70 hover:border-green-500/80"
-    },
-    rare: {
-      "dark-fantasy": "border-blue-600/70 hover:border-blue-500/80",
-      "royal-medieval": "border-blue-600/70 hover:border-blue-500/80",
-      kawaii: "border-blue-600/70 hover:border-blue-500/80"
-    },
-    epic: {
-      "dark-fantasy": "border-purple-600/70 hover:border-purple-500/80",
-      "royal-medieval": "border-purple-600/70 hover:border-purple-500/80",
-      kawaii: "border-purple-600/70 hover:border-purple-500/80"
-    },
-    legendary: {
-      "dark-fantasy": "border-pink-600/70 hover:border-pink-500/80 shadow-pink-400/30",
-      "royal-medieval": "border-pink-600/70 hover:border-pink-500/80 shadow-pink-400/30",
-      kawaii: "border-pink-600/70 hover:border-pink-500/80 shadow-pink-400/30"
-    }
+  const rarityBorders = {
+    common: theme === "kawaii" ? "border-pink-300" : "border-amber-700",
+    uncommon: theme === "kawaii" ? "border-green-400" : "border-green-600",
+    rare: theme === "kawaii" ? "border-blue-400" : "border-blue-600",
+    epic: theme === "kawaii" ? "border-purple-400" : "border-purple-600",
+    legendary: theme === "kawaii" ? "border-pink-400 shadow-lg shadow-pink-400/40" : "border-amber-400 shadow-lg shadow-amber-400/40"
   };
 
-  const bgColors = {
-    "dark-fantasy": active 
-      ? "bg-gradient-to-br from-amber-800 to-orange-900 border-amber-600 shadow-2xl scale-110" 
-      : `bg-gradient-to-br from-stone-800 to-stone-900 ${rarityColors[rarity][theme]} hover:shadow-xl`,
-    "royal-medieval": active 
-      ? "bg-gradient-to-br from-amber-700 to-orange-800 border-amber-600 shadow-2xl scale-110" 
-      : `bg-gradient-to-br from-amber-700 to-orange-800 ${rarityColors[rarity][theme]} hover:shadow-xl`,
-    kawaii: active 
-      ? "bg-gradient-to-br from-pastel-pink to-pastel-lilac border-pastel-pinkDark shadow-2xl scale-110" 
-      : `bg-gradient-to-br from-pastel-cream to-pastel-mint ${rarityColors[rarity][theme]} hover:shadow-xl`
-  };
+  const bgActive = theme === "kawaii" 
+    ? "bg-gradient-to-br from-pink-300 to-purple-400 border-pink-400 scale-110"
+    : theme === "royal-medieval"
+      ? "bg-gradient-to-br from-amber-700 to-orange-800 border-amber-600 scale-110"
+      : "bg-gradient-to-br from-amber-800 to-orange-900 border-amber-600 scale-110";
+
+  const bgDefault = theme === "kawaii"
+    ? `bg-gradient-to-br from-pink-100 to-purple-100 ${rarityBorders[rarity]}`
+    : theme === "royal-medieval"
+      ? `bg-gradient-to-br from-amber-700 to-orange-800 ${rarityBorders[rarity]}`
+      : `bg-gradient-to-br from-stone-800 to-stone-900 ${rarityBorders[rarity]}`;
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`relative w-20 h-20 rounded-xl border-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 ${bgColors[theme]}`}
+      className={`relative w-20 h-20 rounded-2xl border-4 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-110 active:scale-95 ${active ? bgActive : bgDefault} ${styles.shadow}`}
     >
-      <WoodGrain opacity={0.15} />
-      <div className="absolute inset-1 rounded-xl bg-gradient-to-br from-white/30 to-transparent" />
+      <ThemeGrain type={styles.grain} />
+      
       {item && (
         <>
           <div className="absolute inset-0 flex items-center justify-center text-4xl z-10 drop-shadow-lg">
             {item}
           </div>
-          {count && (
+          {count !== undefined && (
             <div className="absolute bottom-1 right-1 bg-gradient-to-br from-amber-300 to-orange-400 border-2 border-amber-800 rounded-full px-2 py-1 text-xs text-amber-900 font-bold shadow-lg z-20 transform hover:scale-110 transition-all duration-200">
               {count}
             </div>
           )}
         </>
       )}
+      
       {rarity === "legendary" && (
-        <div className="absolute -top-1 -right-1 text-yellow-400 text-lg animate-pulse">👑</div>
+        <div className="absolute -top-1 -right-1 rounded-full border border-amber-300 bg-gradient-to-br from-amber-200 to-amber-400 px-1.5 py-0.5 text-[10px] font-bold text-amber-950 shadow-md">
+          L
+        </div>
       )}
     </button>
   );
 }
 
-// Novo componente: WoodenInput
-type WoodenInputProps = {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  className?: string;
-};
-
 export function WoodenInput({ value, onChange, placeholder, disabled, className }: WoodenInputProps) {
   const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
 
-  const themeClasses = {
-    "dark-fantasy": {
-      border: "border-amber-800",
-      bg: "bg-gradient-to-br from-amber-100 to-orange-200",
-      text: "text-amber-900",
-      placeholder: "placeholder:text-amber-700/60",
-      focus: "focus:border-pink-600 focus:ring-pink-400/30"
-    },
-    "royal-medieval": {
-      border: "border-amber-700",
-      bg: "bg-gradient-to-br from-amber-50 to-orange-100",
-      text: "text-amber-800",
-      placeholder: "placeholder:text-amber-600/60",
-      focus: "focus:border-pink-500 focus:ring-pink-300/30"
-    },
-    kawaii: {
-      border: "border-pastel-pinkDark",
-      bg: "bg-gradient-to-br from-pastel-cream to-pastel-mint",
-      text: "text-pastel-pinkDark",
-      placeholder: "placeholder:text-pastel-blueDark/60",
-      focus: "focus:border-pastel-lilac focus:ring-pastel-lilac/30"
-    }
+  const inputStyles = {
+    "dark-fantasy": "border-amber-800 bg-gradient-to-br from-amber-100 to-orange-200 text-amber-900 placeholder-amber-700/60 focus:border-pink-600 focus:ring-pink-400/30",
+    "royal-medieval": "border-amber-700 bg-gradient-to-br from-amber-50 to-orange-100 text-amber-800 placeholder-amber-600/60 focus:border-pink-500 focus:ring-pink-300/30",
+    "kawaii": "border-pink-300 bg-gradient-to-br from-pink-50 to-purple-50 text-pink-800 placeholder-pink-600/60 focus:border-pink-400 focus:ring-pink-300/30"
   };
 
-  const currentTheme = themeClasses[theme as keyof typeof themeClasses];
-
   return (
-    <div className={`relative rounded-xl ${className ?? ""}`}>
+    <div className={`relative rounded-2xl ${className ?? ""}`}>
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className={`w-full h-11 px-4 rounded-xl border ${currentTheme.border} ${currentTheme.bg} ${currentTheme.text} ${currentTheme.placeholder} focus:outline-none ${currentTheme.focus} transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md font-medium text-base hover:shadow-lg focus:shadow-lg`}
+        className={`w-full h-12 px-4 rounded-2xl border-2 ${inputStyles[theme]} focus:outline-none focus:ring-4 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg font-medium text-base`}
       />
-	      {theme !== "kawaii" && <WoodGrain opacity={0.1} />}
-      <div className="absolute inset-1 rounded-lg bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
+      <ThemeGrain type={styles.grain} />
     </div>
   );
 }
-
-// Novo componente: FofoCard - Card com molduras onduladas para o tema pastel
-type FofoCardProps = {
-  children: ReactNode;
-  variant?: "cloud" | "wave";
-  className?: string;
-};
 
 export function FofoCard({ children, variant = "cloud", className }: FofoCardProps) {
   const variantClasses = {
-    cloud: "fofo-cloud",
-    wave: "fofo-wave"
+    cloud: "rounded-3xl bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 border-2 border-pink-200 shadow-soft",
+    wave: "rounded-3xl bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50 border-2 border-blue-200 shadow-soft"
   };
 
   return (
-    <div className={`relative ${variantClasses[variant]} ${className ?? ""}`}>
-      <div className="relative z-10 p-4">
+    <div className={`relative ${variantClasses[variant]} p-6 ${className ?? ""}`}>
+      <div className="relative z-10">
         {children}
       </div>
+      <ThemeGrain type="kawaii" />
     </div>
   );
 }
-type WoodenBadgeProps = {
-  children: ReactNode;
-  variant?: "info" | "success" | "warning" | "danger";
-  size?: "sm" | "md";
-};
 
 export function WoodenBadge({ children, variant = "info", size = "sm" }: WoodenBadgeProps) {
   const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
 
-  const variants = {
-    info: {
-      "dark-fantasy": "bg-gradient-to-br from-blue-800 to-blue-900 border-blue-950 text-blue-100",
-      "royal-medieval": "bg-gradient-to-br from-blue-700 to-blue-800 border-blue-900 text-blue-100",
-      kawaii: "bg-gradient-to-br from-blue-300 to-purple-400 border-blue-800 text-blue-900"
-    },
-    success: {
-      "dark-fantasy": "bg-gradient-to-br from-emerald-800 to-emerald-900 border-emerald-950 text-emerald-100",
-      "royal-medieval": "bg-gradient-to-br from-emerald-700 to-emerald-800 border-emerald-900 text-emerald-100",
-      kawaii: "bg-gradient-to-br from-emerald-300 to-green-400 border-emerald-800 text-emerald-900"
-    },
-    warning: {
-      "dark-fantasy": "bg-gradient-to-br from-amber-800 to-amber-900 border-amber-950 text-amber-100",
-      "royal-medieval": "bg-gradient-to-br from-amber-700 to-amber-800 border-amber-900 text-amber-100",
-      kawaii: "bg-gradient-to-br from-amber-300 to-orange-400 border-amber-800 text-amber-900"
-    },
-    danger: {
-      "dark-fantasy": "bg-gradient-to-br from-red-800 to-red-900 border-red-950 text-red-100",
-      "royal-medieval": "bg-gradient-to-br from-red-700 to-red-800 border-red-900 text-red-100",
-      kawaii: "bg-gradient-to-br from-red-300 to-pink-400 border-red-800 text-red-900"
-    }
-  };
-  
   const sizes = {
     sm: "px-3 py-1.5 text-xs",
     md: "px-4 py-2 text-sm"
   };
-  
+
   return (
-    <span className={`inline-flex items-center gap-2 rounded-xl border-2 ${variants[variant][theme]} ${sizes[size]} font-bold uppercase tracking-wide shadow-soft transform hover:scale-102 transition-all duration-200`}>
-      <span className="animate-pulse">✨</span>
+    <span
+      className={`inline-flex items-center rounded-2xl border-2 ${styles.badge[variant]} ${sizes[size]} font-bold uppercase tracking-wide shadow-lg transform hover:scale-105 transition-all duration-200`}
+    >
       {children}
-      <span className="animate-pulse" style={{animationDelay: '0.5s'}}>⭐</span>
     </span>
-  );
-}
-
-function Nails({ small }: { small?: boolean }) {
-  const size = small ? "h-3 w-3" : "h-4 w-4";
-  return (
-    <div className="pointer-events-none absolute inset-4 flex justify-between z-10">
-      <div className="flex flex-col justify-between">
-        <span className={`${size} rounded-full bg-gradient-to-br from-pink-400 to-pink-600 border-2 border-pink-800 shadow-lg animate-pulse`} />
-        <span className={`${size} rounded-full bg-gradient-to-br from-purple-400 to-purple-600 border-2 border-purple-800 shadow-lg animate-pulse`} style={{animationDelay: '0.5s'}} />
-      </div>
-      <div className="flex flex-col justify-between">
-        <span className={`${size} rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-blue-800 shadow-lg animate-pulse`} style={{animationDelay: '1s'}} />
-        <span className={`${size} rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 border-2 border-cyan-800 shadow-lg animate-pulse`} style={{animationDelay: '1.5s'}} />
-      </div>
-    </div>
-  );
-}
-
-function WoodGrain({ opacity = 0.2 }: { opacity?: number }) {
-  return (
-    <div 
-      className="absolute inset-0 pointer-events-none rounded-2xl"
-      style={{
-        opacity,
-        backgroundImage: `
-          radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-          radial-gradient(circle at 80% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
-          radial-gradient(circle at 40% 60%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
-          repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 3px,
-            rgba(0, 0, 0, 0.05) 3px,
-            rgba(0, 0, 0, 0.05) 4px
-          ),
-          repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent 2px,
-            rgba(0, 0, 0, 0.03) 2px,
-            rgba(0, 0, 0, 0.03) 3px
-          )
-        `
-      }}
-    />
   );
 }

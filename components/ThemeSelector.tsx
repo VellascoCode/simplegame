@@ -22,7 +22,7 @@ export function ThemeSelector() {
       {THEME_OPTIONS.map((option) => (
         <WoodenButton
           key={option.value}
-          label={`${option.emoji} ${option.label}`}
+          label={option.label}
           variant={theme === option.value ? "redRoyal" : "wood"}
           size="sm"
           onClick={() => handleThemeChange(option.value as ThemeType)}

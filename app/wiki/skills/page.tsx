@@ -9,26 +9,84 @@ import { MedievalCard, MedievalSection, RoyalCard, RoyalSection, WoodenButton } 
 export default function SkillsWikiPage() {
   const { theme } = useTheme();
 
+  // Função auxiliar para pegar classe de texto primária com base no tema
+  const getPrimaryTextClass = () => {
+    if (theme === "kawaii") return "text-pink-700";
+    if (theme === "royal-medieval") return "text-amber-100";
+    return "text-amber-300"; // dark-fantasy
+  };
+
+  // Função auxiliar para pegar classe de texto secundária
+  const getSecondaryTextClass = () => {
+    if (theme === "kawaii") return "text-pink-600";
+    if (theme === "royal-medieval") return "text-amber-200";
+    return "text-stone-300";
+  };
+
+  // Função auxiliar para pegar gradiente do divisor
+  const getDividerGradient = () => {
+    if (theme === "kawaii") return "from-pink-400 via-purple-400 to-blue-400";
+    if (theme === "royal-medieval") return "from-red-700 via-amber-600 to-orange-800";
+    return "from-amber-700 via-amber-800 to-orange-900"; // dark-fantasy
+  };
+
+  // Função auxiliar para estilo de ícones
+  const getIconBorderStyle = () => {
+    if (theme === "kawaii") return "border-pink-300";
+    if (theme === "royal-medieval") return "border-amber-800";
+    return "border-amber-900";
+  };
+
+  // Função auxiliar para estilo de ícones (background)
+  const getIconBackgroundClass = () => {
+    if (theme === "kawaii") return "bg-white";
+    if (theme === "royal-medieval") return "bg-amber-900";
+    return "bg-stone-900";
+  };
+
+  // Função auxiliar para estilo de list items (builds, rotas)
+  const getListItemClass = () => {
+    if (theme === "kawaii") return "border-pink-300 bg-pink-100 text-pink-800";
+    if (theme === "royal-medieval") return "border-amber-800 bg-amber-800 text-amber-100";
+    return "border-amber-800 bg-stone-900 text-amber-200";
+  };
+
+  const primaryTextClass = getPrimaryTextClass();
+  const secondaryTextClass = getSecondaryTextClass();
+  const dividerGradient = getDividerGradient();
+  const iconBorderStyle = getIconBorderStyle();
+  const iconBackgroundClass = getIconBackgroundClass();
+  const listItemClass = getListItemClass();
+
   return (
     <section className={`min-h-screen p-4 ${wikiPageStyles.section[theme]}`}>
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-2 md:px-4">
         <header className="space-y-6">
-          <p className="text-6xl font-bold uppercase tracking-widest text-amber-900 drop-shadow-lg text-center">
-            ✨ Wiki ✨
+          <p className={`text-6xl font-bold uppercase tracking-widest drop-shadow-lg text-center ${primaryTextClass}`}>
+            Wiki
           </p>
-        <hr className="my-6 h-2 w-full border-0 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 rounded-full shadow-lg" />
+          <hr
+            className="my-6 h-2 w-full border-0 rounded-full shadow-lg"
+            style={{ background: `linear-gradient(to right, ${dividerGradient})` }}
+          />
           <div className="text-center">
             <div className="flex items-center justify-center gap-4">
-              <Image src="/icons/skills.png" alt="Ícone de skills" width={64} height={64} className="h-24 w-24 rounded-2xl border-4 border-amber-800 bg-gradient-to-br from-amber-200 to-orange-300 shadow-xl" />
-              <h1 className="text-4xl font-bold text-amber-900 drop-shadow-lg">
+              <Image
+                src="/icons/skills.png"
+                alt="Ícone de skills"
+                width={64}
+                height={64}
+                className={`h-24 w-24 rounded-2xl border-4 ${iconBorderStyle} ${iconBackgroundClass} shadow-xl`}
+              />
+              <h1 className={`text-4xl font-bold ${primaryTextClass} drop-shadow-lg`}>
                 Guia de Skills
               </h1>
             </div>
-            <p className="max-w-2xl mx-auto text-lg text-amber-800/90 font-medium mt-4">
+            <p className={`max-w-2xl mx-auto text-lg ${secondaryTextClass} font-medium mt-4`}>
               Todas as habilidades do jogo e como evoluí-las. Use esta página como referência rápida enquanto joga.
             </p>
           </div>
-          <div className="mt-6 w-full overflow-hidden rounded-3xl border-4 border-amber-800 bg-gradient-to-br from-amber-100 to-orange-200 shadow-2xl shadow-amber-900/30">
+          <div className={`mt-6 w-full overflow-hidden rounded-3xl border-4 ${iconBorderStyle} ${iconBackgroundClass} shadow-2xl`}>
             <Image
               src="/tilesets/wiki/skills/1.webp"
               alt="Banner GUI de Skills"
@@ -49,11 +107,13 @@ export default function SkillsWikiPage() {
             <ul className="mt-2 space-y-1 text-sm">
               <li>• Skills sobem de nível pelo uso direto (colher, minerar, lutar, cozinhar etc.).</li>
               <li>
-                • Toda ação relevante concede entre <span className="font-semibold text-amber-400">1 e 2 pontos de EXP</span> para a
+                • Toda ação relevante concede entre{" "}
+                <span className={`font-semibold ${primaryTextClass}`}>1 e 2 pontos de EXP</span> para a
                 skill correspondente.
               </li>
               <li>
-                • Cada nível exige sempre <span className="font-semibold text-amber-400">300 pontos de EXP</span>.
+                • Cada nível exige sempre{" "}
+                <span className={`font-semibold ${primaryTextClass}`}>300 pontos de EXP</span>.
               </li>
               <li>
                 • Skills concedem bônus passivos que afetam dano, precisão, defesa ou eficiência de
@@ -68,6 +128,7 @@ export default function SkillsWikiPage() {
             title="Coleta"
             items={["Harvesting", "Woodcutting", "Mining", "Fishing", "Herbalism", "Gem Collecting"]}
             iconSrc="/icons/skills/harvesting.png"
+            themeProps={{ iconBorderStyle, iconBackgroundClass, primaryTextClass, secondaryTextClass }}
           />
           <SkillCategory
             title="Produção"
@@ -82,6 +143,7 @@ export default function SkillsWikiPage() {
               "Gemcutting",
               "Scrapcrafting"
             ]}
+            themeProps={{ iconBorderStyle, iconBackgroundClass, primaryTextClass, secondaryTextClass }}
           />
           <SkillCategory
             title="Combate"
@@ -95,6 +157,7 @@ export default function SkillsWikiPage() {
               "Defense",
               "Agility"
             ]}
+            themeProps={{ iconBorderStyle, iconBackgroundClass, primaryTextClass, secondaryTextClass }}
           />
         </section>
 
@@ -103,13 +166,15 @@ export default function SkillsWikiPage() {
             <ul className="space-y-2 text-sm">
               <li>• Cada ação válida executada pelo personagem gera 1–2 EXP para a skill associada.</li>
               <li>
-                • Ao acumular <span className="font-semibold text-amber-400">300 EXP</span>, a skill sobe{" "}
-                <span className="font-semibold text-amber-400">1 nível</span> e o excedente é mantido para o próximo nível.
+                • Ao acumular{" "}
+                <span className={`font-semibold ${primaryTextClass}`}>300 EXP</span>, a skill sobe{" "}
+                <span className={`font-semibold ${primaryTextClass}`}>1 nível</span> e o excedente é mantido para o próximo nível.
               </li>
               <li>
-                • Compatibilidade com classe: um personagem de classe Tier <span className="font-semibold text-amber-400">X</span> só
+                • Compatibilidade com classe: um personagem de classe Tier{" "}
+                <span className={`font-semibold ${primaryTextClass}`}>X</span> só
                 ganha EXP de uma skill quando{" "}
-                <span className="font-semibold text-amber-400">skill.level ≤ classLevel × X</span>. Skills muito acima do nível da
+                <span className={`font-semibold ${primaryTextClass}`}>skill.level ≤ classLevel × X</span>. Skills muito acima do nível da
                 classe não recebem EXP.
               </li>
               <li>
@@ -125,45 +190,33 @@ export default function SkillsWikiPage() {
             <div className="grid gap-3 md:grid-cols-2">
               <BonusCard
                 skill="Swordsmanship"
-                bullets={[
-                  "+dano com armas de espada",
-                  "+chance de acerto crítico corpo a corpo"
-                ]}
+                bullets={["+dano com armas de espada", "+chance de acerto crítico corpo a corpo"]}
+                primaryTextClass={primaryTextClass}
               />
               <BonusCard
                 skill="Archery"
-                bullets={[
-                  "+precisão com arcos/bestas",
-                  "-desvio de trajetória em longa distância"
-                ]}
+                bullets={["+precisão com arcos/bestas", "-desvio de trajetória em longa distância"]}
+                primaryTextClass={primaryTextClass}
               />
               <BonusCard
                 skill="Defense"
-                bullets={[
-                  "+chance de bloqueio com escudo",
-                  "-dano recebido em bloqueios bem-sucedidos"
-                ]}
+                bullets={["+chance de bloqueio com escudo", "-dano recebido em bloqueios bem-sucedidos"]}
+                primaryTextClass={primaryTextClass}
               />
               <BonusCard
                 skill="Heavy Weapons"
-                bullets={[
-                  "+dano com machados/martelos pesados",
-                  "+penetração contra alvos blindados"
-                ]}
+                bullets={["+dano com machados/martelos pesados", "+penetração contra alvos blindados"]}
+                primaryTextClass={primaryTextClass}
               />
               <BonusCard
                 skill="Alchemy"
-                bullets={[
-                  "+efetividade de poções produzidas",
-                  "-chance de falha na criação de consumíveis"
-                ]}
+                bullets={["+efetividade de poções produzidas", "-chance de falha na criação de consumíveis"]}
+                primaryTextClass={primaryTextClass}
               />
               <BonusCard
                 skill="Cooking"
-                bullets={[
-                  "+duração de buffs de comida",
-                  "+rendimento de porções por receita"
-                ]}
+                bullets={["+duração de buffs de comida", "+rendimento de porções por receita"]}
+                primaryTextClass={primaryTextClass}
               />
             </div>
           </MedievalSection>
@@ -176,11 +229,11 @@ export default function SkillsWikiPage() {
               recursos em combate.
             </p>
             <div className="mt-4 flex flex-col items-center gap-3 text-sm font-semibold uppercase tracking-widest">
-              <DiagramStep label="Coleta" />
-              <DiagramArrow />
-              <DiagramStep label="Produção" />
-              <DiagramArrow />
-              <DiagramStep label="Combate" />
+              <DiagramStep label="Coleta" primaryTextClass={primaryTextClass} iconBorderStyle={iconBorderStyle} />
+              <DiagramArrow primaryTextClass={primaryTextClass} />
+              <DiagramStep label="Produção" primaryTextClass={primaryTextClass} iconBorderStyle={iconBorderStyle} />
+              <DiagramArrow primaryTextClass={primaryTextClass} />
+              <DiagramStep label="Combate" primaryTextClass={primaryTextClass} iconBorderStyle={iconBorderStyle} />
             </div>
           </MedievalSection>
         </section>
@@ -190,52 +243,52 @@ export default function SkillsWikiPage() {
             <div className="grid gap-3 md:grid-cols-3">
               <RoyalCard title="Conquistas por categoria" variant="redRoyal">
                 <div className="flex flex-wrap gap-2">
-                  <WoodenButton label="Coleta — Selo dourado" variant="wood" className="px-2 text-xs shadow-black/60" />
-                  <WoodenButton label="Produção — Selo de runas" variant="wood" className="px-2 text-xs shadow-black/60" />
-                  <WoodenButton label="Combate — Selo de batalha" variant="redRoyal" className="px-2 text-xs shadow-black/60" />
+                  <WoodenButton label="Coleta — Selo dourado" variant="wood" className="px-2 text-xs" />
+                  <WoodenButton label="Produção — Selo de runas" variant="wood" className="px-2 text-xs" />
+                  <WoodenButton label="Combate — Selo de batalha" variant="redRoyal" className="px-2 text-xs" />
                 </div>
               </RoyalCard>
 
               <RoyalCard title="Builds sugeridas" variant="blueRoyal">
-                <ul className="space-y-1 text-sm text-stone-900">
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                <ul className="space-y-1 text-sm">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     Herbalist → Herbal Sage (Herbalism 25 / Herbcrafting 20 / Nature Arts 20)
                   </li>
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     Gemwright → Runeforger (Gemcutting 20 / Smithing 20 / Sorcery 20)
                   </li>
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     Scrapper → Saboteur (Scrapcrafting 20 / Agility 20 / Dark Arts 15)
                   </li>
                 </ul>
               </RoyalCard>
 
               <RoyalCard title="Compatibilidade de classe" variant="blueRoyal">
-                <ul className="space-y-1 text-sm text-stone-900">
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                <ul className="space-y-1 text-sm">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     Herbalism → Base: Herbalist | Avançada: Herbal Sage / Venom Crafter
                   </li>
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     Gemcutting → Base: Gemwright | Avançada: Runeforger / Crystal Binder
                   </li>
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     Scrapcrafting → Base: Scrapper | Avançada: Tinker / Saboteur
                   </li>
                 </ul>
               </RoyalCard>
 
               <RoyalCard title="Rota de progressão (exemplo)" variant="redRoyal">
-                <ol className="space-y-1 text-sm text-stone-900">
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                <ol className="space-y-1 text-sm">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     1) Skill gate: Herbalism 10 + Herbcrafting 10
                   </li>
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     2) Classe Base: Herbalist (Nível 10)
                   </li>
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     3) Classe Avançada: Herbal Sage (Base 25 + Herbalism 25 + Nature Arts 20)
                   </li>
-                  <li className="rounded-sm border-2 border-black bg-amber-400 px-2 py-1">
+                  <li className={`rounded-sm border-2 ${listItemClass} px-2 py-1`}>
                     4) Elite: Verdant Hierophant (Avançada 50 + Herbalism 30)
                   </li>
                 </ol>
@@ -259,26 +312,46 @@ export default function SkillsWikiPage() {
   );
 }
 
+// ========== COMPONENTES AUXILIARES COM TEMATIZAÇÃO ==========
+
 type SkillCategoryProps = {
   title: string;
   items: string[];
   iconSrc?: string;
+  themeProps: {
+    iconBorderStyle: string;
+    iconBackgroundClass: string;
+    primaryTextClass: string;
+    secondaryTextClass: string;
+  };
 };
 
-function SkillCategory({ title, items, iconSrc }: SkillCategoryProps) {
+function SkillCategory({ title, items, iconSrc, themeProps }: SkillCategoryProps) {
+  const { iconBorderStyle, iconBackgroundClass, primaryTextClass, secondaryTextClass } = themeProps;
   const categoryIcon = title === "Coleta" ? "/icons/gathering.png" : iconSrc;
+
   return (
     <MedievalSection
       title={
         <span className="flex items-center gap-2">
           {categoryIcon && (
-            <Image src={categoryIcon} alt={title} width={24} height={24} className="h-6 w-6 rounded-md border border-amber-900 bg-stone-900 shadow-md shadow-black/50" />
+            <Image
+              src={categoryIcon}
+              alt={title}
+              width={24}
+              height={24}
+              className={`h-6 w-6 rounded-md border ${iconBorderStyle} ${iconBackgroundClass} shadow-md`}
+            />
           )}
           <span>{title}</span>
         </span>
       }
     >
-      <SkillsGrid items={items} category={title} />
+      <SkillsGrid
+        items={items}
+        category={title}
+        themeProps={{ iconBorderStyle, iconBackgroundClass, primaryTextClass, secondaryTextClass }}
+      />
     </MedievalSection>
   );
 }
@@ -309,7 +382,22 @@ const skillMeta: Record<string, { icon: string; desc: string }> = {
   Agility: { icon: "/icons/skills/agility.png", desc: "Mobilidade, esquiva e velocidade." }
 };
 
-function SkillsGrid({ items, category: _category }: { items: string[]; category: string }) {
+function SkillsGrid({
+  items,
+  category: _category,
+  themeProps
+}: {
+  items: string[];
+  category: string;
+  themeProps: {
+    iconBorderStyle: string;
+    iconBackgroundClass: string;
+    primaryTextClass: string;
+    secondaryTextClass: string;
+  };
+}) {
+  const { iconBorderStyle, iconBackgroundClass, primaryTextClass, secondaryTextClass } = themeProps;
+
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => (
@@ -317,16 +405,22 @@ function SkillsGrid({ items, category: _category }: { items: string[]; category:
           <div className="flex items-center gap-3">
             <div className="flex flex-col items-center gap-1">
               {skillMeta[item]?.icon ? (
-                <div className="h-16 w-16 overflow-hidden rounded-md border-2 border-amber-900 bg-stone-900 shadow-md shadow-black/50">
-                  <Image src={skillMeta[item].icon} alt={item} width={64} height={64} className="h-full w-full object-contain" />
+                <div className={`h-16 w-16 overflow-hidden rounded-md border-2 ${iconBorderStyle} ${iconBackgroundClass} shadow-md`}>
+                  <Image
+                    src={skillMeta[item].icon}
+                    alt={item}
+                    width={64}
+                    height={64}
+                    className="h-full w-full object-contain"
+                  />
                 </div>
               ) : (
-                <div className="h-16 w-16 rounded-md border-2 border-amber-900 bg-stone-800 shadow-md shadow-black/50" />
+                <div className={`h-16 w-16 rounded-md border-2 ${iconBorderStyle} ${iconBackgroundClass} shadow-md`} />
               )}
             </div>
             <div>
-              <p className="text-base font-semibold text-amber-50">{item}</p>
-              <p className="text-xs text-amber-200">{skillMeta[item]?.desc ?? ""}</p>
+              <p className={`text-base font-semibold ${primaryTextClass}`}>{item}</p>
+              <p className={`text-xs ${secondaryTextClass}`}>{skillMeta[item]?.desc ?? ""}</p>
             </div>
           </div>
         </MedievalCard>
@@ -338,49 +432,47 @@ function SkillsGrid({ items, category: _category }: { items: string[]; category:
 type BonusCardProps = {
   skill: string;
   bullets: string[];
+  primaryTextClass: string;
 };
 
-function BonusCard({ skill, bullets }: BonusCardProps) {
+function BonusCard({ skill, bullets, primaryTextClass }: BonusCardProps) {
   return (
     <MedievalCard title={skill} subtitle="Exemplo de bônus">
-      <div className="relative flex items-start gap-4 rounded-md border-2 border-amber-900/30 bg-gradient-to-br from-stone-900 to-black p-3 shadow-inner">
-        <span className="pointer-events-none absolute left-2 top-2 h-1.5 w-1.5 rounded-md bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-950 shadow-md" />
-        <span className="pointer-events-none absolute right-2 top-2 h-1.5 w-1.5 rounded-md bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-950 shadow-md" />
-        <span className="pointer-events-none absolute left-2 bottom-2 h-1.5 w-1.5 rounded-md bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-950 shadow-md" />
-        <span className="pointer-events-none absolute right-2 bottom-2 h-1.5 w-1.5 rounded-md bg-gradient-to-br from-amber-600 to-amber-800 border border-amber-950 shadow-md" />
-        
-        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-amber-700 via-amber-800 to-amber-900 border-2 border-amber-950 text-xs font-semibold uppercase tracking-wide text-amber-100 shadow-lg">
+      <div className="relative flex items-start gap-4 rounded-md p-3">
+        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md text-xs font-semibold uppercase tracking-wide shadow-lg">
           Ícone
         </div>
-        
         <div className="flex-1 space-y-1">
           {bullets.map((item) => (
             <div key={item} className="flex items-start gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-sm bg-gradient-to-br from-amber-500 to-amber-700 border border-amber-900 shadow-sm" />
               <p className="text-sm">{item}</p>
             </div>
           ))}
         </div>
       </div>
-      <p className="mt-2 text-xs text-amber-600/80">
+      <p className={`mt-2 text-xs ${primaryTextClass}/80`}>
         Imagem sugerida: ícone técnico representando a skill "{skill}" (64×64px).
       </p>
     </MedievalCard>
   );
 }
 
-function DiagramStep({ label }: { label: string }) {
+function DiagramStep({
+  label,
+  primaryTextClass,
+  iconBorderStyle
+}: {
+  label: string;
+  primaryTextClass: string;
+  iconBorderStyle: string;
+}) {
   return (
-    <div className="relative inline-flex w-40 items-center justify-center rounded-sm border-4 border-stone-950 bg-gradient-to-b from-amber-700 via-amber-800 to-amber-900 p-3 text-amber-100 shadow-xl">
-      <span className="pointer-events-none absolute left-2 top-2 h-1.5 w-1.5 rounded-sm bg-gradient-to-br from-cyan-600 to-cyan-800 border border-cyan-950 shadow-md" />
-      <span className="pointer-events-none absolute right-2 top-2 h-1.5 w-1.5 rounded-sm bg-gradient-to-br from-cyan-600 to-cyan-800 border border-cyan-950 shadow-md" />
-      <span className="pointer-events-none absolute left-2 bottom-2 h-1.5 w-1.5 rounded-sm bg-gradient-to-br from-cyan-600 to-cyan-800 border border-cyan-950 shadow-md" />
-      <span className="pointer-events-none absolute right-2 bottom-2 h-1.5 w-1.5 rounded-sm bg-gradient-to-br from-cyan-600 to-cyan-800 border border-cyan-950 shadow-md" />
+    <div className={`relative inline-flex w-40 items-center justify-center rounded-sm border-4 p-3 shadow-xl ${primaryTextClass} ${iconBorderStyle}`}>
       {label}
     </div>
   );
 }
 
-function DiagramArrow() {
-  return <div className="h-6 w-6 text-center text-2xl text-amber-400">↓</div>;
+function DiagramArrow({ primaryTextClass }: { primaryTextClass: string }) {
+  return <div className={`h-6 w-6 text-center text-2xl ${primaryTextClass}`}>↓</div>;
 }

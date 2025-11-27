@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { useTheme } from "@/components/ThemeProvider";
 import { WoodenButton } from "@/components/UniversalUi";
-import { sideMenuStyles } from "@/components/themeConfig";
 
 type MenuItem = {
   label: string;
@@ -93,15 +92,33 @@ export default function SideMenu({ user }: SideMenuProps) {
 
   useEffect(() => {
     const init: Record<string, boolean> = {};
-    MENU_GROUPS.forEach((group) => (init[group.title] = false)); // Começar fechado
+    MENU_GROUPS.forEach((group) => (init[group.title] = false));
     setExpanded(init);
   }, []);
+
+  const getSidebarClass = () => {
+    if (theme === "kawaii") return "bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 border-r-4 border-pink-300";
+    if (theme === "royal-medieval") return "bg-gradient-to-br from-amber-900 via-orange-900 to-red-900 border-r-4 border-amber-800";
+    return "bg-gradient-to-br from-stone-900 via-stone-950 to-black border-r-4 border-stone-950";
+  };
+
+  const getGroupButtonClass = () => {
+    if (theme === "kawaii") return "border-pink-300 bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 text-pink-800";
+    if (theme === "royal-medieval") return "border-amber-700 bg-gradient-to-r from-amber-800 to-orange-800 text-amber-100";
+    return "border-amber-700 bg-gradient-to-r from-stone-800 to-stone-900 text-amber-100";
+  };
+
+  const getGroupDotClass = () => {
+    if (theme === "kawaii") return "bg-gradient-to-br from-pink-400 to-purple-400";
+    if (theme === "royal-medieval") return "bg-gradient-to-br from-amber-500 to-orange-600";
+    return "bg-gradient-to-br from-amber-500 to-amber-700";
+  };
 
   const sidebarClasses = useMemo(
     () =>
       `fixed left-0 top-16 z-40 flex h-[calc(100vh-64px)] w-[260px] flex-col shadow-2xl transition-transform duration-300 backdrop-blur-sm ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } ${drawerOpen ? "translate-x-0" : ""} ${sideMenuStyles.sidebar[theme]}`,
+      } ${drawerOpen ? "translate-x-0" : ""} ${getSidebarClass()}`,
     [isOpen, drawerOpen, theme]
   );
 
@@ -117,7 +134,6 @@ export default function SideMenu({ user }: SideMenuProps) {
         variant={active ? "redRoyal" : "wood"}
         size="sm"
         onClick={() => {
-          // Navigate to the href
           window.location.href = item.href;
         }}
         className={`w-full justify-start text-left ${depth > 0 ? "ml-4" : ""}`}
@@ -133,10 +149,10 @@ export default function SideMenu({ user }: SideMenuProps) {
             <button
               type="button"
               onClick={() => setExpanded((prev) => ({ ...prev, [group.title]: !prev[group.title] }))}
-              className={`flex w-full items-center gap-2 rounded-xl border-2 px-3 py-2 text-left text-xs font-bold uppercase tracking-[0.2em] shadow-lg transform hover:scale-102 transition-all duration-200 ${sideMenuStyles.groupButton[theme]}`}
+              className={`flex w-full items-center gap-2 rounded-xl border-2 px-3 py-2 text-left text-xs font-bold uppercase tracking-[0.2em] shadow-lg transform hover:scale-102 transition-all duration-200 ${getGroupButtonClass()}`}
             >
               <span
-                className={`h-3 w-3 rounded-full shadow-md ${sideMenuStyles.groupDot[theme]} animate-pulse`}
+                className={`h-3 w-3 rounded-full shadow-md ${getGroupDotClass()} animate-pulse`}
               />
               <span className="flex-1 truncate drop-shadow-sm text-xs">{group.title}</span>
               <span className="text-sm transition-transform duration-200">{expanded[group.title] ? "−" : "+"}</span>
